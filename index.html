@@ -3,34 +3,108 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tengri Panel</title>
+<title>Tengri Panel v3.0</title>
 
 <style>
 /* ==========================================================================
-   EFSANE CANLI TEMA DEĞİŞKENLERİ (CANLI NEON VE PREMİUM TONLAR)
+   PREMIUM SİBER RENK TEMALARI (KUSURSUZ VE CANLI)
    ========================================================================== */
+
+/* 1. DEFAULT: CYBER PUNK (NEON RED) */
 :root {
-    --bg-main: #06060a;
-    --bg-container: #0d0e15;
-    --bg-input: #020204;
-    --bg-btn: #12131a;
-    --bg-btn-hover: #1a1c29;
-    --bg-tab-active: #1a1c29;
-    --text-main: #94a3b8;
-    --text-input: #f8fafc;
+    --bg-main: #0a0505;
+    --bg-container: #140b0b;
+    --bg-input: #060202;
+    --bg-btn: #1f0f0f;
+    --bg-btn-hover: #2d1616;
+    --bg-tab-active: #2d1616;
+    --text-main: #e5c7c7;
+    --text-input: #ffffff;
     --text-heading: #ffffff;
-    --text-btn: #94a3b8;
-    --border-color: #222533;
-    --border-container: #1e2235;
-    --accent-color: #ff2a2a; /* Aşırı Canlı Siber Kırmızı */
-    --accent-glow: rgba(255, 42, 42, 0.55);
+    --text-btn: #ff4444;
+    --border-color: #3d1d1d;
+    --border-container: #2d1616;
+    --accent-color: #ff2222; 
+    --accent-glow: rgba(255, 34, 34, 0.6);
 }
 
-/* PURE WHITE - ASİL VE NET AÇIK MOD */
+/* 2. DEEP SAPPHIRE (SAFİR MAVİ) */
+html[data-theme="blue"] {
+    --bg-main: #050a15;
+    --bg-container: #0b1326;
+    --bg-input: #03060c;
+    --bg-btn: #12203f;
+    --bg-btn-hover: #1a2e5a;
+    --bg-tab-active: #1a2e5a;
+    --text-main: #c7d6e5;
+    --text-input: #ffffff;
+    --text-heading: #ffffff;
+    --text-btn: #3399ff;
+    --border-color: #1f3970;
+    --border-container: #162952;
+    --accent-color: #0077ff; 
+    --accent-glow: rgba(0, 119, 255, 0.6);
+}
+
+/* 3. MATRIX NEON (HACKER YEŞİLİ) */
+html[data-theme="green"] {
+    --bg-main: #040805;
+    --bg-container: #09140c;
+    --bg-input: #020402;
+    --bg-btn: #102415;
+    --bg-btn-hover: #17331e;
+    --bg-tab-active: #17331e;
+    --text-main: #c7e5ce;
+    --text-input: #ffffff;
+    --text-heading: #ffffff;
+    --text-btn: #39ff14;
+    --border-color: #1b3d23;
+    --border-container: #142e1b;
+    --accent-color: #00ff44; 
+    --accent-glow: rgba(0, 255, 68, 0.6);
+}
+
+/* 4. ACID PURPLE (NEON MOR) */
+html[data-theme="purple"] {
+    --bg-main: #09040c;
+    --bg-container: #14091c;
+    --bg-input: #040206;
+    --bg-btn: #241033;
+    --bg-btn-hover: #331749;
+    --bg-tab-active: #331749;
+    --text-main: #dec7e5;
+    --text-input: #ffffff;
+    --text-heading: #ffffff;
+    --text-btn: #cc33ff;
+    --border-color: #3d1b58;
+    --border-container: #2e1442;
+    --accent-color: #dd00ff; 
+    --accent-glow: rgba(221, 0, 255, 0.6);
+}
+
+/* 5. AMBER GLOW (SİBER TURUNCU) */
+html[data-theme="orange"] {
+    --bg-main: #0b0603;
+    --bg-container: #170d06;
+    --bg-input: #040201;
+    --bg-btn: #2b170b;
+    --bg-btn-hover: #3a200f;
+    --bg-tab-active: #3a200f;
+    --text-main: #e5d2c7;
+    --text-input: #ffffff;
+    --text-heading: #ffffff;
+    --text-btn: #ff9933;
+    --border-color: #4f2b14;
+    --border-container: #3d2110;
+    --accent-color: #ff7700; 
+    --accent-glow: rgba(255, 119, 0, 0.6);
+}
+
+/* 6. ICE NOVA (MODERN BUZ AÇIK MODU) */
 html[data-theme="white"] {
-    --bg-main: #f8fafc;
+    --bg-main: #eef2f7;
     --bg-container: #ffffff;
-    --bg-input: #f1f5f9;
+    --bg-input: #f8fafc;
     --bg-btn: #e2e8f0;
     --bg-btn-hover: #cbd5e1;
     --bg-tab-active: #ffffff;
@@ -39,76 +113,36 @@ html[data-theme="white"] {
     --text-heading: #0f172a;
     --text-btn: #475569;
     --border-color: #cbd5e1;
-    --border-container: #cbd5e1;
-    --accent-color: #0066ff; /* Canlı Elektrik Mavisi */
-    --accent-glow: rgba(0, 102, 255, 0.3);
+    --border-container: #e2e8f0;
+    --accent-color: #0f172a; 
+    --accent-glow: rgba(15, 23, 42, 0.15);
 }
 
-/* CYBER PINK - KIZLARA ÖZEL NEON FUŞYA */
-html[data-theme="pink"] {
-    --bg-main: #18020c;
-    --bg-container: #2c0417;
-    --bg-input: #100108;
-    --bg-btn: #440624;
-    --bg-btn-hover: #5c0931;
-    --bg-tab-active: #5c0931;
-    --text-main: #f472b6;
-    --text-input: #fff1f2;
+/* 7. MIDNIGHT PITCH (ZİFİRİ KARANLIK) */
+html[data-theme="midnight"] {
+    --bg-main: #000000;
+    --bg-container: #0b0b0c;
+    --bg-input: #030303;
+    --bg-btn: #141416;
+    --bg-btn-hover: #1c1c1f;
+    --bg-tab-active: #1c1c1f;
+    --text-main: #a1a1aa;
+    --text-input: #f4f4f5;
     --text-heading: #ffffff;
-    --text-btn: #f472b6;
-    --border-color: #5c0931;
-    --border-container: #440624;
-    --accent-color: #ff007f; /* Patlayan Canlı Pembe */
-    --accent-glow: rgba(255, 0, 127, 0.6);
-}
-
-/* DEEP BLUE - ERKEKLERE ÖZEL ELEKTRİK SAFİR */
-html[data-theme="blue"] {
-    --bg-main: #020617;
-    --bg-container: #0f172a;
-    --bg-input: #030712;
-    --bg-btn: #1e293b;
-    --bg-btn-hover: #334155;
-    --bg-tab-active: #334155;
-    --text-main: #38bdf8;
-    --text-input: #f0f9ff;
-    --text-heading: #ffffff;
-    --text-btn: #38bdf8;
-    --border-color: #334155;
-    --border-container: #1e293b;
-    --accent-color: #00d2ff; /* Ultra Parlak Siber Mavi */
-    --accent-glow: rgba(0, 210, 255, 0.6);
-}
-
-/* NEON RED - AGRESİF CEHENNEM KIRMISIZI */
-html[data-theme="red"] {
-    --bg-main: #1a0000;
-    --bg-container: #330000;
-    --bg-input: #0f0000;
-    --bg-btn: #4d0000;
-    --bg-btn-hover: #660000;
-    --bg-tab-active: #660000;
-    --text-main: #f87171;
-    --text-input: #fff5f5;
-    --text-heading: #ffffff;
-    --text-btn: #ff4d4d;
-    --border-color: #660000;
-    --border-container: #4d0000;
-    --accent-color: #ff0000; /* Gerçek Saf Neon Kırmızı */
-    --accent-glow: rgba(255, 0, 0, 0.7);
+    --text-btn: #e4e4e7;
+    --border-color: #27272a;
+    --border-container: #18181b;
+    --accent-color: #ffffff; 
+    --accent-glow: rgba(255, 255, 255, 0.3);
 }
 
 *{box-sizing:border-box;}
 
-/* 🎯 İMLEÇLER ORİJİNAL VE KUSURSUZ STANDARDA DÖNDÜRÜLDÜ */
-html, body, .input-area, div {
-    cursor: default;
-}
-button, .tab-btn, .theme-dot, .input-area:hover, .output:hover {
-    cursor: pointer;
-}
+/* Standart ve Kusursuz İmleç Yapısı */
+html, body, .input-area, div { cursor: default; }
+button, .tab-btn, .theme-dot { cursor: pointer; }
 
-body{
+body {
     margin:0;
     padding:20px;
     background: var(--bg-main) !important; 
@@ -116,20 +150,20 @@ body{
     font-family:'Courier New', Courier, monospace; 
     overflow-x:hidden;
     min-height: 100vh;
-    transition: background 0.25s ease, color 0.25s ease;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
-/* TEMA SEÇİCİ PANEL */
+/* TEMA SEÇİCİ ALAN */
 .theme-selector {
     display: flex;
     justify-content: flex-end;
     gap: 12px;
     max-width: 900px;
-    margin: 0 auto 15px auto;
+    margin: 0 auto 20px auto;
     align-items: center;
     background: var(--bg-container);
-    padding: 10px 15px;
-    border-radius: 6px;
+    padding: 12px 18px;
+    border-radius: 8px;
     border: 1px solid var(--border-container);
 }
 .theme-label {
@@ -137,7 +171,7 @@ body{
     text-transform: uppercase;
     letter-spacing: 1.5px;
     font-weight: bold;
-    color: var(--text-btn);
+    color: var(--text-main);
 }
 .theme-dot {
     width: 24px;
@@ -145,7 +179,7 @@ body{
     border-radius: 50%;
     border: 2px solid transparent;
     transition: all 0.2s ease;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    box-shadow: 0 0 8px rgba(0,0,0,0.4);
 }
 .theme-dot:hover {
     transform: scale(1.25);
@@ -156,7 +190,7 @@ body{
     box-shadow: 0 0 15px var(--accent-color);
 }
 
-/* TABS CONTAINER */
+/* SEKME ALANI */
 .tabs{
     display:flex;
     justify-content:center;
@@ -164,7 +198,7 @@ body{
     margin-bottom:30px;
 }
 
-/* DİNAMİK BUTONLAR */
+/* BUTONLAR */
 button, .tab-btn {
     background: var(--bg-btn);
     color: var(--text-btn);
@@ -177,15 +211,12 @@ button, .tab-btn {
     border-radius: 4px;
     transition: all 0.2s ease;
 }
-
 button:hover, .tab-btn:hover {
     color: var(--text-heading) !important;
     background: var(--bg-btn-hover);
     border-color: var(--accent-color); 
     box-shadow: 0 0 15px var(--accent-glow);
 }
-
-/* AKTİF TAB */
 .tab-btn.active {
     background: var(--bg-tab-active) !important;
     color: var(--accent-color) !important;
@@ -193,28 +224,26 @@ button:hover, .tab-btn:hover {
     box-shadow: 0 0 20px var(--accent-glow);
 }
 
-/* İÇERİK ALANI */
+/* ANA PANEL CONTAINER */
 .container{
     position:relative;
     width:100%;
     max-width: 900px;
     margin: 0 auto;
 }
-
 .tab-content{
     position:absolute;
     width:100%;
     opacity:0;
     transform:scale(0.98);
-    transition: all .25s ease-in-out;
+    transition: all .2s ease-in-out;
     pointer-events:none;
     background: var(--bg-container);
     padding: 25px;
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid var(--border-container);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
 }
-
 .tab-content.active{
     opacity:1;
     transform:scale(1);
@@ -233,7 +262,7 @@ h3 {
     padding-left: 10px;
 }
 
-/* ZENGİN METİN GİRİŞ VE ÇIKIŞ ALANLARI */
+/* GİRİŞ - ÇIKIŞ TEXTAREA ALANLARI */
 .input-area, .output{
     width:100%;
     height:220px;
@@ -250,28 +279,27 @@ h3 {
     overflow-y: auto;
     word-break: break-word;
 }
-
 .input-area:focus, .output:focus {
     border-color: var(--accent-color);
-    box-shadow: 0 0 10px var(--accent-glow);
+    box-shadow: 0 0 12px var(--accent-glow);
 }
-
 .output{
     min-height:220px;
     height: auto;
     border-style: dashed;
 }
 
-/* METİN BİLGİSİ */
+/* SAYAÇ BİLGİLERİ */
 .meta-info {
     font-size: 11px;
-    color: var(--text-btn);
+    color: var(--text-main);
     margin-bottom: 15px;
     display: flex;
     gap: 15px;
+    opacity: 0.8;
 }
 .meta-info span strong {
-    color: #10b981; /* Canlı Yeşil */
+    color: var(--accent-color);
 }
 
 .action-buttons {
@@ -281,17 +309,17 @@ h3 {
     flex-wrap: wrap;
 }
 
-/* SİBER KIRMIZI YASAKLI KELİME */
+/* YASAKLI KELİME STİLİ */
 .bad-word{
-    color:#ff0033;
+    color:#ff1144;
     font-weight:bold;
-    background:rgba(255, 0, 51, 0.15);
-    border: 1px solid rgba(255, 0, 51, 0.5);
+    background:rgba(255, 17, 68, 0.12);
+    border: 1px solid rgba(255, 17, 68, 0.4);
     padding:1px 5px;
     border-radius:3px;
 }
 
-/* NEON BİLDİRİM TOAST */
+/* TOAST BİLDİRİM */
 .toast {
     position: fixed;
     top: -100px;
@@ -307,9 +335,7 @@ h3 {
     transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 10000;
 }
-.toast.show {
-    top: 20px;
-}
+.toast.show { top: 20px; }
 
 /* WATERMARK */
 .watermark{
@@ -323,30 +349,32 @@ h3 {
     letter-spacing:20px;
     pointer-events:none;
     user-select:none;
-    opacity: 0.03; 
+    opacity: 0.02; 
     color: var(--text-heading);
     animation: pulse 4s ease-in-out infinite;
 }
-
 @keyframes pulse{
-    0%,100%{transform:scale(1); opacity: 0.02;}
-    50%{transform:scale(1.02); opacity: 0.05;}
+    0%,100%{transform:scale(1); opacity: 0.01;}
+    50%{transform:scale(1.02); opacity: 0.03;}
 }
 </style>
 </head>
 
 <body>
 
+<!-- DÜZELTİLMİŞ VE GENİŞLETİLMİŞ TEMA SEÇİCİ -->
 <div class="theme-selector">
-    <span class="theme-label">TEMA SEÇİMİ:</span>
-    <div class="theme-dot active" style="background: #ff2a2a;" onclick="changeTheme('dark', this)" title="Cyber Dark"></div>
-    <div class="theme-dot" style="background: #0066ff;" onclick="changeTheme('white', this)" title="Pure White"></div>
-    <div class="theme-dot" style="background: #ff007f;" onclick="changeTheme('pink', this)" title="Cyber Pink (Kızlar)"></div>
-    <div class="theme-dot" style="background: #00d2ff;" onclick="changeTheme('blue', this)" title="Deep Blue (Erkekler)"></div>
-    <div class="theme-dot" style="background: #ff0000; box-shadow: inset 0 0 5px #000;" onclick="changeTheme('red', this)" title="Neon Red"></div>
+    <span class="theme-label">PREMIUM TEMA:</span>
+    <div class="theme-dot active" style="background: #ff2222;" onclick="changeTheme('dark', this)" title="Cyber Punk (Kırmızı)"></div>
+    <div class="theme-dot" style="background: #0077ff;" onclick="changeTheme('blue', this)" title="Deep Sapphire (Mavi)"></div>
+    <div class="theme-dot" style="background: #00ff44;" onclick="changeTheme('green', this)" title="Matrix Neon (Yeşil)"></div>
+    <div class="theme-dot" style="background: #dd00ff;" onclick="changeTheme('purple', this)" title="Acid Purple (Mor)"></div>
+    <div class="theme-dot" style="background: #ff7700;" onclick="changeTheme('orange', this)" title="Amber Glow (Turuncu)"></div>
+    <div class="theme-dot" style="background: #ffffff; border: 1px solid #94a3b8;" onclick="changeTheme('white', this)" title="Ice Nova (Buz Açık)"></div>
+    <div class="theme-dot" style="background: #1c1c1f;" onclick="changeTheme('midnight', this)" title="Midnight Pitch (Zifiri Oled)"></div>
 </div>
 
-<div id="toast-notification" class="toast">⚔️ METİN KOPYALANDI!</div>
+<div id="toast-notification" class="toast">⚡ METİN BAŞARIYLA KOPYALANDI!</div>
 
 <div class="tabs">
     <button class="tab-btn active" onclick="openTab(0)">🧹 Boşluk Temizleyici</button>
@@ -355,6 +383,7 @@ h3 {
 
 <div class="container">
 
+    <!-- TAB 1 -->
     <div class="tab-content active">
         <h3>Metni buraya yapıştır aslan parçası</h3>
         <div id="input1" class="input-area" contenteditable="true" oninput="calculateMeta(1)"></div>
@@ -372,6 +401,7 @@ h3 {
         <div id="output1" class="output" contenteditable="true"></div>
     </div>
 
+    <!-- TAB 2 -->
     <div class="tab-content">
         <h3>Metni buraya yapıştır aslan parçası</h3>
         <div id="input2" class="input-area" contenteditable="true" oninput="calculateMeta(2)"></div>
@@ -395,7 +425,7 @@ h3 {
 
 <script>
 
-/* TEMA MOTORU */
+/* KUSURSUZ ÇALIŞAN TEMA GEÇİŞ MOTORU */
 function changeTheme(themeName, element) {
     if(themeName === 'dark') {
         document.documentElement.removeAttribute('data-theme');
@@ -403,19 +433,19 @@ function changeTheme(themeName, element) {
         document.documentElement.setAttribute('data-theme', themeName);
     }
     
-    // Aktif daire işaretini güncelle
+    // Aktif daire işaretini pürüzsüz güncelle
     document.querySelectorAll('.theme-dot').forEach(dot => dot.classList.remove('active'));
     element.classList.add('active');
 }
 
-/* BİLDİRİM TOAST */
+/* TOAST PANEL */
 function showToast() {
     const toast = document.getElementById("toast-notification");
     toast.classList.add("show");
     setTimeout(() => { toast.classList.remove("show"); }, 2000);
 }
 
-/* SAYAÇLAR */
+/* METİN ANALİZ SAYAÇLARI */
 function calculateMeta(tabIndex) {
     const text = document.getElementById(`input${tabIndex}`).innerText;
     const charCount = text.length;
@@ -425,7 +455,7 @@ function calculateMeta(tabIndex) {
     document.getElementById(`word-count-${tabIndex}`).innerHTML = `Kelime: <strong>${wordCount}</strong>`;
 }
 
-/* TAB GEÇİŞLERI */
+/* SEKME KONTROLÜ */
 function openTab(i){
     document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
     document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
@@ -433,7 +463,7 @@ function openTab(i){
     document.querySelectorAll(".tab-btn")[i].classList.add("active");
 }
 
-/* YASAKLI KELİMELER */
+/* YASAKLI KELİME DETEKTÖRÜ */
 const bannedWords = [
     "yüksek kalite", "yüksek kaliteli", "hakiki deri", "gerçek deri", "%100 deri", "% 100 deri",
     "birinci sınıf", "1. kalite", "1. sınıf", "unisex", "1.sınıf", "1.kalite", "1.kalıte",
@@ -442,8 +472,8 @@ const bannedWords = [
 
 function escapeRegExp(str){ return str.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
 
-function highlight(text){
-    bannedWords.forEach(word=>{
+function highlight(text) {
+    bannedWords.forEach(word => {
         const pattern = escapeRegExp(word).replace(/\s+/g,"\\s+");
         const reg = new RegExp(pattern,"gi");
         text = text.replace(reg, m => `<span class="bad-word">${m}</span>`);
@@ -451,7 +481,7 @@ function highlight(text){
     return text;
 }
 
-/* METİN TEMİZLEME MOTORU */
+/* ARKA PLAN TEMİZLİK MOTORU */
 function cleanGarbageFromText(txt, forceLowercase = false) {
     if (!txt) return "";
     
@@ -477,7 +507,7 @@ function cleanGarbageFromText(txt, forceLowercase = false) {
     return clean;
 }
 
-/* ANA DÖNÜŞTÜRÜCÜ METOT (BOLD KORUYUCU) */
+/* ALGORİTMA ENTITY SARMALAYICI */
 function cleanAndStructureDOM(htmlText, forceLowercase = false) {
     if (!htmlText.trim()) return "";
 
@@ -514,18 +544,16 @@ function cleanAndStructureDOM(htmlText, forceLowercase = false) {
     return highlight(finalLines.join("<br>"));
 }
 
-/* KOPYALAYICI VE 14PX BOYUT ENJEKTÖRÜ */
+/* PANELDEN PANALEYE AKILLI KOPYALAYICI */
 function copyToClipboard(elementId) {
     const element = document.getElementById(elementId);
     const clone = element.cloneNode(true);
     
-    // Yasaklı kelime kırmızı işaretlerini temizle
     clone.querySelectorAll('.bad-word').forEach(el => {
         const textNode = document.createTextNode(el.innerText);
         el.parentNode.replaceChild(textNode, el);
     });
 
-    // Kopyalanan HTML metnini her zaman tam olarak 14px yapacak global sarmalayıcı ekle
     let finalFormattedHTML = `<span style="font-size: 14px; font-family: sans-serif; line-height: 1.6;">${clone.innerHTML}</span>`;
 
     const blob = new Blob([finalFormattedHTML], { type: 'text/html' });
@@ -535,13 +563,12 @@ function copyToClipboard(elementId) {
     navigator.clipboard.write(data).then(() => { showToast(); });
 }
 
-/* TAB 1 - BOŞLUK TEMİZLEME */
+/* TETİKLEYİCİLER */
 function cleanSpaces(){
     let html = document.getElementById("input1").innerHTML;
     document.getElementById("output1").innerHTML = cleanAndStructureDOM(html, false);
 }
 
-// Enter tuşuna basıldığında div içinde düzgün alt satır oluşturma standardı
 document.getElementById("input1").addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
         document.execCommand('insertLineBreak', false, null);
@@ -562,7 +589,6 @@ function clear1(){
     calculateMeta(1);
 }
 
-/* TAB 2 - YAZIM DÜZENLEME */
 function fixText(){
     let html = document.getElementById("input2").innerHTML;
     document.getElementById("output2").innerHTML = cleanAndStructureDOM(html, true);
