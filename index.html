@@ -7,107 +7,105 @@
 
 <style>
 /* ==========================================================================
-   TEMA DEĞİŞKENLERİ (CSS VARIABLES) - VARSAYILAN: DARK TEMA
+   EFSANE CANLI TEMA DEĞİŞKENLERİ (CANLI NEON VE PREMİUM TONLAR)
    ========================================================================== */
 :root {
-    --bg-main: #020204;
-    --bg-container: #070709;
-    --bg-input: #030303;
-    --bg-btn: #0a0a0c;
-    --bg-btn-hover: #111115;
-    --bg-tab-active: #18181b;
+    --bg-main: #06060a;
+    --bg-container: #0d0e15;
+    --bg-input: #020204;
+    --bg-btn: #12131a;
+    --bg-btn-hover: #1a1c29;
+    --bg-tab-active: #1a1c29;
     --text-main: #94a3b8;
-    --text-input: #e4e4e7;
-    --text-heading: #f4f4f5;
-    --text-btn: #64748b;
-    --border-color: #27272a;
-    --border-container: #18181b;
-    --accent-color: #ef4444; 
-    --accent-glow: rgba(239, 68, 68, 0.4);
+    --text-input: #f8fafc;
+    --text-heading: #ffffff;
+    --text-btn: #94a3b8;
+    --border-color: #222533;
+    --border-container: #1e2235;
+    --accent-color: #ff2a2a; /* Aşırı Canlı Siber Kırmızı */
+    --accent-glow: rgba(255, 42, 42, 0.55);
 }
 
-/* AÇIK RENK TEMASI */
+/* PURE WHITE - ASİL VE NET AÇIK MOD */
 html[data-theme="white"] {
-    --bg-main: #f1f5f9;
+    --bg-main: #f8fafc;
     --bg-container: #ffffff;
-    --bg-input: #f8fafc;
+    --bg-input: #f1f5f9;
     --bg-btn: #e2e8f0;
     --bg-btn-hover: #cbd5e1;
     --bg-tab-active: #ffffff;
-    --text-main: #475569;
+    --text-main: #334155;
     --text-input: #0f172a;
-    --text-heading: #1e293b;
-    --text-btn: #64748b;
+    --text-heading: #0f172a;
+    --text-btn: #475569;
     --border-color: #cbd5e1;
-    --border-container: #e2e8f0;
-    --accent-color: #3b82f6; 
-    --accent-glow: rgba(59, 130, 246, 0.2);
+    --border-container: #cbd5e1;
+    --accent-color: #0066ff; /* Canlı Elektrik Mavisi */
+    --accent-glow: rgba(0, 102, 255, 0.3);
 }
 
-/* KIZLARA ÖZEL PEMBE TEMA */
+/* CYBER PINK - KIZLARA ÖZEL NEON FUŞYA */
 html[data-theme="pink"] {
-    --bg-main: #1c0d16;
-    --bg-container: #2d1222;
-    --bg-input: #15060f;
-    --bg-btn: #3d192f;
-    --bg-btn-hover: #4c1d3a;
-    --bg-tab-active: #4c1d3a;
+    --bg-main: #18020c;
+    --bg-container: #2c0417;
+    --bg-input: #100108;
+    --bg-btn: #440624;
+    --bg-btn-hover: #5c0931;
+    --bg-tab-active: #5c0931;
     --text-main: #f472b6;
-    --text-input: #fdf2f8;
-    --text-heading: #fce7f3;
+    --text-input: #fff1f2;
+    --text-heading: #ffffff;
     --text-btn: #f472b6;
-    --border-color: #4c1d3a;
-    --border-container: #3d192f;
-    --accent-color: #ec4899; 
-    --accent-glow: rgba(236, 72, 153, 0.4);
+    --border-color: #5c0931;
+    --border-container: #440624;
+    --accent-color: #ff007f; /* Patlayan Canlı Pembe */
+    --accent-glow: rgba(255, 0, 127, 0.6);
 }
 
-/* ERKEKLERE ÖZEL MAVİ TEMA */
+/* DEEP BLUE - ERKEKLERE ÖZEL ELEKTRİK SAFİR */
 html[data-theme="blue"] {
-    --bg-main: #050b14;
-    --bg-container: #0b1528;
-    --bg-input: #030710;
-    --bg-btn: #0f203c;
-    --bg-btn-hover: #172f57;
-    --bg-tab-active: #172f57;
-    --text-main: #60a5fa;
-    --text-input: #eff6ff;
-    --text-heading: #dbeafe;
-    --text-btn: #3b82f6;
-    --border-color: #172f57;
-    --border-container: #0f203c;
-    --accent-color: #2563eb; 
-    --accent-glow: rgba(37, 99, 235, 0.4);
+    --bg-main: #020617;
+    --bg-container: #0f172a;
+    --bg-input: #030712;
+    --bg-btn: #1e293b;
+    --bg-btn-hover: #334155;
+    --bg-tab-active: #334155;
+    --text-main: #38bdf8;
+    --text-input: #f0f9ff;
+    --text-heading: #ffffff;
+    --text-btn: #38bdf8;
+    --border-color: #334155;
+    --border-container: #1e293b;
+    --accent-color: #00d2ff; /* Ultra Parlak Siber Mavi */
+    --accent-glow: rgba(0, 210, 255, 0.6);
 }
 
-/* NEON KIRMIZI TEMA */
+/* NEON RED - AGRESİF CEHENNEM KIRMISIZI */
 html[data-theme="red"] {
-    --bg-main: #140505;
-    --bg-container: #280b0b;
-    --bg-input: #0f0303;
-    --bg-btn: #3c0f0f;
-    --bg-btn-hover: #571717;
-    --bg-tab-active: #571717;
+    --bg-main: #1a0000;
+    --bg-container: #330000;
+    --bg-input: #0f0000;
+    --bg-btn: #4d0000;
+    --bg-btn-hover: #660000;
+    --bg-tab-active: #660000;
     --text-main: #f87171;
-    --text-input: #fef2f2;
-    --text-heading: #fee2e2;
-    --text-btn: #ef4444;
-    --border-color: #571717;
-    --border-container: #3c0f0f;
-    --accent-color: #dc2626; 
-    --accent-glow: rgba(220, 38, 38, 0.5);
+    --text-input: #fff5f5;
+    --text-heading: #ffffff;
+    --text-btn: #ff4d4d;
+    --border-color: #660000;
+    --border-container: #4d0000;
+    --accent-color: #ff0000; /* Gerçek Saf Neon Kırmızı */
+    --accent-glow: rgba(255, 0, 0, 0.7);
 }
 
 *{box-sizing:border-box;}
 
-/* 🐱 ÖZEL ÇİZİM TOMBİŞ BEYAZ KEDİ İMLECİ (0 0 AKTİF EDİLDİ TIKLAMA ENGELLENMİYOR) 🐱 */
+/* 🎯 İMLEÇLER ORİJİNAL VE KUSURSUZ STANDARDA DÖNDÜRÜLDÜ */
 html, body, .input-area, div {
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><circle cx='16' cy='18' r='11' fill='%23ffffff' stroke='%23444' stroke-width='0.5'/><path d='M6 11 L11 7 L12 13 Z' fill='%23ffffff' stroke='%23444' stroke-width='0.5'/><path d='M26 11 L21 7 L20 13 Z' fill='%23ffffff' stroke='%23444' stroke-width='0.5'/><path d='M7 10 L10 8 L11 12 Z' fill='%23ffb6c1'/><path d='M25 10 L22 8 L21 12 Z' fill='%23ffb6c1'/><circle cx='12' cy='16' r='1.5' fill='%23222222'/><circle cx='20' cy='16' r='1.5' fill='%23222222'/><ellipse cx='8' cy='19' rx='2' ry='1' fill='%23ffb6c1' opacity='0.7'/><ellipse cx='24' cy='19' rx='2' ry='1' fill='%23ffb6c1' opacity='0.7'/><polygon points='16,18 14,16 18,16' fill='%23ffb6c1'/><path d='M14 20 Q16 22 18 20' stroke='%23222222' stroke-width='1' fill='none'/></svg>") 0 0, auto !important;
+    cursor: default;
 }
-
-/* 🐾 ÖZEL ÇİZİM PEMBE YASTIKÇIKLI ŞİRİN PATİ (0 0 AKTİF EDİLDİ TIKLAMA ENGELLENMİYOR) 🐾 */
 button, .tab-btn, .theme-dot, .input-area:hover, .output:hover {
-    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><ellipse cx='16' cy='19' rx='8' ry='7' fill='%23ffffff' stroke='%23444' stroke-width='0.5'/><ellipse cx='16' cy='20' rx='5' ry='4' fill='%23ffb6c1'/><circle cx='9' cy='12' r='3.5' fill='%23ffffff' stroke='%23444' stroke-width='0.5'/><circle cx='9' cy='12' r='2' fill='%23ffb6c1'/><circle cx='16' cy='9' r='4' fill='%23ffffff' stroke='%23444' stroke-width='0.5'/><circle cx='16' cy='9' r='2.5' fill='%23ffb6c1'/><circle cx='23' cy='12' r='3.5' fill='%23ffffff' stroke='%23444' stroke-width='0.5'/><circle cx='23' cy='12' r='2' fill='%23ffb6c1'/></svg>") 0 0, pointer !important;
+    cursor: pointer;
 }
 
 body{
@@ -125,32 +123,37 @@ body{
 .theme-selector {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 12px;
     max-width: 900px;
     margin: 0 auto 15px auto;
     align-items: center;
+    background: var(--bg-container);
+    padding: 10px 15px;
+    border-radius: 6px;
+    border: 1px solid var(--border-container);
 }
 .theme-label {
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     font-weight: bold;
     color: var(--text-btn);
 }
 .theme-dot {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     border: 2px solid transparent;
-    transition: all 0.2s;
-    box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 .theme-dot:hover {
-    transform: scale(1.2);
+    transform: scale(1.25);
 }
 .theme-dot.active {
     border-color: var(--text-heading) !important;
-    transform: scale(1.1);
+    transform: scale(1.15);
+    box-shadow: 0 0 15px var(--accent-color);
 }
 
 /* TABS CONTAINER */
@@ -209,6 +212,7 @@ button:hover, .tab-btn:hover {
     padding: 25px;
     border-radius: 6px;
     border: 1px solid var(--border-container);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 .tab-content.active{
@@ -225,7 +229,7 @@ h3 {
     margin-bottom: 20px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    border-left: 3px solid var(--accent-color);
+    border-left: 4px solid var(--accent-color);
     padding-left: 10px;
 }
 
@@ -249,6 +253,7 @@ h3 {
 
 .input-area:focus, .output:focus {
     border-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-glow);
 }
 
 .output{
@@ -266,11 +271,7 @@ h3 {
     gap: 15px;
 }
 .meta-info span strong {
-    color: #86efac;
-}
-
-html[data-theme="white"] .meta-info span strong {
-    color: #16a34a;
+    color: #10b981; /* Canlı Yeşil */
 }
 
 .action-buttons {
@@ -282,12 +283,12 @@ html[data-theme="white"] .meta-info span strong {
 
 /* SİBER KIRMIZI YASAKLI KELİME */
 .bad-word{
-    color:#ff0000;
+    color:#ff0033;
     font-weight:bold;
-    background:rgba(255, 0, 0, 0.1);
-    border: 1px solid rgba(255, 0, 0, 0.4);
-    padding:1px 4px;
-    border-radius:2px;
+    background:rgba(255, 0, 51, 0.15);
+    border: 1px solid rgba(255, 0, 51, 0.5);
+    padding:1px 5px;
+    border-radius:3px;
 }
 
 /* NEON BİLDİRİM TOAST */
@@ -296,13 +297,13 @@ html[data-theme="white"] .meta-info span strong {
     top: -100px;
     right: 20px;
     background: var(--bg-container);
-    border: 1px solid var(--accent-color);
+    border: 2px solid var(--accent-color);
     color: var(--text-heading);
-    padding: 12px 24px;
+    padding: 14px 28px;
     border-radius: 4px;
     font-size: 13px;
     font-weight: bold;
-    box-shadow: 0 0 20px var(--accent-glow);
+    box-shadow: 0 0 25px var(--accent-glow);
     transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 10000;
 }
@@ -337,12 +338,12 @@ html[data-theme="white"] .meta-info span strong {
 <body>
 
 <div class="theme-selector">
-    <span class="theme-label">TEMA:</span>
-    <div class="theme-dot active" style="background: #020204;" onclick="changeTheme('dark', this)" title="Cyber Dark"></div>
-    <div class="theme-dot" style="background: #ffffff; border: 1px solid #cbd5e1;" onclick="changeTheme('white', this)" title="Pure White"></div>
-    <div class="theme-dot" style="background: #ec4899;" onclick="changeTheme('pink', this)" title="Cyber Pink (Kızlar)"></div>
-    <div class="theme-dot" style="background: #2563eb;" onclick="changeTheme('blue', this)" title="Deep Blue (Erkekler)"></div>
-    <div class="theme-dot" style="background: #dc2626;" onclick="changeTheme('red', this)" title="Neon Red"></div>
+    <span class="theme-label">TEMA SEÇİMİ:</span>
+    <div class="theme-dot active" style="background: #ff2a2a;" onclick="changeTheme('dark', this)" title="Cyber Dark"></div>
+    <div class="theme-dot" style="background: #0066ff;" onclick="changeTheme('white', this)" title="Pure White"></div>
+    <div class="theme-dot" style="background: #ff007f;" onclick="changeTheme('pink', this)" title="Cyber Pink (Kızlar)"></div>
+    <div class="theme-dot" style="background: #00d2ff;" onclick="changeTheme('blue', this)" title="Deep Blue (Erkekler)"></div>
+    <div class="theme-dot" style="background: #ff0000; box-shadow: inset 0 0 5px #000;" onclick="changeTheme('red', this)" title="Neon Red"></div>
 </div>
 
 <div id="toast-notification" class="toast">⚔️ METİN KOPYALANDI!</div>
@@ -402,7 +403,7 @@ function changeTheme(themeName, element) {
         document.documentElement.setAttribute('data-theme', themeName);
     }
     
-    // Aktif daire işaretleme görseli güncellemesi
+    // Aktif daire işaretini güncelle
     document.querySelectorAll('.theme-dot').forEach(dot => dot.classList.remove('active'));
     element.classList.add('active');
 }
