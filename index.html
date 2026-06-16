@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tengri Panel v3.0</title>
+<title>Tengri Panel v3.5</title>
 
 <style>
 /* ==========================================================================
@@ -138,9 +138,8 @@ html[data-theme="midnight"] {
 
 *{box-sizing:border-box;}
 
-/* Standart ve Kusursuz İmleç Yapısı */
 html, body, .input-area, div { cursor: default; }
-button, .tab-btn, .theme-dot { cursor: pointer; }
+button, .tab-btn, .theme-dot, .synergy-box { cursor: pointer; }
 
 body {
     margin:0;
@@ -159,7 +158,7 @@ body {
     justify-content: flex-end;
     gap: 12px;
     max-width: 900px;
-    margin: 0 auto 20px auto;
+    margin: 0 auto 10px auto;
     align-items: center;
     background: var(--bg-container);
     padding: 12px 18px;
@@ -181,13 +180,38 @@ body {
     transition: all 0.2s ease;
     box-shadow: 0 0 8px rgba(0,0,0,0.4);
 }
-.theme-dot:hover {
-    transform: scale(1.25);
-}
+.theme-dot:hover { transform: scale(1.25); }
 .theme-dot.active {
     border-color: var(--text-heading) !important;
     transform: scale(1.15);
     box-shadow: 0 0 15px var(--accent-color);
+}
+
+/* 🎲 SİNERJİ SÖZÜ KUTUSU */
+.synergy-box {
+    max-width: 900px;
+    margin: 0 auto 20px auto;
+    background: var(--bg-container);
+    border: 1px dashed var(--border-color);
+    border-left: 4px solid var(--accent-color);
+    padding: 14px 20px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-heading);
+    user-select: none;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+}
+.synergy-box:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px var(--accent-glow);
+    transform: translateY(-1px);
+}
+.synergy-box span {
+    color: var(--accent-color);
+    margin-right: 5px;
 }
 
 /* SEKME ALANI */
@@ -262,7 +286,7 @@ h3 {
     padding-left: 10px;
 }
 
-/* GİRİŞ - ÇIKIŞ TEXTAREA ALANLARI */
+/* TEXTAREA ALANLARI */
 .input-area, .output{
     width:100%;
     height:220px;
@@ -298,9 +322,7 @@ h3 {
     gap: 15px;
     opacity: 0.8;
 }
-.meta-info span strong {
-    color: var(--accent-color);
-}
+.meta-info span strong { color: var(--accent-color); }
 
 .action-buttons {
     margin-bottom: 25px;
@@ -362,7 +384,6 @@ h3 {
 
 <body>
 
-<!-- DÜZELTİLMİŞ VE GENİŞLETİLMİŞ TEMA SEÇİCİ -->
 <div class="theme-selector">
     <span class="theme-label">PREMIUM TEMA:</span>
     <div class="theme-dot active" style="background: #ff2222;" onclick="changeTheme('dark', this)" title="Cyber Punk (Kırmızı)"></div>
@@ -374,6 +395,10 @@ h3 {
     <div class="theme-dot" style="background: #1c1c1f;" onclick="changeTheme('midnight', this)" title="Midnight Pitch (Zifiri Oled)"></div>
 </div>
 
+<div class="synergy-box" id="synergy-display" onclick="generateSynergyWord()">
+    <span>🎲 GÜNÜN SİNERJİSİ:</span> <span id="synergy-text" style="color: inherit; font-weight: normal;">Yükleniyor...</span>
+</div>
+
 <div id="toast-notification" class="toast">⚡ METİN BAŞARIYLA KOPYALANDI!</div>
 
 <div class="tabs">
@@ -383,7 +408,6 @@ h3 {
 
 <div class="container">
 
-    <!-- TAB 1 -->
     <div class="tab-content active">
         <h3>Metni buraya yapıştır aslan parçası</h3>
         <div id="input1" class="input-area" contenteditable="true" oninput="calculateMeta(1)"></div>
@@ -401,7 +425,6 @@ h3 {
         <div id="output1" class="output" contenteditable="true"></div>
     </div>
 
-    <!-- TAB 2 -->
     <div class="tab-content">
         <h3>Metni buraya yapıştır aslan parçası</h3>
         <div id="input2" class="input-area" contenteditable="true" oninput="calculateMeta(2)"></div>
@@ -425,27 +448,72 @@ h3 {
 
 <script>
 
-/* KUSURSUZ ÇALIŞAN TEMA GEÇİŞ MOTORU */
+/* 🎯 30 ADET EĞLENCELİ VE KOMİK SİNERJİ SÖZÜ LİSTESİ */
+const synergyQuotes = [
+    "Bugün yapacağın kopyala-yapıştırlar, yarınki ciroların temelidir aslan parçası.",
+    "Unutma; trendyol algoritması gözyaşıyla beslenir, metni temizle ve dik dur!",
+    "Hakiki deri yazan parmakların dert görmesin, işimizin başındayız.",
+    "O '1. Kalite' kelimesi buraya gelecek ve imha edilecek. Başka yolu yok.",
+    "Müşteri yorumlarında 'Hızlı kargo teşekkürler' yazdıracak o kusursuz metin tam karşında.",
+    "Bugün sisteme girilen her harf, gelecekteki bir iade talebini engeller.",
+    "Gözlerin mi yoruldu? Hemen bir kahve kap ve space tuşunu dövmeye devam et.",
+    "Panel cayır cayır parlıyor, senin metinler hala neden ham halde?",
+    "Bir kopyala-yapıştır savaşçısı asla pes etmez, sadece Ctrl+Z yapar.",
+    "Bugün 'Yüksek Kalite' yazmadan bir ürünü övmeyi başarabilirsen efsane olursun.",
+    "E-ticaret uzun bir yolculuktur, Tengri Panel ise senin altındaki spor arabadır.",
+    "Giriş alanına bakıp derin nefes al... O gereksiz boşlukları tırnaklayacağız!",
+    "Müşteri açıklamayı okumadan alacak olsa da biz buraya sanatımızı bırakıyoruz.",
+    "Mağazanın suspend yemesini istemiyorsan o metne düzgünce takla attır.",
+    "Ctrl+C senin kılıcın, Ctrl+V ise senin kalkanındır. Savaş başlasın!",
+    "Metni yapıştır, butona bas ve arkana yaslan. Gerisini Tengri halleder.",
+    "Biz burada sadece boşluk temizlemiyoruz, dijital kaosun önüne geçiyoruz.",
+    "Günün tavsiyesi: Yasaklı kelimeleri silerken patronun arkandan geçmediğinden emin ol.",
+    "Bu panel sadece siber renklerden ibaret değil, burası bir üretkenlik mabedi.",
+    "Yazım hataları müşteriyi kaçırır, Tengri Panel ise onları sepete hapseder.",
+    "Bugün yapacağın temizlik, yarın yapacağın ciroya göz kırpıyor.",
+    "İçerideki 'unisex' kelimesini yok ettiğinde dünyadaki bir editör huzura eriyor.",
+    "Zor bir gün mü? Unutma, o kopyalanan HTML kodları kendi kendini temizleyemez.",
+    "Space tuşuna çok sert basma, onun da bir kalbi ve basım ömrü var.",
+    "Algoritmanın canı sıkkın olabilir ama senin metnin jilet gibi olmak zorunda.",
+    "Trendyol paneline girmeden önce Tengri'den geçmeyen metin, metin değildir.",
+    "Şu an tam olarak kaç karakter temizlediğini sayaçlar biliyor, skorunu yüksek tut!",
+    "Bir e-ticaret dehası metni temizlemeden asla kopyalamaz. Sen bir dehasın.",
+    "Metin bittiğinde kopyala butonuna basmanın verdiği o tatmin hissi paha biçilemez.",
+    "Klavye seslerin ofiste yankılansın, bırak herkes ne kadar sıkı çalıştığını duysun!"
+];
+
+/* RANDOM SÖZ ÜRETİCİ MOTOR */
+let lastIndex = -1;
+function generateSynergyWord() {
+    let randomIndex;
+    // Üst üste aynı sözün gelmesini engelleme mantığı
+    do {
+        randomIndex = Math.floor(Math.random() * synergyQuotes.length);
+    } while (randomIndex === lastIndex);
+    
+    lastIndex = randomIndex;
+    document.getElementById("synergy-text").innerText = synergyQuotes[randomIndex];
+}
+
+/* TEMA MOTORU */
 function changeTheme(themeName, element) {
     if(themeName === 'dark') {
         document.documentElement.removeAttribute('data-theme');
     } else {
         document.documentElement.setAttribute('data-theme', themeName);
     }
-    
-    // Aktif daire işaretini pürüzsüz güncelle
     document.querySelectorAll('.theme-dot').forEach(dot => dot.classList.remove('active'));
     element.classList.add('active');
 }
 
-/* TOAST PANEL */
+/* BİLDİRİM TOAST */
 function showToast() {
     const toast = document.getElementById("toast-notification");
     toast.classList.add("show");
     setTimeout(() => { toast.classList.remove("show"); }, 2000);
 }
 
-/* METİN ANALİZ SAYAÇLARI */
+/* SAYAÇLAR */
 function calculateMeta(tabIndex) {
     const text = document.getElementById(`input${tabIndex}`).innerText;
     const charCount = text.length;
@@ -455,7 +523,7 @@ function calculateMeta(tabIndex) {
     document.getElementById(`word-count-${tabIndex}`).innerHTML = `Kelime: <strong>${wordCount}</strong>`;
 }
 
-/* SEKME KONTROLÜ */
+/* TAB GEÇİŞLERI */
 function openTab(i){
     document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
     document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
@@ -463,7 +531,7 @@ function openTab(i){
     document.querySelectorAll(".tab-btn")[i].classList.add("active");
 }
 
-/* YASAKLI KELİME DETEKTÖRÜ */
+/* YASAKLI KELİMELER */
 const bannedWords = [
     "yüksek kalite", "yüksek kaliteli", "hakiki deri", "gerçek deri", "%100 deri", "% 100 deri",
     "birinci sınıf", "1. kalite", "1. sınıf", "unisex", "1.sınıf", "1.kalite", "1.kalıte",
@@ -481,10 +549,8 @@ function highlight(text) {
     return text;
 }
 
-/* ARKA PLAN TEMİZLİK MOTORU */
 function cleanGarbageFromText(txt, forceLowercase = false) {
     if (!txt) return "";
-    
     let clean = txt
         .replace(/&nbsp;/gi, " ")
         .replace(/nbsp;/gi, " ")
@@ -503,14 +569,11 @@ function cleanGarbageFromText(txt, forceLowercase = false) {
         clean = clean.toLowerCase();
         clean = clean.replace(/(^|[.!?]\s+)([a-zçğıöşü])/g, (m, p1, p2) => p1 + p2.toUpperCase());
     }
-    
     return clean;
 }
 
-/* ALGORİTMA ENTITY SARMALAYICI */
 function cleanAndStructureDOM(htmlText, forceLowercase = false) {
     if (!htmlText.trim()) return "";
-
     let sandbox = document.createElement("div");
     sandbox.innerHTML = htmlText;
     
@@ -523,7 +586,6 @@ function cleanAndStructureDOM(htmlText, forceLowercase = false) {
             }
         }
     }
-    
     traverseAndClean(sandbox);
     
     let structuralHTML = sandbox.innerHTML
@@ -540,30 +602,23 @@ function cleanAndStructureDOM(htmlText, forceLowercase = false) {
             finalLines.push(trimmedLine);
         }
     });
-    
     return highlight(finalLines.join("<br>"));
 }
 
-/* PANELDEN PANALEYE AKILLI KOPYALAYICI */
 function copyToClipboard(elementId) {
     const element = document.getElementById(elementId);
     const clone = element.cloneNode(true);
-    
     clone.querySelectorAll('.bad-word').forEach(el => {
         const textNode = document.createTextNode(el.innerText);
         el.parentNode.replaceChild(textNode, el);
     });
-
     let finalFormattedHTML = `<span style="font-size: 14px; font-family: sans-serif; line-height: 1.6;">${clone.innerHTML}</span>`;
-
     const blob = new Blob([finalFormattedHTML], { type: 'text/html' });
     const textBlob = new Blob([clone.innerText], { type: 'text/plain' });
     const data = [new ClipboardItem({ 'text/html': blob, 'text/plain': textBlob })];
-    
     navigator.clipboard.write(data).then(() => { showToast(); });
 }
 
-/* TETİKLEYİCİLER */
 function cleanSpaces(){
     let html = document.getElementById("input1").innerHTML;
     document.getElementById("output1").innerHTML = cleanAndStructureDOM(html, false);
@@ -601,6 +656,10 @@ function clear2(){
     calculateMeta(2);
 }
 
+// SAYFA AÇILDIĞINDA İLK RANDOM SÖZÜ TETİKLE
+window.onload = function() {
+    generateSynergyWord();
+};
 </script>
 
 </body>
