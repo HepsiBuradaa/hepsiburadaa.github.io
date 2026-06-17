@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tengri Panel Pro</title>
+<title>Tengri Panel Ultra</title>
 
 <style>
 /* ==========================================================================
@@ -587,7 +587,7 @@ const oracleQuotes = [
     "Bugün birisi sana 'Bakar mısın?' diyecek. Duymamazlıktan gel, iş yıkmaya çalışıyorlar.",
     "Kaderinde yakın zamanda bir zam, terfi veya en kötü ihtimalle çok tatlı bir öğle yemeği ısmarlanması var.",
     "Metnini temizledin, peki ya zihnini? Bir ara arkana yaslan ve derin bir nefes al şampiyon.",
-    "Bugün kurumsal dünyayı dize getirebilecek bir energyye sahipsin ama canın istemiyor, çok haklısın.",
+    "Bugün kurumsal dünyayı dize getirebilecek bir enerjiye sahipsin ama canın istemiyor, çok haklısın.",
     "Gelecekte harika bir tatil görüyorum. Ama o geleceğe daha çok var, şimdi şu metni hallet.",
     "Siber evren sana mesaj gönderiyor: 'Bugün o klavyeye biraz daha yumuşak bas, o da bir can.'",
     "Seni çekemeyenlerin algoritması çöksün, tarayıcıları kapansın, ramleri yansın. Sen devam et.",
@@ -615,7 +615,7 @@ const oracleQuotes = [
     "Küreye göre bugün alacağın en iyi karar, işi tam zamanında bırakıp bilgisayarı kapatmak olacak.",
     "Bugün internet hızın tavan yapacak, indirdiğin her dosya saniyeler içinde inecek. Saf lüks.",
     "Metindeki tüm pislikleri temizledin. Artık tertemiz bir sayfan var. Hayatın da böyle ferah olsun.",
-    "Bugün biri sana 'Bitu acil yapar mısın?' diyecek. 'Acil' kelimesinin sözlük anlamını sorgulat ona.",
+    "Bugün biri sana 'Bunu acil yapar mısın?' diyecek. 'Acil' kelimesinin sözlük anlamını sorgulat ona.",
     "Kafandaki düşünceler şu an temizlenmemiş bir HTML metni gibi karmakarışık. Bi' dur, sakinleş.",
     "Bugün arkandan konuşanların tarayıcı geçmişi yanlışlıkla patronlarına mail gitsin. Amin.",
     "Küre parlıyor: Bugün yapacağın işler gelecekteki rahatının temel taşları olacak. Sık dişini.",
@@ -689,54 +689,15 @@ function highlight(text) {
 }
 
 /* ==========================================================================
-   🎯 YENİ NESİL GELİŞMİŞ BOŞLUK VE SATIR TEMİZLEME MOTORU (KUSURSUZ SÜRÜM)
+   🎯 ULTRA GELİŞMİŞ "SÜPER TEMİZLİK" METİN MOTORU (KESİN ÇÖZÜM)
    ========================================================================== */
 
-function cleanGarbageFromText(txt) {
-    if (!txt) return "";
-    return txt
-        .replace(/[\r\u200B\u200C\u200D\uFEFF]/g, "") // Gizli sistem kırılmalarını yok et
-        .replace(/&nbsp;/gi, " ")
-        .replace(/nbsp;/gi, " ")
-        .replace(/;nbsp/gi, " ")
-        .replace(/&nbsp/gi, " ")
-        .replace(/\u00A0/g, " ")
-        .replace(/&amp;;/gi, " ")
-        .replace(/&amp;/gi, " ")
-        .replace(/&[^;]+;/g, " ")
-        .replace(/&/g, " ")
-        .replace(/;/g, " ")
-        .replace(/[ \t]+/g, " "); // Çoklu tab ve boşlukları teke indir
-}
+function sanitizeHTMLStructure(htmlContent) {
+    let tempDiv = document.createElement("div");
+    tempDiv.innerHTML = htmlContent;
 
-function processDOMNodes(node, forceLowercase = false) {
-    if (node.nodeType === Node.TEXT_NODE) {
-        let cleanText = cleanGarbageFromText(node.textContent);
-        
-        // B + veya B - kombinasyonlarını jilet gibi birleştir (Teknik hata önleyici)
-        cleanText = cleanText.replace(/B\s*\+\s*/gi, "B+").replace(/B\s*-\s*/gi, "B-");
-        
-        if (forceLowercase) {
-            cleanText = cleanText.toLocaleLowerCase('tr-TR');
-        }
-        node.textContent = cleanText;
-    } else if (node.nodeType === Node.ELEMENT_NODE) {
-        for (let i = 0; i < node.childNodes.length; i++) {
-            processDOMNodes(node.childNodes[i], forceLowercase);
-        }
-    }
-}
-
-function cleanAndStructureDOM(inputElementId, forceLowercase = false) {
-    const inputArea = document.getElementById(inputElementId);
-    if (!inputArea) return "";
-
-    // Orijinal veriyi klonlayıp sanal ortamda işleme alıyoruz
-    let sandbox = document.createElement("div");
-    sandbox.innerHTML = inputArea.innerHTML;
-
-    // Tüm paragraf ve div bloklarının sınırlarına kontrollü ayrım işareti koyuyoruz
-    let blocks = sandbox.querySelectorAll('p, div, br, li');
+    // Satır koruması için her blok elemanı (\n) işaretine dönüştürüyoruz
+    let blocks = tempDiv.querySelectorAll('p, div, br, li, tr');
     blocks.forEach(el => {
         if (el.tagName.toLowerCase() === 'br') {
             el.before(document.createTextNode('\n'));
@@ -746,30 +707,83 @@ function cleanAndStructureDOM(inputElementId, forceLowercase = false) {
         }
     });
 
-    // 1. Aşama: DOM ağacındaki tüm metinleri temizle (Kalın tagler korunur)
-    processDOMNodes(sandbox, forceLowercase);
+    // Sadece bold (strong, b) taglerini koru, diğer tüm span/style çöplerini kazı!
+    let allElements = tempDiv.getElementsByTagName("*");
+    for (let i = allElements.length - 1; i >= 0; i--) {
+        let el = allElements[i];
+        let tagName = el.tagName.toLowerCase();
+        if (tagName !== 'strong' && tagName !== 'b') {
+            // Elementin sadece içindeki metni/yapıyı tut, dış etiketini (span vb.) patlat
+            el.outerHTML = el.innerHTML;
+        } else {
+            // Bold etiketlerinin içindeki tüm gereksiz class ve style niteliklerini sıfırla
+            el.removeAttribute('style');
+            el.removeAttribute('class');
+            el.removeAttribute('id');
+        }
+    }
+    return tempDiv.innerHTML;
+}
 
-    // 2. Aşama: Satırları ayır ve boş olan, çöp barındıran tüm satırları filtrele
-    let rawHTML = sandbox.innerHTML;
-    let rawLines = rawHTML.split('\n');
-    let finalProcessedLines = [];
+function ultimateClean(txt, forceLowercase = false) {
+    if (!txt) return "";
+
+    // 1. Aşama: Gizli sistem boşluklarını ve inatçı web kodlarını yok et
+    let clean = txt
+        .replace(/[\r\u200B\u200C\u200D\uFEFF]/g, "") 
+        .replace(/&nbsp;/gi, " ")
+        .replace(/nbsp;/gi, " ")
+        .replace(/;nbsp/gi, " ")
+        .replace(/&nbsp/gi, " ")
+        .replace(/\u00A0/g, " ")
+        .replace(/&amp;;/gi, " ")
+        .replace(/&amp;/gi, " ")
+        .replace(/&[^;]+;/g, " ")
+        .replace(/&/g, " ")
+        .replace(/;/g, " ");
+
+    // 2. Aşama: Teknik ifadeleri (B +, B -) jilet gibi sıfır boşluğa çek
+    clean = clean.replace(/B\s*\+\s*/gi, "B+").replace(/B\s*-\s*/gi, "B-");
+
+    // 3. Aşama: Çoklu boşlukları ve tabları tek boşluğa indirge
+    clean = clean.replace(/[ \t]+/g, " ");
+
+    if (forceLowercase) {
+        clean = clean.toLocaleLowerCase('tr-TR');
+    }
+    return clean;
+}
+
+function processUltraEngine(inputElementId, forceLowercase = false) {
+    const inputArea = document.getElementById(inputElementId);
+    if (!inputArea || !inputArea.innerHTML.trim()) return "";
+
+    // 1. Adım: HTML'deki tüm gereksiz span ve harici tarayıcı çöplerini soy
+    let sanitizedHTML = sanitizeHTMLStructure(inputArea.innerHTML);
+
+    // 2. Adım: Satır satır parçala ve her satırı bağımsız olarak temizle
+    let rawLines = sanitizedHTML.split('\n');
+    let dynamicResultLines = [];
 
     rawLines.forEach(line => {
-        // Satırın içindeki HTML etiketlerini soyup gerçek bir içerik var mı kontrol ediyoruz
-        let textCheck = line.replace(/<[^>]*>/g, "").replace(/\s+/g, "").trim();
+        // Satırın içindeki bold taglerini koruyarak saf metin temizliği yapıyoruz
+        let cleanedLine = ultimateClean(line, forceLowercase);
         
-        if (textCheck !== "") {
-            let processedLine = line.trim();
+        // Satırın gerçekten içi dolu mu (boş etiket mi kalmış) kontrolü
+        let contentCheck = cleanedLine.replace(/<[^>]*>/g, "").replace(/\s+/g, "").trim();
+        
+        if (contentCheck !== "") {
+            let finalizedLine = cleanedLine.trim();
             if (forceLowercase) {
-                // Türkçe cümle başlarını akıllı büyütme koruması
-                processedLine = processedLine.replace(/(^|>|[.!?]\s+)([a-zçğıöşü])/g, (m, p1, p2) => p1 + p2.toLocaleUpperCase('tr-TR'));
+                // Türkçe dil kurallarına uygun cümle başı büyütme desteği
+                finalizedLine = finalizedLine.replace(/(^|>|[.!?]\s+)([a-zçğıöşü])/g, (m, p1, p2) => p1 + p2.toLocaleUpperCase('tr-TR'));
             }
-            finalProcessedLines.push(processedLine);
+            dynamicResultLines.push(finalizedLine);
         }
     });
 
-    // Satırları tek bir satır atlama işaretiyle bağla ve yasaklı kelimeleri işaretle
-    return highlight(finalProcessedLines.join("<br>"));
+    // Temizlenen satırları tek br ile birleştir ve yasaklı kelime filtresinden geçir
+    return highlight(dynamicResultLines.join("<br>"));
 }
 
 function copyToClipboard(elementId) {
@@ -787,11 +801,11 @@ function copyToClipboard(elementId) {
 }
 
 function cleanSpaces(){
-    document.getElementById("output1").innerHTML = cleanAndStructureDOM("input1", false);
+    document.getElementById("output1").innerHTML = processUltraEngine("input1", false);
 }
 
 function fixText(){
-    document.getElementById("output2").innerHTML = cleanAndStructureDOM("input2", true);
+    document.getElementById("output2").innerHTML = processUltraEngine("input2", true);
 }
 
 function handleEnterKey(e) {
