@@ -499,7 +499,6 @@ h3 {
 
 <body>
 
-<!-- PREMIUM TEMA SEÇİCİ -->
 <div class="theme-selector">
     <span class="theme-label">TEMA:</span>
     <div class="theme-dot id-dark-dot active" style="background: #1c1c1e; border: 1px solid #3a3a3c;" onclick="changeTheme('dark', this)" title="Midnight OLED (Derin Siyah)"></div>
@@ -514,7 +513,6 @@ h3 {
     <div class="theme-dot" style="background: #ffffff; border: 1px solid #cbd5e1;" onclick="changeTheme('white', this)" title="Obsidian White (Yumuşak Platin)"></div>
 </div>
 
-<!-- 🔮 NEW: TENGRİ KEHANET MERKEZİ -->
 <div class="oracle-box">
     <div class="oracle-sphere-wrapper">
         <div class="pulse-glow"></div>
@@ -535,7 +533,6 @@ h3 {
 
 <div class="container">
 
-    <!-- TAB 1 -->
     <div class="tab-content active">
         <h3>Metni buraya yapıştır aslan parçası</h3>
         <div id="input1" class="input-area" contenteditable="true" oninput="calculateMeta(1)"></div>
@@ -553,7 +550,6 @@ h3 {
         <div id="output1" class="output" contenteditable="true"></div>
     </div>
 
-    <!-- TAB 2 -->
     <div class="tab-content">
         <h3>Metni buraya yapıştır aslan parçası</h3>
         <div id="input2" class="input-area" contenteditable="true" oninput="calculateMeta(2)"></div>
@@ -619,7 +615,7 @@ const oracleQuotes = [
     "Bugün kurumsallık maskeni evde unutmuş gibisin, için kıpır kıpır. Geyik yapacak birini bul.",
     "Yakın çevrenden biri sana gizli bir hayranlık besliyor. Muhtemelen bu paneli nasıl bu kadar hızlı kullandığına şaşırıyor.",
     "Küreye göre bugün alacağın en iyi karar, işi tam zamanında bırakıp bilgisayarı kapatmak olacak.",
-    "Bugün internet hızın tavan yapacak, indirdiğin her dosya saniyeler içinde inecek. Saf lüks.",
+    "Bugün internet hızın tavan yapacak, indirdiğin her dosya saniyeler içinde incecek. Saf lüks.",
     "Metindeki tüm pislikleri temizledin. Artık tertemiz bir sayfan var. Hayatın da böyle ferah olsun.",
     "Bugün biri sana 'Bunu acil yapar mısın?' diyecek. 'Acil' kelimesinin sözlük anlamını sorgulat ona.",
     "Kafandaki düşünceler şu an temizlenmemiş bir HTML metni gibi karmakarışık. Bi' dur, sakinleş.",
@@ -751,9 +747,8 @@ function cleanAndStructureDOM(htmlText, forceLowercase = false) {
     let finalLines = [];
     
     lines.forEach(line => {
-        let trimmedLine = line.trim();
+        let trimmedLine = line.replace(/[\s\u00A0]+/g, " ").trim();
         if (trimmedLine !== "" && trimmedLine !== "<br>" && trimmedLine !== "<b></b>" && trimmedLine !== "<strong></strong>") {
-            trimmedLine = trimmedLine.replace(/>\s+</g, "><").replace(/[ \t]+/g, " ");
             finalLines.push(trimmedLine);
         }
     });
