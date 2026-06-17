@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tengri Panel Alpha</title>
+<title>Tengri Panel Ultra - Final</title>
 
 <style>
 /* ==========================================================================
@@ -587,7 +587,7 @@ const oracleQuotes = [
     "Bugün birisi sana 'Bakar mısın?' diyecek. Duymamazlıktan gel, iş yıkmaya çalışıyorlar.",
     "Kaderinde yakın zamanda bir zam, terfi veya en kötü ihtimalle çok tatlı bir öğle yemeği ısmarlanması var.",
     "Metnini temizledin, peki ya zihnini? Bir ara arkana yaslan ve derin bir nefes al şampiyon.",
-    "Bugün kurumsal dünyayı dize getirebilecek bir enerjiye sahipsin ama canın istemiyor, çok haklısın.",
+    "Bugün kurumsal dünyayı dize getirebilecek bir energyye sahipsin ama canın istemiyor, çok haklısın.",
     "Gelecekte harika bir tatil görüyorum. Ama o geleceğe daha çok var, şimdi şu metni hallet.",
     "Siber evren sana mesaj gönderiyor: 'Bugün o klavyeye biraz daha yumuşak bas, o da bir can.'",
     "Seni çekemeyenlerin algoritması çöksün, tarayıcıları kapansın, ramleri yansın. Sen devam et.",
@@ -600,7 +600,7 @@ const oracleQuotes = [
     "Bugün o meşhur 'toplantı olmasaydı maille çözülürdü' aydınlanmasını tam 3 kez yaşayacaksın.",
     "Küre fısıldıyor: Akşama güzel bir dizi/film patlat, bütün günün yükünü silsin süpürsün.",
     "Yazım hatalarını düzelttiğin gibi hayatına da ince bir ayar çekiyorsun. Doğru yoldasın.",
-    "Bugün müşteriden gelen 'Elinize sağlık çok güzel olmuş' mesajını göreceksini. (Şaka şaka, revizyon var).",
+    "Bugün müşteriden gelen 'Elinize sağlık çok güzel olmuş' mesajını göreceksiniz. (Şaka şaka, revizyon var).",
     "İçinden bir ses 'Bırak git' diyor ama cüzdanın 'Dur yolcu' diye fısıldıyor. Çalışmaya devam.",
     "Birazdan kopyalayacağın metin, gideceği yerde büyük bir hayranlıkla okunacak. Gurur duy.",
     "Bugün tarayıcında 40'tan fazla sekme açılacak. Bilgisayarına iyi davran, o senin yoldaşın.",
@@ -621,7 +621,7 @@ const oracleQuotes = [
     "Küre parlıyor: Bugün yapacağın işler gelecekteki rahatının temel taşları olacak. Sık dişini.",
     "İçindeki siber gücü serbest bırak. Sen sadece bir metin düzenleyici kullanmıyorsun, operasyon yönetiyorsun.",
     "Bugün kulaklığını tak ve dünyayı sessize al. Sadece sen, müziğin ve bu asil siyah panel.",
-    "Günün özlü sözü: Hatalı metin düzeltilir, hatalı insan zor. Metinlerle uğraşmaya devam.",
+    "Günün özlü sözü: Hatalı metin düzeltilir, hatalı insan zor. Metinlerle uğraştmaya devam.",
     "Tengri Oracle görevini tamamladı. Şimdi o 'Kopyala' butonuna bas ve şovunu yap aslan parçası!"
 ];
 
@@ -689,64 +689,28 @@ function highlight(text) {
 }
 
 /* ==========================================================================
-   🎯 ENKAPSÜLE EDİLMİŞ GÜVENLİ KALIN YAZI KORUMA VE BOŞLUK SİLME MOTORU
+   🎯 NİHAİ HAM REKÜRSİF STRİNG KORUMA VE BOŞLUK TEMİZLEME MOTORU
    ========================================================================== */
 
-function convertStylesToRealBold(element) {
-    // 1. Adım: Tüm dahili elementleri tarayıp style/weight kontrolü yapıyoruz
-    let allNodes = element.getElementsByTagName("*");
-    for (let i = allNodes.length - 1; i >= 0; i--) {
-        let el = allNodes[i];
-        let style = window.getComputedStyle(el);
-        
-        // Eğer element kalın yazı özelliğine sahip bir span veya div ise
-        if (style.fontWeight === "bold" || parseInt(style.fontWeight) >= 600) {
-            let bTag = document.createElement("b");
-            bTag.innerHTML = el.innerHTML;
-            el.parentNode.replaceChild(bTag, el);
-        }
-    }
+function hardProtectBoldStyles(rawHtml) {
+    if (!rawHtml) return "";
+
+    // 1. Adım: Tarayıcının ezmesini engellemek için inline style barındıran tüm bold varyasyonlarını ham metin düzeyinde b etiketine çeviriyoruz
+    let protectedHtml = rawHtml
+        // font-weight içeren span varyasyonlarını jilet gibi yakala ve b içine al
+        .replace(/<span[^>]*style="[^"]*font-weight:\s*bold;?[^"]*"[^>]*>([\s\S]*?)<\/span>/gi, '<b>$1</b>')
+        .replace(/<span[^>]*style="[^"]*font-weight:\s*700;?[^"]*"[^>]*>([\s\S]*?)<\/span>/gi, '<b>$1</b>')
+        .replace(/<span[^>]*style="[^"]*font-weight:\s*600;?[^"]*"[^>]*>([\s\S]*?)<\/span>/gi, '<b>$1</b>')
+        // strong etiketlerini b etiketine eşitleyip sabitle
+        .replace(/<strong[^>]*>([\s\S]*?)<\/strong>/gi, '<b>$1</b>');
+
+    return protectedHtml;
 }
 
-function sanitizeHTMLStructure(htmlContent) {
-    let tempDiv = document.createElement("div");
-    tempDiv.innerHTML = htmlContent;
-
-    // Gizli inline-style kalınlıkları gerçek <b> etiketlerine çevir
-    convertStylesToRealBold(tempDiv);
-
-    // Satır takibi yapabilmek için paragraf, div ve listeleri \n ile ayır
-    let blocks = tempDiv.querySelectorAll('p, div, br, li, tr');
-    blocks.forEach(el => {
-        if (el.tagName.toLowerCase() === 'br') {
-            el.before(document.createTextNode('\n'));
-        } else {
-            el.before(document.createTextNode('\n'));
-            el.after(document.createTextNode('\n'));
-        }
-    });
-
-    // Sadece gerçek <b> ve <strong> taglerini koru, geri kalan her şeyi erit!
-    let allElements = tempDiv.getElementsByTagName("*");
-    for (let i = allElements.length - 1; i >= 0; i--) {
-        let el = allElements[i];
-        let tagName = el.tagName.toLowerCase();
-        if (tagName !== 'strong' && tagName !== 'b') {
-            el.outerHTML = el.innerHTML;
-        } else {
-            // Kalın etiketlerin üzerindeki tüm kirli class/style özniteliklerini kazı
-            el.removeAttribute('style');
-            el.removeAttribute('class');
-            el.removeAttribute('id');
-        }
-    }
-    return tempDiv.innerHTML;
-}
-
-function ultimateClean(txt, forceLowercase = false) {
+function cleanInvisibleWebGarbage(txt, forceLowercase = false) {
     if (!txt) return "";
 
-    // Web sitelerinden gelen görünmez çöp karakterleri süpür
+    // Web sayfalarından sızan tüm lanet olası görünmez karakterleri ve web pisliklerini yok et
     let clean = txt
         .replace(/[\r\u200B\u200C\u200D\uFEFF]/g, "") 
         .replace(/&nbsp;/gi, " ")
@@ -760,10 +724,10 @@ function ultimateClean(txt, forceLowercase = false) {
         .replace(/&/g, " ")
         .replace(/;/g, " ");
 
-    // Teknik kutup ifadelerindeki inatçı boşlukları tamamen yok et (B+, B-)
+    // B +, B - gibi teknik terim boşluklarını anında birleştir
     clean = clean.replace(/B\s*\+\s*/gi, "B+").replace(/B\s*-\s*/gi, "B-");
 
-    // Geri kalan tüm çoklu boşlukları tek bir standart boşluğa düşür
+    // Tüm çoklu boşlukları ve tab sekmesini tek boşluğa düşür
     clean = clean.replace(/[ \t]+/g, " ");
 
     if (forceLowercase) {
@@ -776,30 +740,60 @@ function processUltraEngine(inputElementId, forceLowercase = false) {
     const inputArea = document.getElementById(inputElementId);
     if (!inputArea || !inputArea.innerHTML.trim()) return "";
 
-    // 1. Adım: Yapıştırılan metindeki gizli kalın yazıları bularak zırhla koru
-    let sanitizedHTML = sanitizeHTMLStructure(inputArea.innerHTML);
+    // 1. Aşama: Tarayıcı hafızasını atlat, ham HTML dizgesini çekip kalın yazıları b etiketine hapset!
+    let rawHtml = inputArea.innerHTML;
+    let textWithProtectedBolds = hardProtectBoldStyles(rawHtml);
 
-    // 2. Adım: Satır bazlı ayırarak boş satır kontrolü yap
-    let rawLines = sanitizedHTML.split('\n');
+    // Sanal bir işleme alanı oluşturup geriye kalan tüm çöp p, div, span etiketlerini soyuyoruz
+    let sandbox = document.createElement("div");
+    sandbox.innerHTML = textWithProtectedBolds;
+
+    // Satır yapısını korumak için blok elemanlarına \n basıyoruz
+    let blocks = sandbox.querySelectorAll('p, div, br, li, tr');
+    blocks.forEach(el => {
+        if (el.tagName.toLowerCase() === 'br') {
+            el.before(document.createTextNode('\n'));
+        } else {
+            el.before(document.createTextNode('\n'));
+            el.after(document.createTextNode('\n'));
+        }
+    });
+
+    // Sadece korumaya aldığımız 'b' etiketlerini tut, kalan tüm span ve tarayıcı çöplerini erit!
+    let allElements = sandbox.getElementsByTagName("*");
+    for (let i = allElements.length - 1; i >= 0; i--) {
+        let el = allElements[i];
+        if (el.tagName.toLowerCase() !== 'b') {
+            el.outerHTML = el.innerHTML;
+        } else {
+            // b etiketinin üzerinde kalan kırıntıları da süpür
+            el.removeAttribute('style');
+            el.removeAttribute('class');
+            el.removeAttribute('id');
+        }
+    }
+
+    // 2. Aşama: Satır bazlı parçala ve boş satırları tamamen imha et
+    let rawLines = sandbox.innerHTML.split('\n');
     let dynamicResultLines = [];
 
     rawLines.forEach(line => {
-        let cleanedLine = ultimateClean(line, forceLowercase);
+        let cleanedLine = cleanInvisibleWebGarbage(line, forceLowercase);
         
-        // Satırın içinde gerçekten okunabilir bir şey var mı testi (Boş etiketleri ele)
+        // Satır boş mu yoksa içi dolu mu kontrolü
         let contentCheck = cleanedLine.replace(/<[^>]*>/g, "").replace(/\s+/g, "").trim();
         
         if (contentCheck !== "") {
             let finalizedLine = cleanedLine.trim();
             if (forceLowercase) {
-                // Türkçe dil yapısına göre cümle başı kontrolü
+                // Türkçe dil kurallarına uygun cümle başı büyütme filtresi
                 finalizedLine = finalizedLine.replace(/(^|>|[.!?]\s+)([a-zçğıöşü])/g, (m, p1, p2) => p1 + p2.toLocaleUpperCase('tr-TR'));
             }
             dynamicResultLines.push(finalizedLine);
         }
     });
 
-    // Satırları tek bir br satır kırılımıyla bağla ve yasaklı kelime taraması yap
+    // Satırları tek br kırılımıyla bağla ve yasaklı kelime boyasını vur
     return highlight(dynamicResultLines.join("<br>"));
 }
 
