@@ -275,10 +275,10 @@ const oracleQuotes = [
    "Bugün istifa edip dünyayı gezecek o cesur kararı alacaksın... Tam o sırada gözün masadaki yarım kalmış sodaya takılacak, 'Neyse bunu bari bitireyim' derken mesai bitecek.",
    "Bugün LinkedIn profilini 'Open to Work' yapasın var. Ama piyasanın durumunu hatırlayınca profili 'Gerekirse 24 Saat Çalışırım' yapmaktan son anda dönüyorsun. Kopyala butonuna bas ve sakinleş.",
    "Evren sana fısıldıyor: 'Sen daha iyilerine layıksın.' Doğru, layıksın ama kredi kartı ekstrem de diyor ki: 'Şu an tam olarak bu masaya ve bu metinlere layıksın.' Hadi aslan parçası.",
-   "Bugün toplantıda masaya vurup 'Ben gidiyorum' demek için harika bir enerji var üstünde. Ama masaya vurursan laptop ekranı kırılır, masraf çıkar. Boşver, temizle metni geç.",
+   "Bugün toplantıda masaya vurup 'Ben gidiyorum' demek için harika bir energy var üstünde. Ama masaya vurursan laptop ekranı kırılır, masraf çıkar. Boşver, temizle metni geç.",
    "Kaderinde bugün çok radikal bir kariyer değişikliği görüyorum. Mesela 'Boşluk Temizleyici' sekmesinden 'Yazım Düzenleyici' sekmesine geçeceksin. Büyük devrim.",
    "Küre diyor ki: İstifa edip bir sahil kasabasında domates yetiştirmek harika bir fikir. Ama domates tohumu fiyatlarına bakınca bu panelin siyahlığı gözüne bir tık daha güzel geliyor, değil mi?",
-   "Bugün bir delilik yapıp Slack'ten 'Ben çıkıyorum, ne haliniz varsa görün' yazasın gelecek. Ama enter tuşuna basmadan önce kıdem tazminatını hesaplayıp yerine 'Harika bir feedback, hemen ilgileniyorum' yazacaksın.",
+   "Bugün bir delilik yapıp Slack'ten 'Ben çıkıyorum, ne haliniz varsa görün' yazasın gelecek. Ama enter tuşuna basmadan önce kıdem tazminatını hesaplayıp yerine 'Harika bir feedback, hemen ilgileniyorum' yazacaksınız.",
    "Yıldız haritana göre bugün kurumsal kölelik zincirlerini kırma günün! Ama Akbank, Garanti ve Yapı Kredi el ele tutuşup kapıda seni bekliyor. Zincirler kalsın, biz metindeki çift boşlukları kıralım.",
    "Küre diyor ki: İstifa et, her şeyi sat, Hindistan'a git ve ruhunu arındır. Ama uçak bileti fiyatlarına baktıktan sonra bu paneldeki 'Temizle' butonu gözüne Ganj Nehri'nden daha arındırıcı gelecek.",
    "Küre diyor ki: Sen bu dünyaya her sabah 8'de uyanıp elalemin excel tablosunu, word metnini düzeltmek için gelmedin. Sen çok daha büyük şeyler için yaratıldın... Şaka şaka, tam olarak bunun için geldin. Hadi yapıştır metni, mesai akıyor.",
@@ -349,8 +349,10 @@ function cleanInvisibleWebGarbage(txt, forceLowercase = false) {
     if (!txt) return "";
     let clean = txt.replace(/[\r\u200B\u200C\u200D\uFEFF]/g, "").replace(/&nbsp;/gi, " ").replace(/nbsp;/gi, " ").replace(/;nbsp/gi, " ").replace(/&nbsp/gi, " ").replace(/\u00A0/g, " ").replace(/&amp;;/gi, " ").replace(/&amp;/gi, " ").replace(/&[^;]+;/g, " ").replace(/&/g, " ").replace(/;/g, " ");
     clean = clean.replace(/B\s*\+\s*/gi, "B+").replace(/B\s*-\s*/gi, "B-");
-    clean = clean.replace(/[ \t]{3,}/g, "    ");
-    clean = clean.replace(/([^\s])[ \t]{2}([^\s])/g, "$1 $2");
+    
+    // ARTIK ARADAKİ TÜM YAN YANA FAZLA BOŞLUKLARI TEK BİR NORMAL BOŞLUĞA İNDİRGİYORUZ
+    clean = clean.replace(/\s{2,}/g, " ");
+    
     if (forceLowercase) { clean = clean.toLocaleLowerCase('tr-TR'); }
     return clean;
 }
@@ -373,7 +375,7 @@ function processUltraEngine(inputElementId, forceLowercase = false) {
         let contentCheck = cleanedLine.replace(/<[^>]*>/g, "").replace(/\s+/g, "").trim();
         if (contentCheck !== "") {
             let finalizedLine = cleanedLine.trim();
-            finalizedLine = finalizedLine.replace(/    /g, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
+            // ESKİDEN O BOŞLUKLARI TEKRAR 8 TANE &nbsp;'YE ÇEVİREN KOD BLOĞUNU KALDIRDIK!
             if (forceLowercase) { finalizedLine = finalizedLine.replace(/(^|>|[.!?]\s+)([a-zçğıöşü])/g, (m, p1, p2) => p1 + p2.toLocaleUpperCase('tr-TR')); }
             dynamicResultLines.push(finalizedLine);
         }
