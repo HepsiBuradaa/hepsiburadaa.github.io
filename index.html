@@ -121,11 +121,11 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
     z-index: 9999;
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* İçeriği sağa yaslamak için */
+    align-items: flex-end;
 }
 
 .slide-control-panel {
-    margin-right: 40px; /* Panel bitiş çizgisiyle hizalamak için sağ boşluk */
+    margin-right: 40px; 
     margin-bottom: -1px;
     z-index: 10000;
 }
@@ -143,7 +143,7 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
     transition: all 0.2s ease;
     text-transform: uppercase;
     box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
-    opacity: 1; /* Artık daha belirgin */
+    opacity: 1;
 }
 .slide-toggle-btn:hover {
     color: var(--text-heading) !important;
@@ -313,10 +313,9 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
     padding: 4px 0 0 0;
 }
 
-/* 🎯 TIKLANABİLİR GELİŞMİŞ SARK SÜRÜCÜSÜ ALANI */
 .cyber-timeline {
     width: 100%;
-    height: 3px; /* Tıklaması daha kolay olsun diye 1px'den 3px'e çıkarıldı */
+    height: 3px; 
     background: rgba(255, 255, 255, 0.05);
     border: none;
     position: relative;
@@ -326,7 +325,7 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
 
 .cyber-timeline:hover {
     background: rgba(255, 255, 255, 0.15);
-    height: 5px; /* Üzerine gelince genişlesin */
+    height: 5px; 
 }
 
 .timeline-progress {
@@ -338,7 +337,7 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
     opacity: 0.9;
     box-shadow: 0 0 8px var(--accent-color);
     width: 0%;
-    pointer-events: none; /* Tıklamayı engellememesi için */
+    pointer-events: none; 
 }
 </style>
 </head>
@@ -477,8 +476,8 @@ const oracleQuotes = [
    "Şu an istifa etsen evren sana yeni kapılar açar elbet, ama o kapılardan içeri ev sahibi de girebilir. Gel risk almayalım, şu taslağı bir güzel toparlayalım.",
    "Bugün tam 'Kendi hikayeni yazma' günü. Ama o hikayenin ilk bölümü 'İşsizlik Maaşı Sırasında Bir Gün' olsun istemiyorsak, gel şu metni kusursuz hale getirelim.",
    "Şu an klavyeye çok sert basarak mail yazıyorsun, hıncını anlıyorum. Ama mekanik klavye fiyatları uçtu, tuş fırlarsa yenisini alamayız. Sakince o parmağını geri çek ve şu metni yumuşatarak düzenle.",
-   "Bugün tam patronun odasının kapısını çarparak çıkma günü! Ama o kapı hidrolikli, yavaşça kapanıp karizmanı çizecek, hiç gerek yok. Gel biz şu Excel tablosunu pürüzsüz hale getirelim.",
-   "Bugün o istifa dilekçesini yazıp müdürün önüne fırlatmak için harika bir motivasyonun var. Ama o kağıdı fırlatırken rüzgar ters eser, kendi yüzüne çarpar, iyice sinirin bozulur. Gel o kağıda metnin yeni halini yazalım.",
+   "Bugün tam patronun odasının kapısını çarparak çıkma günü! Ama o kapı hidrolikli, yavaşça kapanıp karizmanı çizecek, hiç gerek yok. Gel biz şu Excel tablosunu pırıl pırıl hale getirelim.",
+   "Bugün o istifa dilekçesini yazıp tam patronun masasına fırlatacakken, telefonuna bankadan 'Sayın müşterimiz, 120 ay vadeli konut kredinizin 3. taksiti tahsil edilememiştir' bildirimi düşecek. O fırlattığın kağıdı masadan 'Yere çöp düşmüş de efendim' diye yerleri siler gibi geri toplayacaksın.",
    "Bugün tam şirket telefonunu sessize alıp ortadan kaybolma günü. Ama telefon şirket malı, kaybedersen maaşından keserler, durduk yere borçlanma. Gel şu metni cilalayalım.",
    "Şu an müdüre 'Sizinle çalışmak bir kabustu' diye bağırmak istiyorsun. Ama sesin detone olur, ciddiyetin kaybolur, arkandan gülerler. Hiç o riske girmeyelim, gel şu raporu pürüzsüz yapalım.",
    "Bugün 'Bıktım sizin vizyonunuzdan' deyip sandalyeyi tekmelemek için harika bir enerji var üstünde. Ama sandalye tekerlekli, kayar odanın öbür ucundaki çöp kovasına çarpar, durduk yere iş çıkar. Boşver, metni temizle geç.",
@@ -514,7 +513,7 @@ const oracleQuotes = [
    "Senin başarılarını görmezden gelenlerin en sevdikleri döküman, tam 'Kaydet' tuşuna basacakken elektrik kesintisiyle uçup gitsin. Amin.",
    "Sana sürekli 'Biz bir aileyiz' deyip mesai ücretini vermeyenlerin şirket arabasının lastiği tam da sanayiye en uzak mesafede patlasın. Amin.",
    "Bugün 'Seni çok iyi anlıyorum' diyenlerin aslında 'Şu an seni hiç dinlemiyorum, sadece kendi konuşma sıramın gelmesini bekliyorum' demek istediğini bir kez daha anlayacaksın.",
-   "Bugün müdürün 'Bu projede senin vizyonuna güveniyorum' demesinin aslında 'Hata çıkarsa faturayı tamamen sana keseceğim' demek olduğunu acı bir tebessümle fark edeceksin.",
+   "Bugün müdürün 'Bu projede senin vizyonuna güveniyorum' demesinin aslında 'Hata çıkarsa faturayı tamamen sana keseceğim' demek olduğunu acı bir tebessümle fark edeceksiniz.",
    "Bugün 'Önceliğimiz çalışan mutluluğu' sloganının aslında 'Ofise langırt koyduk ama oynarsan gözümüz üstünde olur' demek olduğunu anlayacaksın.",
    "Bugün 'Aramızda çok güzel bir sinerji oluştu' iltifatının aslında 'Sen ne desen onaylıyorsun, işleri de sessizce yapıyorsun, tam aradığımız kölesin' anlamına geldiğini anlayacaksın.",
    "Bugün 'Biz burada bir aileyiz' söyleminin aslında 'Haklarını ararken fazla profesyonel düşünme, fedakarlık yaparken de sınır tanıma' anlamına geldiğini bir kez daha anlayacaksın.",
@@ -526,122 +525,56 @@ const oracleQuotes = [
     "Kaderinde bugün çok radikal bir kariyer değişikliği görüyorum. Mesela 'Boşluk Temizleyici' sekmesinden 'Yazım Düzenleyici' sekmesine geçeceksin. Büyük devrim.",
     "Küre diyor ki: İstifa edip bir sahil kasabasında domates yetiştirmek harika bir fikir. Ama domates tohumu fiyatlarına bakınca bu panelin siyahlığı gözüne bir tık daha güzel geliyor, değil mi?",
     "Bugün bir delilik yapıp Slack'ten 'Ben çıkıyorum, ne haliniz varsa görün' yazasın gelecek. Ama enter tuşuna basmadan önce kıdem tazminatını hesapayıp yerine 'Harika bir feedback, hemen ilgileniyorum' yazacaksınız.",
-    "Yıldız haritana göre bugün kurumsal kölelik zincirlerini kırma günün! Ama Akbank, Garanti ve Yapı Kredi el ele tutuşup kapıda seni bekliyor. Zincirler kalsın, biz metindeki çift boşlukları kıralım.",
+    "Yıldız haritana göre bugün kurumsal kölelik zincirlerini kırma günün! Ama Akbank, Garanti and Yapı Kredi el ele tutuşup kapıda seni bekliyor. Zincirler kalsın, biz metindeki çift boşlukları kıralım.",
     "Küre diyor ki: İstifa et, her şeyi sat, Hindistan'a git ve ruhunu arındır. Ama uçak bileti fiyatlarına baktıktan sonra bu paneldeki 'Temizle' butonu gözüne Ganj Nehri'nden daha arındırıcı gelecek.",
     "Küre diyor ki: Sen bu dünyaya her sabah 8'de uyanıp elalemin excel tablosunu, word metnini düzeltmek için gelmedin. Sen çok daha büyük şeyler için yaratıldın... Şaka şaka, tam olarak bunun için geldin. Hadi yapıştır metni, mesai akıyor.",
     "Bugün istifa edip dünyayı gezen o cool gezginlerden olma hayalin tavan yapacak. Ama sırt çantanı hazırlarken içine koyacak lüksün sadece şirket logolu polar ve promosyon termos olduğunu fark edip masana geri çökeceksiniz. Kopyala butonuna bas ve hayalleri serbest bırak.",
-    "Evren bugün sana çok net bir vizyon gösteriyor: Kendi işinin patronu olmuşsun, altındaki lüks araba, arkanda korumalar... Ama vizyonun çözünürlüğü biraz artınca fark ediyorsun ki altındaki araba şirket arabası, arkandakiler de 'Şu iş ne oldu?' diye bekleyen yöneticiler. Uyan aslanım, metin temizlenecek.",
+    "Evren heute sana çok net bir vizyon gösteriyor: Kendi işinin patronu olmuşsun, altındaki lüks araba, arkanda korumalar... Ama vizyonun çözünürlüğü biraz artınca fark ediyorsun ki altındaki araba şirket arabası, arkandakiler de 'Şu iş ne oldu?' diye bekleyen yöneticiler. Uyan aslanım, metin temizlenecek.",
     "İçindeki o çılgın girişimci ruh 'Hemen bu akşam şirketi kuruyoruz' diye bağırıyor. Ama muhasebecinin isteyeceği stopajı, bağkuru, damga vergisini hesaplayınca, buradaki bedava, reklamsız, vergisiz mat siyah panel gözüne bir anda İsviçre Merkez Bankası gibi güvenli gelecek.",
     "Bugün şirketin ortak platformunda yanlışlıkla 'Yetti be, ne bitmez revizyonmuş!' yazacaksın... diye korkup soğuk terler dökeceksiniz ama yerine saniyede 120 kelime hızla 'Tabii ki hemen revize edip en mükemmel haliyle iletiyorum, sevgiler' yazarak hayatta kalacaksın.",
-    "Geleceğinde inanılmaz bir zenginlik, malikaneler, uşaklar görüyorum... Ama rüya tabirlerine göre bu rüya 'Çok yakında mesaiye kalacaksın ve akşam yemeğinde sana sadece soğuk bir dürüm ısmarlayacaklar' anlamına geliyor. Dürümün tuzu bol olsun, devam.",
-    "Bugün ani bir cinnetle yöneticine Slack’ten 'Ben gidiyorum, vizyonsuz ekibiniz ve bitmeyen revizyonlarınız size kalsın' yazacaksınız. Tam gönder tuşuna basacakken kalbin sıkışacak, gözün kararacak, metni silip yerine 'Elinize sağlık, çok ufak bir sorum olacaktı :)'* yazıp arkaya gizlice ağlamaya gideceksiniz.",
-    "Küre parlıyor! Seni çok yakında business class uçuşunda şampanyanı yudumlarken görüyorum... Ama uçak modunu kapatınca uyanıyorsun ki metrobüste bir teyzenin pazar çantasıyla sol böbreğin arasında sıkışmışsın ve işe geç kalıyorsun. Yapıştır şu metni de bari primin kesilmesin.",
-    "Bugün istifa dilekçeni yazıp tam patronun masasına fırlatacakken, telefonuna bankadan 'Sayın müşterimiz, 120 ay vadeli konut kredinizin 3. taksiti tahsil edilememiştir' bildirimi düşecek. O fırlattığın kağıdı masadan 'Yere çöp düşmüş de efendim' diye yerleri siler gibi geri toplayacaksın.",
-    "Büyük bir kurumsal kriz kapıda ama sakin ol, seninle alakası yok. Kahvenden bir yudum al ve izle.",
-    "Gözüm metnindeki gizli 'Yüksek Kalite' ibarelerini arıyor... Yapma öyle şeyler, Tengri görüyor.",
-    "Bugün copy-paste yaparken elin hiç titremeyecek. Kusursuz bir CTRL+C performansı seziyorum.",
-    "O beklediğin mail veya mesaj bugün gelecek. Gelmezse de karşı tarafın vizyonsuzluğudur, boşver.",
-    "Yapay zeka senin işini elinden almayacak ama o kahveyi şimdi tazelemezsen uykun kesin alacak.",
-    "Yakın zamanda bir revizyon yiyeceksin ama öyle bir düzelteceksin ki isteyen utancından istifa edecek.",
-    "Hayatındaki bazı insanlar tıpkı '&nbsp;' gibi; varlar ama hiçbir işe yaramıyorlar, sadece yer kaplıyorlar.",
-    "Bugün şanslı günündesin. Yapıştırdığın metin tek seferde dümdüz olacak, uğraştırmayacak.",
-    "Plaza dilencilerinin attığı o anlamsız 'As per our discussion' maillerine karşı bağışıklık kazanacağın bir gün.",
-    "Bugün birisi sana 'Bakar mısın?' diyecek. Duymamazlıktan gel, iş yıkmaya çalışıyorlar.",
-    "Kaderinde yakın zamanda bir zam, terfi veya en kötü ihtimalle çok tatlı bir öğle yemeği ısmarlanması yok.",
-    "Metnini temizledin, peki ya zihnini? Bir ara arkana yaslan ve derin bir nefes al şampiyon.",
-    "Bugün kurumsal dünyayı dize getirebilecek bir energye sahipsin ama canın istemiyor, çok haklısın.",
-    "Gelecekte harika bir tatil görüyorum. Ama o geleceğe daha çok var, şimdi şu metni hallet.",
-    "Siber evren sana mesaj gönderiyor: 'Bugün o klavyeye biraz daha yumuşak bas, o da bir can.'",
-    "Seni çekemeyenlerin algoritması çöksün, tarayıcıları kapansın, ramleri yansın. Sen devam et.",
-    "Bugün yapacağın en büyük hata, biten işi teslim ettikten sonra 'Başka bir şey var mıydı?' diye sormak olur. Sorma.",
-    "Bugün karşına çıkacak saçmalıklara karşı sabrın, bu panelin siyahlığı kadar derin ve sınırsız olsun.",
-    "Metindeki çift boşlukları avladığın gibi hayattaki iki yüzlüleri de avlayacağın keskin bir gün.",
-    "Günün tavsiyesi: O sekmeyi kapat. Hangi sekme olduğunu biliyorsun. Kapat gitsin.",
-    "Küre fısıldıyor: Akşama güzel bir dizi/film patlat, bütün günün yükünü silsin süpürsün.",
-    "Yazım hatalarını düzelttiğin gibi hayatına da ince bir ayar çekiyorsun. Doğru yoldasın.",
-    "Bugün müşteriden gelen 'Elinize sağlık çok güzel olmuş' mesajını göreceksiniz. (Şaka şaka, revizyon var).",
-    "İçinden bir ses 'Bırak git' diyor ama cüzdanın 'Dur yolcu' diye fısıldıyor. Çalışmaya devam.",
-    "Birazdan kopyalayacağın metin, gideceği yerde büyük bir hayranlıkla okunacak. Gurur duy.",
-    "Bugün tarayıcında 40'tan fazla sekme açılacak. Bilgisayarına iyi davran, o senin yoldaşın.",
-    "Günün kehaneti: Bugün klavyene dökülmeyen her kahve, senin için büyük bir zaferdir.",
-    "Metninde hiç yasakli kelime çıkmadı mı? İşte profesyonelliğin saf ve temiz hali. Helal olsun.",
-    "Bugün 'Bakarız' denen her şeyin aslında 'Asla yapmayacağız' anlamına geldiğini bir kez daha anlayacaksın.",
-    "Siber kaderinde büyük bir kahve molası var. Hak ettin, hadi git doldur gel.",
-    "Hayat bazen hatalı kodlar gibi karmaşıktır, ama unutmaman gereken şey: Her zaman bir geri al (CTRL+Z) tuşu vardır.",
-    "Küreye göre bugün alacağın en iyi karar, işi tam zamanında bırakıp bilgisayarı kapatmak olacak.",
-    "Metindeki tüm pislikleri temizledin. Artık tertemiz bir sayfan var. Hayatın da böyle ferah olsun.",
-    "Kafandaki düşünceler şu an temizlenmemiş bir HTML metni gibi karmakarışık. Bi' dur, sakinleş.",
-    "Bugün arkandan konuşanlerin tarayıcı geçmişi yanlışlıkla patronlarına mail gitsin. Amin.",
-    "Küre parlıyor: Bugün yapacağın işler gelecekteki rahatının temel taşları olacak. Sık dişini.",
-    "Bugün kulaklığını tak ve dünyayı sessize al. Sadece sen, müziğin ve bu asil siyah panel.",
     "Günün özlü sözü: Hatalı metin düzeltilir, hatalı insan zor. Metinlerle uğraşmaya devam.",
     "Tengri Oracle görevini tamamladı. Şimdi o 'Kopyala' butonuna bas ve şovunu yap aslan parçası!"
 ];
 
-// 🎵 MÜZİK LİSTESİ
+/* 🎵 18 ŞARKILIK EKSİKSİZ VE BİRBİRİNE GİRMEMİŞ ORİJİNAL MÜZİK LİSTESİ */
 const musicList = [
-    { title: "", url: "./muzikler/1.mp3" },
-    { title: "", url: "./muzikler/12345.mp3" },
-    { title: "", url: "./muzikler/2.mp3" },
-    { title: "", url: "./muzikler/3.mp3" },
-    { title: "", url: "./muzikler/4.mp3" },
-    { title: "", url: "./muzikler/5.mp3" },
-    { title: "", url: "./muzikler/6.mp3" },
-    { title: "", url: "./muzikler/7.mp3" },
-    { title: "", url: "./muzikler/8.mp3" },
-    { title: "", url: "./muzikler/9.mp3" },
-    { title: "", url: "./muzikler/10.mp3" },
-    { title: "", url: "./muzikler/11.mp3" },
-    { title: "", url: "./muzikler/12.mp3" },
-    { title: "", url: "./muzikler/13.mp3" },
-    { title: "", url: "./muzikler/14.mp3" },
-    { title: "", url: "./muzikler/15.mp3" },
-    { title: "", url: "./muzikler/16.mp3" },
-    { title: "", url: "./muzikler/17.mp3" }
+    { title: "Şarkı 1", url: "./muzikler/1.mp3" },
+    { title: "Şarkı 2", url: "./muzikler/12345.mp3" },
+    { title: "Şarkı 3", url: "./muzikler/2.mp3" },
+    { title: "Şarkı 4", url: "./muzikler/3.mp3" },
+    { title: "Şarkı 5", url: "./muzikler/4.mp3" },
+    { title: "Şarkı 6", url: "./muzikler/5.mp3" },
+    { title: "Şarkı 7", url: "./muzikler/6.mp3" },
+    { title: "Şarkı 8", url: "./muzikler/7.mp3" },
+    { title: "Şarkı 9", url: "./muzikler/8.mp3" },
+    { title: "Şarkı 10", url: "./muzikler/9.mp3" },
+    { title: "Şarkı 11", url: "./muzikler/10.mp3" },
+    { title: "Şarkı 12", url: "./muzikler/11.mp3" },
+    { title: "Şarkı 13", url: "./muzikler/12.mp3" },
+    { title: "Şarkı 14", url: "./muzikler/13.mp3" },
+    { title: "Şarkı 15", url: "./muzikler/14.mp3" },
+    { title: "Şarkı 16", url: "./muzikler/15.mp3" },
+    { title: "Şarkı 17", url: "./muzikler/16.mp3" },
+    { title: "Şarkı 18", url: "./muzikler/17.mp3" }
 ];
 
 let currentTrackIndex = 0;
 let isPlaying = false;
 let isShuffle = false;
 let isRepeat = false;
-let audio; 
-let audioCtx;
-let analyser;
-let source;
-let canvas;
-let ctx;
-let animationFrameId;
+let audio, audioCtx, analyser, source, canvas, ctx, animationFrameId;
 
-// 🔊 OYNATICI MOTORU BAŞLANGIÇ AYARLARI
 window.addEventListener('DOMContentLoaded', () => {
     audio = document.getElementById('main-audio');
     canvas = document.getElementById('visualizer');
     ctx = canvas.getContext('2d');
-    
-    // Canvas boyutlarını ayarla
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.parentElement.clientHeight;
-    
-    // İlk parçayı yükle
     loadTrack(currentTrackIndex);
-    
-    // Ses sürgüsü senkronu
     audio.volume = 0.7;
-    
-    // Şarkı bittiğinde ne olacağını izle
-    audio.addEventListener('ended', () => {
-        if (isRepeat) {
-            audio.play();
-        } else {
-            nextTrack();
-        }
-    });
-    
-    // Zaman güncellemelerini izle
+    audio.addEventListener('ended', () => { if (isRepeat) { audio.play(); } else { nextTrack(); } });
     audio.addEventListener('timeupdate', updateProgress);
-    audio.addEventListener('loadedmetadata', () => {
-        document.getElementById('time-duration').innerText = formatTime(audio.duration);
-    });
+    audio.addEventListener('loadedmetadata', () => { document.getElementById('time-duration').innerText = formatTime(audio.duration); });
 });
 
 function loadTrack(index) {
@@ -655,12 +588,7 @@ function loadTrack(index) {
 
 function togglePlay() {
     if (!audio.src) return;
-    
-    // Web Audio API kilidini aç
-    if (!audioCtx) {
-        initVisualizer();
-    }
-    
+    if (!audioCtx) { initVisualizer(); }
     if (isPlaying) {
         audio.pause();
         document.getElementById('play-pause-btn').innerText = "▶ OYNAT";
@@ -669,23 +597,13 @@ function togglePlay() {
         audio.play().then(() => {
             document.getElementById('play-pause-btn').innerText = "⏸ DURDUR";
             isPlaying = true;
-        }).catch(err => console.log("Oynatma hatası:", err));
+        }).catch(err => console.log(err));
     }
-}
-
-function stopAudio() {
-    audio.pause();
-    audio.currentTime = 0;
-    document.getElementById('play-pause-btn').innerText = "▶ OYNAT";
-    isPlaying = false;
 }
 
 function nextTrack() {
-    if (isShuffle) {
-        currentTrackIndex = Math.floor(Math.random() * musicList.length);
-    } else {
-        currentTrackIndex = (currentTrackIndex + 1) % musicList.length;
-    }
+    if (isShuffle) { currentTrackIndex = Math.floor(Math.random() * musicList.length); }
+    else { currentTrackIndex = (currentTrackIndex + 1) % musicList.length; }
     loadTrack(currentTrackIndex);
     if (isPlaying) audio.play().catch(() => {});
 }
@@ -699,20 +617,16 @@ function prevTrack() {
 function toggleShuffle() {
     isShuffle = !isShuffle;
     const btn = document.getElementById('shuffle-btn');
-    if (isShuffle) btn.classList.add('active-mode');
-    else btn.classList.remove('active-mode');
+    if (isShuffle) btn.classList.add('active-mode'); else btn.classList.remove('active-mode');
 }
 
 function toggleRepeat() {
     isRepeat = !isRepeat;
     const btn = document.getElementById('repeat-btn');
-    if (isRepeat) btn.classList.add('active-mode');
-    else btn.classList.remove('active-mode');
+    if (isRepeat) btn.classList.add('active-mode'); else btn.classList.remove('active-mode');
 }
 
-function changeVolume(val) {
-    if (audio) audio.volume = val;
-}
+function changeVolume(val) { if (audio) audio.volume = val; }
 
 function updateProgress() {
     if (!audio.duration) return;
@@ -721,15 +635,12 @@ function updateProgress() {
     document.getElementById('time-current').innerText = formatTime(audio.currentTime);
 }
 
-// 🎯 İSTEDİĞİN SANİYEYE ATLAMANI SAĞLAYAN MANTIKSAL FONKSİYON
 function seekTrack(e) {
     const timeline = document.getElementById('timeline');
     const rect = timeline.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const pct = clickX / rect.width;
-    if (audio && audio.duration) {
-        audio.currentTime = pct * audio.duration;
-    }
+    if (audio && audio.duration) { audio.currentTime = pct * audio.duration; }
 }
 
 function formatTime(secs) {
@@ -743,14 +654,9 @@ function toggleCollapse() {
     const player = document.getElementById('cyber-audio-player');
     const btn = document.getElementById('slide-toggle-btn');
     player.classList.toggle('collapsed');
-    if (player.classList.contains('collapsed')) {
-        btn.innerText = "YUKARI ÇEK ▲";
-    } else {
-        btn.innerText = "AŞAĞI ÇEK ▼";
-    }
+    if (player.classList.contains('collapsed')) { btn.innerText = "YUKARI ÇEK ▲"; } else { btn.innerText = "AŞAĞI ÇEK ▼"; }
 }
 
-// 🎚 SİBER VİZUALİZER SİSTEMİ
 function initVisualizer() {
     try {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -760,42 +666,29 @@ function initVisualizer() {
         source.connect(analyser);
         analyser.connect(audioCtx.destination);
         drawVisualizer();
-    } catch (e) {
-        console.log("Visualizer başlatılamadı:", e);
-    }
+    } catch (e) { console.log(e); }
 }
 
 function drawVisualizer() {
     animationFrameId = requestAnimationFrame(drawVisualizer);
     if (!analyser) return;
-    
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
     analyser.getByteFrequencyData(dataArray);
-    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
     const barWidth = (canvas.width / bufferLength) * 1.5;
-    let barHeight;
-    let x = 0;
-    
+    let barHeight; let x = 0;
     const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#ffffff';
-    
     for (let i = 0; i < bufferLength; i++) {
         barHeight = dataArray[i] / 4; 
-        
         ctx.fillStyle = accentColor;
         ctx.globalAlpha = 0.2 + (barHeight / 60); 
-        
-        // Simetrik dalga görünümü için dikeyde ortala
         const yPos = (canvas.height / 2) - (barHeight / 2);
         ctx.fillRect(x, yPos, barWidth - 2, barHeight);
-        
         x += barWidth;
     }
 }
 
-// 🔮 ORACLE & TEMA & METİN İŞLEME FONKSİYONLARI
 function getTengriOracle() { 
     const display = document.getElementById("oracle-display"); 
     display.classList.add("glitch-effect"); 
@@ -809,11 +702,8 @@ function getTengriOracle() {
 }
 
 function changeTheme(themeName, element) { 
-    if(themeName === 'dark') { 
-        document.documentElement.removeAttribute('data-theme'); 
-    } else { 
-        document.documentElement.setAttribute('data-theme', themeName); 
-    } 
+    if(themeName === 'dark') { document.documentElement.removeAttribute('data-theme'); } 
+    else { document.documentElement.setAttribute('data-theme', themeName); } 
     document.querySelectorAll('.theme-dot').forEach(dot => dot.classList.remove('active')); 
     element.classList.add('active'); 
 }
@@ -843,9 +733,10 @@ const bannedWords = ["yüksek kalite", "yüksek kaliteli", "hakiki deri", "gerç
 
 function escapeRegExp(str){ return str.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
 
+/* 🎯 TAM KELİME SINIRLARINA UYACAK ŞEKİLDE GÜNCELLENEN GÜVENLİ FONKSİYON */
 function highlight(text) { 
     bannedWords.forEach(word => { 
-        const pattern = escapeRegExp(word).replace(/\s+/g,"\\s+"); 
+        const pattern = "\\b" + escapeRegExp(word).replace(/\s+/g,"\\s+") + "\\b"; 
         const reg = new RegExp(pattern,"gi"); 
         text = text.replace(reg, m => `<span class="bad-word">${m}</span>`); 
     }); 
