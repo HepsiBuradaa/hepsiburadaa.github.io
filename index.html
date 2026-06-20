@@ -111,7 +111,7 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
 @keyframes pulse{ 0%,100%{transform:scale(1); opacity: 0.012;} 50%{transform:scale(1.01); opacity: 0.02;} }
 
 /* ==========================================================================
-   🎵 PREMIUM CYBER AUDIO PLAYER (RE-DESIGNED)
+   🎵 PREMIUM CYBER AUDIO PLAYER (MINIMALIST RE-DESIGNED)
    ========================================================================== */
 .cyber-player-wrapper {
     position: fixed;
@@ -124,22 +124,22 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
 .slide-control-panel {
     display: flex;
     justify-content: flex-end;
-    padding-right: 30px;
+    padding-right: 40px;
     margin-bottom: -1px;
 }
 
 .slide-toggle-btn {
-    background: var(--bg-container);
+    background: rgba(9, 9, 10, 0.85);
+    backdrop-filter: blur(12px);
     border: 1px solid var(--border-container);
     border-bottom: none;
     color: var(--text-main);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
-    letter-spacing: 1.5px;
-    padding: 8px 16px;
-    border-radius: 6px 6px 0 0;
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
-    transition: all 0.2s ease;
+    letter-spacing: 2px;
+    padding: 6px 16px;
+    border-radius: 4px 4px 0 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-transform: uppercase;
 }
 .slide-toggle-btn:hover {
@@ -148,13 +148,14 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
 }
 
 .cyber-player {
-    background: var(--bg-container);
-    border-top: 1px solid var(--border-container);
-    padding: 15px 30px 20px 30px;
+    background: rgba(9, 9, 10, 0.85);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 12px 40px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    box-shadow: 0 -15px 35px rgba(0,0,0,0.7);
+    gap: 10px;
+    box-shadow: 0 -20px 50px rgba(0,0,0,0.8);
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     transform: translateY(0);
 }
@@ -168,49 +169,48 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 45px;
+    height: 36px;
 }
 
 .player-left-meta {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 20%;
-    gap: 4px;
+    align-items: center;
+    gap: 16px;
+    width: 25%;
 }
 
 .track-index {
     color: var(--text-heading);
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11px;
+    font-weight: 500;
     letter-spacing: 0.5px;
+    opacity: 0.9;
 }
 
 .time-box {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     font-size: 11px;
     font-family: monospace;
     color: var(--text-main);
-    opacity: 0.7;
+    opacity: 0.5;
 }
 
 .player-center-visual {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40%;
+    width: 35%;
     height: 100%;
 }
 
 .visualizer-container {
     width: 100%;
-    max-width: 320px;
-    height: 38px;
-    background: rgba(0, 0, 0, 0.15);
-    border-radius: 4px;
-    border: 1px solid rgba(255,255,255,0.02);
+    max-width: 260px;
+    height: 24px;
+    background: transparent;
     overflow: hidden;
+    opacity: 0.8;
 }
 
 .visualizer-canvas {
@@ -223,76 +223,97 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 12px;
+    gap: 20px;
     width: 40%;
 }
 
 .control-group {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 }
 
 .player-btn {
-    padding: 8px 14px;
-    font-size: 10px;
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 6px 10px;
+    font-size: 9px;
     letter-spacing: 1px;
-    font-weight: 600;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: var(--text-main);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.player-btn:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: none;
 }
 
 .player-btn.active-mode {
-    border-color: var(--accent-color) !important;
-    box-shadow: 0 0 10px var(--accent-glow);
-    color: var(--text-heading) !important;
+    border-color: transparent !important;
+    color: var(--accent-color) !important;
+    background: rgba(255, 255, 255, 0.05);
+    font-weight: 700;
 }
 
 .volume-box {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: 6px;
 }
 
 .volume-icon {
-    font-size: 13px;
+    font-size: 11px;
     color: var(--text-main);
+    opacity: 0.6;
     user-select: none;
 }
 
 .volume-slider {
     -webkit-appearance: none;
-    width: 75px;
-    height: 4px;
-    background: var(--bg-input);
-    border: 1px solid var(--border-color);
-    border-radius: 2px;
+    width: 60px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.07);
+    border: none;
     outline: none;
     cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.volume-slider:hover {
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: var(--text-heading);
-    box-shadow: 0 0 6px var(--accent-color);
+    box-shadow: 0 0 4px var(--accent-color);
     cursor: pointer;
 }
 
 .timeline-row {
     width: 100%;
-    padding: 0 2px;
+    padding: 0;
 }
 
 .cyber-timeline {
     width: 100%;
-    height: 5px;
-    background: var(--bg-input);
-    border: 1px solid var(--border-color);
-    border-radius: 3px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
     position: relative;
     cursor: pointer;
+    transition: height 0.2s ease;
+}
+
+.cyber-timeline:hover {
+    height: 4px;
 }
 
 .timeline-progress {
@@ -301,7 +322,7 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
     top: 0;
     height: 100%;
     background: var(--accent-color);
-    box-shadow: 0 0 8px var(--accent-color);
+    box-shadow: 0 0 6px var(--accent-color);
     width: 0%;
     pointer-events: none;
 }
@@ -491,13 +512,13 @@ const oracleQuotes = [
     "Kaderinde bugün çok radikal bir kariyer değişikliği görüyorum. Mesela 'Boşluk Temizleyici' sekmesinden 'Yazım Düzenleyici' sekmesine geçeceksin. Büyük devrim.",
     "Küre diyor ki: İstifa edip bir sahil kasabasında domates yetiştirmek harika bir fikir. Ama domates tohumu fiyatlarına bakınca bu panelin siyahlığı gözüne bir tık daha güzel geliyor, değil mi?",
     "Bugün bir delilik yapıp Slack'ten 'Ben çıkıyorum, ne haliniz varsa görün' yazasın gelecek. Ama enter tuşuna basmadan önce kıdem tazminatını hesaplayıp yerine 'Harika bir feedback, hemen ilgileniyorum' yazacaksınız.",
-    "Yıldız haritana göre bugün kurumsal kölelik zincirlerini kırma günün! Ama Akbank, Garanti ve Yapı Kredi el ele tutuşup kapıda seni bekliyor. Zincirler kalsın, biz metindeki çift boşlukları kıralım.",
+    "Yıldız haritana göre bugün kurumsal kölelik zincirlerini kırma günün! Ama Akbank, Garanti and Yapı Kredi el ele tutuşup kapıda seni bekliyor. Zincirler kalsın, biz metindeki çift boşlukları kıralım.",
     "Küre diyor ki: İstifa et, her şeyi sat, Hindistan'a git ve ruhunu arındır. Ama uçak bileti fiyatlarına baktıktan sonra bu paneldeki 'Temizle' butonu gözüne Ganj Nehri'nden daha arındırıcı gelecek.",
     "Küre diyor ki: Sen bu dünyaya her sabah 8'de uyanıp elalemin excel tablosunu, word metnini düzeltmek için gelmedin. Sen çok daha büyük şeyler için yaratıldın... Şaka şaka, tam olarak bunun için geldin. Hadi yapıştır metni, mesai akıyor.",
     "Bugün istifa edip dünyayı gezen o cool gezginlerden olma hayalin tavan yapacak. Ama sırt çantanı hazırlarken içine koyacak lüksün sadece şirket logolu polar ve promosyon termos olduğunu fark edip masana geri çökeceksiniz. Kopyala butonuna bas ve hayalleri serbest bırak.",
     "Evren bugün sana çok net bir vizyon gösteriyor: Kendi işinin patronu olmuşsun, altındaki lüks araba, arkanda korumalar... Ama vizyonun çözünürlüğü biraz artınca fark ediyorsun ki altındaki araba şirket arabası, arkandakiler de 'Şu iş ne oldu?' diye bekleyen yöneticiler. Uyan aslanım, metin temizlenecek.",
     "İçindeki o çılgın girişimci ruh 'Hemen bu akşam şirketi kuruyoruz' diye bağırıyor. Ama muhasebecinin isteyeceği stopajı, bağkuru, damga vergisini hesaplayınca, buradaki bedava, reklamsız, vergisiz mat siyah panel gözüne bir anda İsviçre Merkez Bankası gibi güvenli gelecek.",
-    "Bugün şirketin ortak platformunda yanlışlıkla 'Yetti be, ne bitmez revizyonmuş!' yazacaksın... diye korkup soğuk terler dökeceksin ama yerine saniyede 120 kelime hızla 'Tabii ki hemen revize edip en mükemmel haliyle iletiyorum, sevgiler' yazarak hayatta kalacaksın.",
+    "Bugün şirketin ortak platformunda yanlışlıkla 'Yetti be, ne bitmez revizyonmuş!' yazacaksın... diye korkup soğuk terler dökeceksiniz ama yerine saniyede 120 kelime hızla 'Tabii ki hemen revize edip en mükemmel haliyle iletiyorum, sevgiler' yazarak hayatta kalacaksın.",
     "Geleceğinde inanılmaz bir zenginlik, malikaneler, uşaklar görüyorum... Ama rüya tabirlerine göre bu rüya 'Çok yakında mesaiye kalacaksın ve akşam yemeğinde sana sadece soğuk bir dürüm ısmarlayacaklar' anlamına geliyor. Dürümün tuzu bol olsun, devam.",
     "Bugün ani bir cinnetle yöneticine Slack’ten 'Ben gidiyorum, vizyonsuz ekibiniz ve bitmeyen revizyonlarınız size kalsın' yazacaksınız. Tam gönder tuşuna basacakken kalbin sıkışacak, gözün kararacak, metni silip yerine 'Elinize sağlık, çok ufak bir sorum olacaktı :)'* yazıp arkaya gizlice ağlamaya gideceksiniz.",
     "Küre parlıyor! Seni çok yakında business class uçuşunda şampanyanı yudumlarken görüyorum... Ama uçak modunu kapatınca uyanıyorsun ki metrobüste bir teyzenin pazar çantasıyla sol böbreğin arasında sıkışmışsın ve işe geç kalıyorsun. Yapıştır şu metni de bari primin kesilmesin.",
@@ -521,8 +542,8 @@ const oracleQuotes = [
     "Bugün yapacağın en büyük hata, biten işi teslim ettikten sonra 'Başka bir şey var mıydı?' diye sormak olur. Sorma.",
     "Bugün karşına çıkacak saçmalıklara karşı sabrın, bu panelin siyahlığı kadar derin ve sınırsız olsun.",
     "Metindeki çift boşlukları avladığın gibi hayattaki iki yüzlüleri de avlayacağın keskin bir gün.",
-    "Günün tavsiyesi: O sekmeyi kapat. Hangi sekme olduğunu biliyorsun. Kapat gitsin.",
-    "Küre fısıldıyor: Akşama güzel bir dizi/film patlat, bütün günün yükünü silsin süpürsün.",
+    "Günü tavsiyesi: O sekmeyi kapat. Hangi sekme olduğunu biliyorsun. Kapat gitsin.",
+    "Küre bir film patlat, bütün günün yükünü silsin süpürsün.",
     "Yazım hatalarını düzelttiğin gibi hayatına da ince bir ayar çekiyorsun. Doğru yoldasın.",
     "Bugün müşteriden gelen 'Elinize sağlık çok güzel olmuş' mesajını göreceksiniz. (Şaka şaka, revizyon var).",
     "İçinden bir ses 'Bırak git' diyor ama cüzdanın 'Dur yolcu' diye fısıldıyor. Çalışmaya devam.",
@@ -687,249 +708,7 @@ function copyToClipboard(elementId) {
 function cleanSpaces(){ document.getElementById("output1").innerHTML = processUltraEngine("input1", false); }
 function fixText(){ document.getElementById("output2").innerHTML = processUltraEngine("input2", true); }
 
-function handleEnterKey(e) { if (e.key === "Enter") { document.execCommand('insertLineBreak', false, null); e.preventDefault(); } }
-document.getElementById("input1").addEventListener("keydown", handleEnterKey);
-document.getElementById("input2").addEventListener("keydown", handleEnterKey);
-
-function copy1(){ copyToClipboard("output1"); }
-function clear1(){ document.getElementById("input1").innerHTML=""; document.getElementById("output1").innerHTML=""; calculateMeta(1); }
-function copy2(){ copyToClipboard("output2"); }
-function clear2(){ document.getElementById("input2").innerHTML=""; document.getElementById("output2").innerHTML=""; calculateMeta(2); }
-
-window.addEventListener("DOMContentLoaded", function() {
-    audio = document.getElementById("main-audio"); 
-    const darkDot = document.querySelector(".id-dark-dot");
-    if (darkDot) { changeTheme('dark', darkDot); }
-    initPlayer();
-});
-
-// ==========================================================================
-// 🎵 PREMIUM CYBER AUDIO PLAYER ENGINE
-// ==========================================================================
-
-function initPlayer() {
-    canvas = document.getElementById("visualizer");
-    ctx = canvas.getContext("2d");
-    
-    loadTrack(currentTrackIndex);
-    audio.addEventListener("ended", handleTrackEnded);
-    audio.addEventListener("timeupdate", updateTimeline);
-    audio.addEventListener("loadedmetadata", updateDuration);
-    
-    audio.volume = document.getElementById("volume-slider").value;
-    
-    setupVisualizerCanvas();
-    drawVisualizerPulse();
-}
-
-function initAudioContext() {
-    if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 64; 
-        source = audioCtx.createMediaElementSource(audio);
-        source.connect(analyser);
-        analyser.connect(audioCtx.destination);
-    }
-}
-
-function loadTrack(index) {
-    audio.src = musicList[index].url;
-    document.getElementById("track-index").innerText = `Şarkı: ${index + 1} / ${musicList.length}`;
-    resetTimeline();
-}
-
-function togglePlay() {
-    const playBtn = document.getElementById("play-pause-btn");
-    
-    initAudioContext();
-    if (audioCtx && audioCtx.state === 'suspended') {
-        audioCtx.resume();
-    }
-    
-    if (isPlaying) {
-        audio.pause();
-        isPlaying = false;
-        playBtn.innerText = "▶ OYNAT";
-    } else {
-        audio.play().then(() => {
-            startVisualizerLoop();
-        }).catch(e => console.log("Etkileşim bekleniyor..."));
-        isPlaying = true;
-        playBtn.innerText = "⏸ DURDUR";
-    }
-}
-
-function handleTrackEnded() {
-    if (isRepeat) {
-        audio.currentTime = 0;
-        audio.play().catch(e => {});
-    } else {
-        nextTrack();
-    }
-}
-
-function nextTrack() {
-    if (isShuffle) {
-        currentTrackIndex = Math.floor(Math.random() * musicList.length);
-    } else {
-        currentTrackIndex = (currentTrackIndex + 1) % musicList.length;
-    }
-    loadTrack(currentTrackIndex);
-    if (isPlaying) {
-        audio.play().then(() => startVisualizerLoop()).catch(e => {});
-    }
-}
-
-function prevTrack() {
-    currentTrackIndex = (currentTrackIndex - 1 + musicList.length) % musicList.length;
-    loadTrack(currentTrackIndex);
-    if (isPlaying) {
-        audio.play().then(() => startVisualizerLoop()).catch(e => {});
-    }
-}
-
-function toggleShuffle() {
-    isShuffle = !isShuffle;
-    document.getElementById("shuffle-btn").classList.toggle("active-mode", isShuffle);
-}
-
-function toggleRepeat() {
-    isRepeat = !isRepeat;
-    document.getElementById("repeat-btn").classList.toggle("active-mode", isRepeat);
-}
-
-function changeVolume(val) {
-    if (audio) audio.volume = val;
-}
-
-function seekTrack(e) {
-    const timeline = document.getElementById("timeline");
-    const rect = timeline.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const width = rect.width;
-    const percentage = clickX / width;
-    if (audio.duration) {
-        audio.currentTime = percentage * audio.duration;
-    }
-}
-
-function updateTimeline() {
-    if (!audio.duration) return;
-    const progress = (audio.currentTime / audio.duration) * 100;
-    document.getElementById("timeline-progress").style.width = `${progress}%`;
-    document.getElementById("time-current").innerText = formatTime(audio.currentTime);
-}
-
-function updateDuration() {
-    document.getElementById("time-duration").innerText = formatTime(audio.duration);
-}
-
-function resetTimeline() {
-    document.getElementById("timeline-progress").style.width = "0%";
-    document.getElementById("time-current").innerText = "00:00";
-}
-
-function formatTime(seconds) {
-    if (isNaN(seconds)) return "00:00";
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
-}
-
-function toggleCollapse() {
-    const playerEl = document.getElementById("cyber-audio-player");
-    const toggleBtn = document.getElementById("slide-toggle-btn");
-    playerEl.classList.toggle("collapsed");
-    if (playerEl.classList.contains("collapsed")) {
-        toggleBtn.innerText = "YUKARI KAYDIR ▲";
-    } else {
-        toggleBtn.innerText = "AŞAĞI ÇEK ▼";
-    }
-}
-
-// ==========================================================================
-// 🎨 REAL-TIME FREQUENCY VISUALIZER GRAPHICS
-// ==========================================================================
-function setupVisualizerCanvas() {
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = canvas.offsetWidth * dpr;
-    canvas.height = canvas.offsetHeight * dpr;
-    ctx.scale(dpr, dpr);
-}
-
-function getAccentColor() {
-    return getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#ffffff';
-}
-
-function startVisualizerLoop() {
-    if (animationFrameId) cancelAnimationFrame(animationFrameId);
-    
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-    
-    function draw() {
-        if (!isPlaying) {
-            drawVisualizerPulse();
-            return;
-        }
-        
-        animationFrameId = requestAnimationFrame(draw);
-        analyser.getByteFrequencyData(dataArray);
-        
-        const width = canvas.offsetWidth;
-        const height = canvas.offsetHeight;
-        ctx.clearRect(0, 0, width, height);
-        
-        const barWidth = (width / bufferLength) * 1.4;
-        let barHeight;
-        let x = 0;
-        const accent = getAccentColor();
-        
-        for (let i = 0; i < bufferLength; i++) {
-            barHeight = (dataArray[i] / 255) * height;
-            
-            let gradient = ctx.createLinearGradient(x, height, x, height - barHeight);
-            gradient.addColorStop(0, 'rgba(0,0,0,0.1)');
-            gradient.addColorStop(0.5, accent);
-            gradient.addColorStop(1, '#ffffff');
-            
-            ctx.fillStyle = gradient;
-            ctx.shadowBlur = 8;
-            ctx.shadowColor = accent;
-            
-            ctx.fillRect(x, height - barHeight, barWidth - 2, barHeight);
-            x += barWidth;
-        }
-        ctx.shadowBlur = 0;
-    }
-    draw();
-}
-
-function drawVisualizerPulse() {
-    if (isPlaying) return;
-    animationFrameId = requestAnimationFrame(drawVisualizerPulse);
-    
-    const width = canvas.offsetWidth;
-    const height = canvas.offsetHeight;
-    ctx.clearRect(0, 0, width, height);
-    
-    const accent = getAccentColor();
-    const time = Date.now() * 0.004;
-    const bars = 16;
-    const barWidth = width / bars;
-    
-    for (let i = 0; i < bars; i++) {
-        const pulseHeight = (Math.sin(time + i * 0.5) * 0.3 + 0.4) * (height * 0.4);
-        ctx.fillStyle = accent;
-        ctx.globalAlpha = 0.25;
-        ctx.fillRect(i * barWidth, height/2 - pulseHeight/2, barWidth - 3, pulseHeight);
-    }
-    ctx.globalAlpha = 1.0;
-}
-
-window.addEventListener('resize', setupVisualizerCanvas);
+function handleEnterKey(e) { if (e.key === "Enter") { } }
 </script>
-
 </body>
 </html>
