@@ -477,7 +477,6 @@ const oracleQuotes = [
    "Bugün tam 'Kendi hikayeni yazma' günü. Ama o hikayenin ilk bölümü 'İşsizlik Maaşı Sırasında Bir Gün' olsun istemiyorsak, gel şu metni kusursuz hale getirelim.",
    "Şu an klavyeye çok sert basarak mail yazıyorsun, hıncını anlıyorum. Ama mekanik klavye fiyatları uçtu, tuş fırlarsa yenisini alamayız. Sakince o parmağını geri çek ve şu metni yumuşatarak düzenle.",
    "Bugün tam patronun odasının kapısını çarparak çıkma günü! Ama o kapı hidrolikli, yavaşça kapanıp karizmanı çizecek, hiç gerek yok. Gel biz şu Excel tablosunu pırıl pırıl hale getirelim.",
-   "Bugün o istifa dilekçesini yazıp tam patronun masasına fırlatacakken, telephoneuna bankadan 'Sayın müşterimiz, 120 ay vadeli konut kredinizin 3. taksiti tahsil edilememiştir' bildirimi düşecek. O fırlattığın kağıdı masadan 'Yere çöp düşmüş de efendim' diye yerleri siler gibi geri toplayacaksın.",
    "Bugün tam şirket telefonunu sessize alıp ortadan kaybolma günü. Ama telefon şirket malı, kaybedersen maaşından keserler, durduk yere borçlanma. Gel şu metni cilalayalım.",
    "Şu an müdüre 'Sizinle çalışmak bir kabustu' diye bağırmak istiyorsun. Ama sesin detone olur, ciddiyetin kaybolur, arkandan gülerler. Hiç o riske girmeyelim, gel şu raporu pürüzsüz yapalım.",
    "Bugün 'Bıktım sizin vizyonunuzdan' deyip sandalyeyi tekmelemek için harika bir enerji var üstünde. Ama sandalye tekerlekli, kayar odanın öbür ucundaki çöp kovasına çarpar, durduk yere iş çıkar. Boşver, metni temizle geç.",
@@ -715,11 +714,11 @@ function showToast() {
 }
 
 function calculateMeta(tabIndex) { 
-    const text = document.getElementById(`input${tabIndex}`).innerText; 
+    const text = document.getElementById(`input` + tabIndex).innerText; 
     const charCount = text.length; 
     const wordCount = text.trim() === "" ? 0 : text.trim().split(/\s+/).length; 
-    document.getElementById(`char-count-${tabIndex}`).innerHTML = `Karakter: <strong>${charCount}</strong>`; 
-    document.getElementById(`word-count-${tabIndex}`).innerHTML = `Kelime: <strong>${wordCount}</strong>`; 
+    document.getElementById(`char-count-` + tabIndex).innerHTML = `Karakter: <strong>${charCount}</strong>`; 
+    document.getElementById(`word-count-` + tabIndex).innerHTML = `Kelime: <strong>${wordCount}</strong>`; 
 }
 
 function openTab(i){ 
@@ -729,20 +728,43 @@ function openTab(i){
     document.querySelectorAll(".tab-btn")[i].classList.add("active"); 
 }
 
-const bannedWords = ["yüksek kalite", "yüksek kaliteli", "hakiki deri", "gerçek deri", "%100 deri", "% 100 deri", "birinci sınıf", "1. kalite", "1. sınıf", "unisex", "1.sınıf", "1.kalite", "1.kalıte", "1. kalıte", "1.SINIF", "1. SINIF", "1.KALİTE", "1. KALİTE", "BİRİNCİ SINIF", "YÜKSEK KALİTE", "YÜKSEK KALITE"];
+const bannedWords = ["yüksek kalite", "yüksek kaliteli", "hakiki deri", "gerçek deri", "%100 deri", "% 100 deri", "birinci sınıf", "1. kalite", "1. sınıf", "unisex", "1.sınıf", "1.kalite", "1.kalıte", "1. kalıte", "1.sınif", "1. sınif", "1.kalite", "1. kalite", "birinci sınıf", "yüksek kalite", "yüksek kalıte"];
 
-function escapeRegExp(str){ return str.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
-
-/* 🎯 TÜRKÇE HARFLERİ ASLA YUTMAYAN YENİ GÜVENLİ HIGHLIGHT MOTORU */
+/* 🎯 %100 GÜVENLİ VE ASLA HARF YUTMAYAN YENİ STRİNG MATCH TEMİZLEME MOTORU */
 function highlight(text) { 
-    bannedWords.forEach(word => { 
-        const escapedWord = escapeRegExp(word).replace(/\s+/g, "\\s+");
-        // Türkçe karakter dostu kelime sınırı kontrolü: Önünde ve arkasında harf/rakam/türkçe karakter olmamalı
-        const pattern = "(?<![a-zA-Z0-9çğıöşüÇĞİÖŞÜ])(" + escapedWord + ")(?![a-zA-Z0-9çğıöşüÇĞİÖŞÜ])";
-        const reg = new RegExp(pattern, "gi"); 
-        text = text.replace(reg, m => `<span class="bad-word">${m}</span>`); 
-    }); 
-    return text; 
+    if (!text) return "";
+    let cleanBannedWords = bannedWords.map(w => w.trim().toLowerCase());
+    
+    // Metni geçici bir HTML elementine koyup satır satır bölüyoruz
+    let tempDiv = document.createElement("div");
+    tempDiv.innerHTML = text;
+    let htmlContent = tempDiv.innerHTML;
+
+    cleanBannedWords.forEach(word => {
+        let index = 0;
+        let lowerHtml = htmlContent.toLowerCase();
+        
+        while ((index = lowerHtml.indexOf(word, index)) !== -1) {
+            // Tam kelime kontrolü için önündeki ve arkasındaki karakterleri denetliyoruz
+            let charBefore = index > 0 ? htmlContent.charAt(index - 1) : " ";
+            let charAfter = index + word.length < htmlContent.length ? htmlContent.charAt(index + word.length) : " ";
+            
+            let isWordStart = /[^a-zA-Z0-9çğıöşüÇĞİÖŞÜ]/.test(charBefore);
+            let isWordEnd = /[^a-zA-Z0-9çğıöşüÇĞİÖŞÜ]/.test(charAfter);
+            
+            if (isWordStart && isWordEnd) {
+                let originalWord = htmlContent.substring(index, index + word.length);
+                let replacement = `<span class="bad-word">${originalWord}</span>`;
+                
+                htmlContent = htmlContent.substring(0, index) + replacement + htmlContent.substring(index + word.length);
+                lowerHtml = htmlContent.toLowerCase();
+                index += replacement.length;
+            } else {
+                index += word.length;
+            }
+        }
+    });
+    return htmlContent;
 }
 
 function hardProtectBoldStyles(rawHtml) { 
@@ -778,7 +800,7 @@ function processUltraEngine(inputElementId, forceLowercase = false) {
         let contentCheck = cleanedLine.replace(/<[^>]*>/g, "").replace(/\s+/g, "").trim();
         if (contentCheck !== "") {
             let finalizedLine = cleanedLine.trim();
-            if (forceLowercase) { finalizedLine = finalizedLine.replace(/(^|>|[.!?]\s+)([a-zçğıöşü])/g, (m, p1, p2) => p1 + p2.toLocaleUpperCase('tr-TR')); }
+            if (forceLowercase) { finalizedLine = finalizedLine.replace(/(^|>|[.!?]\s+)([a-zçğıöşüı])/g, (m, p1, p2) => p1 + p2.toLocaleUpperCase('tr-TR')); }
             dynamicResultLines.push(finalizedLine);
         }
     });
