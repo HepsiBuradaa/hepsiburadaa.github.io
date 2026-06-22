@@ -72,6 +72,13 @@ body {
     transition: background 0.25s ease, color 0.25s ease;
 }
 
+/* Kahve Molası Modu Aktifken Sayfa Flulaştırma */
+body.coffee-blur-active > *:not(#coffee-modal) {
+    filter: blur(8px);
+    pointer-events: none;
+    transition: filter 0.5s ease;
+}
+
 .theme-selector { display: flex; justify-content: flex-end; gap: 12px; max-width: 900px; margin: 0 auto 20px auto; align-items: center; background: var(--bg-container); padding: 12px 18px; border-radius: 8px; border: 1px solid var(--border-container); }
 .theme-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; color: var(--text-main); opacity: 0.8; }
 .theme-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
@@ -92,7 +99,7 @@ body {
 @keyframes textGlitch { 0% { transform: translate(2px, 1px); opacity: 0.7; } 50% { transform: translate(-1px, -1px); opacity: 0.9; } 100% { transform: translate(0, 0); opacity: 1; } }
 
 .tabs{ display:flex; justify-content:center; gap:12px; margin-bottom:25px; }
-button, .tab-btn { background: var(--bg-btn); color: var(--text-btn); border: 1px solid var(--border-color); padding: 12px 26px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 6px; transition: all 0.2s ease; }
+button, .tab-btn { background: var(--bg-btn); color: var(--text-btn); border: 1px solid var(--border-color); padding: 12px 26px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 6px; transition: all 0.2s ease; position: relative; }
 button:hover, .tab-btn:hover { color: var(--text-heading) !important; background: var(--bg-btn-hover); border-color: var(--accent-color); box-shadow: 0 0 12px var(--accent-glow); }
 .tab-btn.active { background: var(--bg-tab-active) !important; color: var(--text-heading) !important; border-color: var(--accent-color) !important; box-shadow: 0 0 15px var(--accent-glow); }
 
@@ -249,6 +256,158 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
     border-radius: 2px;
     pointer-events: none;
 }
+
+/* Ses Kısmı/Açma Premium Kaydırıcı Tasarımı */
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 15px;
+}
+.volume-icon {
+    font-size: 14px;
+    color: var(--text-main);
+    user-select: none;
+    cursor: pointer;
+}
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 70px;
+    height: 4px;
+    background: var(--bg-input);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    transition: width 0.2s;
+}
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    box-shadow: 0 0 6px var(--accent-color);
+}
+.volume-slider::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    box-shadow: 0 0 6px var(--accent-color);
+    border: none;
+}
+
+/* ==========================================================================
+   ☕ KAHVE MOLASI MODAL STİLLERİ
+   ========================================================================== */
+.coffee-modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 100000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+.coffee-modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+.coffee-cup-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    background: url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=300&auto=format&fit=crop') center/cover;
+    border-radius: 50%;
+    box-shadow: 0 0 30px rgba(255,255,255,0.2), inset 0 0 20px rgba(0,0,0,0.6);
+    margin-bottom: 30px;
+}
+/* Buhar/Duman Efekti */
+.smoke-container {
+    position: absolute;
+    top: -20px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+}
+.smoke-container span {
+    display: block;
+    width: 4px;
+    height: 35px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    filter: blur(3px);
+    animation: floatingSmoke 3s infinite linear;
+    opacity: 0;
+}
+.smoke-container span:nth-child(1) { animation-delay: 0.2s; }
+.smoke-container span:nth-child(2) { animation-delay: 0.8s; }
+.smoke-container span:nth-child(3) { animation-delay: 0.5s; }
+@keyframes floatingSmoke {
+    0% { transform: translateY(10px) scaleX(1); opacity: 0; }
+    30% { opacity: 0.5; transform: translateY(0) scaleX(1.5); }
+    60% { opacity: 0.3; }
+    100% { transform: translateY(-30px) scaleX(2); opacity: 0; }
+}
+.coffee-quote-display {
+    max-width: 600px;
+    text-align: center;
+    font-size: 18px;
+    font-style: italic;
+    color: #f2f2f7;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    padding: 0 20px;
+    min-height: 70px;
+    opacity: 0.65; /* Saydam, huzurlu görünüm */
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+    letter-spacing: 0.5px;
+    line-height: 1.6;
+}
+.coffee-quote-display.fade {
+    opacity: 0;
+    transform: translateY(5px);
+}
+.coffee-close-btn {
+    margin-top: 40px;
+    background: #121214;
+    border: 1px solid #242426;
+    color: #aeaeb2;
+    padding: 10px 24px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    border-radius: 4px;
+}
+
+/* ==========================================================================
+   🔥 TENGRİ KAOS MODU ANIMASYONLARI
+   ========================================================================== */
+@keyframes shakeKaos {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    20% { transform: translate(-4px, 4px) rotate(-2deg); }
+    40% { transform: translate(-4px, -4px) rotate(3deg); }
+    60% { transform: translate(4px, 4px) rotate(-1deg); }
+    80% { transform: translate(4px, -4px) rotate(2deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+.tengri-crazy-mode button, .tengri-crazy-mode .tab-btn {
+    animation: shakeKaos 0.15s infinite linear !important;
+}
+.tengri-img-spawn {
+    position: fixed;
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    z-index: 999999;
+    border: 3px solid #ff3366;
+    box-shadow: 0 0 40px rgba(255,51,102,0.6);
+    pointer-events: none;
+}
 </style>
 </head>
 
@@ -266,6 +425,7 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
     <div class="theme-dot" style="background: #e67e22;" onclick="changeTheme('orange', this)" title="Imperial Amber (Kehribar Altın)"></div>
     <div class="theme-dot" style="background: #474d59;" onclick="changeTheme('slate', this)" title="Titanium Slate (Gunmetal Gri)"></div>
     <div class="theme-dot" style="background: #ffffff; border: 1px solid #cbd5e1;" onclick="changeTheme('white', this)" title="Obsidian White (Yumuşak Platin)"></div>
+    <button onclick="startCoffeeBreak()" style="padding: 6px 14px; font-size: 11px; margin-left: 10px; background: #1c1a09; border-color: #ffd166; color: #ffd166;">☕ KAHVE MOLASI</button>
 </div>
 
 <div class="oracle-box">
@@ -318,6 +478,17 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
     </div>
 </div>
 
+<div id="coffee-modal" class="coffee-modal">
+    <div class="coffee-cup-container">
+        <div class="smoke-container">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div id="coffee-quote" class="coffee-quote-display">Yükleniyor...</div>
+    <button class="coffee-close-btn" onclick="endCoffeeBreak()">MOLA BİTTİ, DEVAM</button>
+</div>
 
 <div id="cyber-audio-player" class="cyber-player">
     <button id="player-toggle" class="player-toggle-btn" onclick="togglePlayerMinimize()">▼ AŞAĞI KAYDIR</button>
@@ -336,6 +507,11 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
             <button class="player-btn" onclick="nextTrack()">⏭</button>
             <button id="shuffle-btn" class="player-btn" onclick="toggleShuffle()">🔀 KARIŞTIR</button>
             <button id="repeat-btn" class="player-btn" onclick="toggleRepeat()">🔁 TEKRARLA</button>
+            
+            <div class="volume-control">
+                <span class="volume-icon" onclick="muteToggle()">🔊</span>
+                <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)">
+            </div>
         </div>
     </div>
     
@@ -346,8 +522,7 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
         </div>
         <span id="total-duration" class="time-display">00:00</span>
     </div>
-    
-    <audio id="main-audio" src=""></audio>
+<audio id="main-audio" src=""></audio>
 </div>
 
 <script>
@@ -408,7 +583,7 @@ const oracleQuotes = [
    "Senin başarılarını görmezden gelenlerin en sevdikleri döküman, tam 'Kaydet' tuşuna basacakken elektrik kesintisiyle uçup gitsin. Amin.",
    "Sana sürekli 'Biz bir aileyiz' deyip mesai ücretini vermeyenlerin şirket arabasının lastiği tam da sanayiye en uzak mesafede patlasın. Amin.",
    "Bugün 'Seni çok iyi anlıyorum' diyenlerin aslında 'Şu an seni hiç dinlemiyorum, sadece kendi konuşma sıramın gelmesini bekliyorum' demek istediğini bir kez daha anlayacaksın.",
-   "Bugün müdürün 'Bu projede senin vizyonuna güveniyorum' demesinin aslında 'Hata çıkarsa faturayı tamamen sana keseceğim' demek olduğunu acı bir tebessümle fark edeceksin.",
+   "Bugün müdürün 'Bu projede senin vizyonuna güveniyorum' demesinin aslında 'Hata çıkarsa faturayı tamamen sana keseceğim' demek olduğunu acı bir tebessümle fark edeceksiniz.",
    "Bugün 'Önceliğimiz çalışan mutluluğu' sloganının aslında 'Ofise langırt koyduk ama oynarsan gözümüz üstünde olur' demek olduğunu anlayacaksın.",
    "Bugün 'Aramızda çok güzel bir sinerji oluştu' iltifatının aslında 'Sen ne desen onaylıyorsun, işleri de sessizce yapıyorsun, tam aradığımız kölesin' anlamına geldiğini anlayacaksın.",
    "Bugün 'Biz burada bir aileyiz' söyleminin aslında 'Haklarını ararken fazla profesyonel düşünme, fedakarlık yaparken de sınır tanıma' anlamına geldiğini bir kez daha anlayacaksın.",
@@ -420,7 +595,7 @@ const oracleQuotes = [
    "Kaderinde bugün çok radikal bir kariyer değişikliği görüyorum. Mesela 'Boşluk Temizleyici' sekmesinden 'Yazım Düzenleyici' sekmesine geçeceksin. Büyük devrim.",
    "Küre diyor ki: İstifa edip bir sahil kasabasında domates yetiştirmek harika bir fikir. Ama domates tohumu fiyatlarına bakınca bu panelin siyahlığı gözüne bir tık daha güzel geliyor, değil mi?",
    "Bugün bir delilik yapıp Slack'ten 'Ben çıkıyorum, ne haliniz varsa görün' yazasın gelecek. Ama enter tuşuna basmadan önce kıdem tazminatını hesaplayıp yerine 'Harika bir feedback, hemen ilgileniyorum' yazacaksınız.",
-   "Yıldız haritana göre bugün kurumsal kölelik zincirlerini kırma günün! Ama Akbank, Garanti ve Yapı Kredi el ele tutuşup kapıda seni bekliyor. Zincirler kalsın, biz metindeki çift boşlukları kıralım.",
+   "Yıldız haritana göre bugün kurumsal kölelik zincirlerini kırma günün! Ama Akbank, Garanti and Yapı Kredi el ele tutuşup kapıda seni bekliyor. Zincirler kalsın, biz metindeki çift boşlukları kıralım.",
    "Küre diyor ki: İstifa et, her şeyi sat, Hindistan'a git ve ruhunu arındır. Ama uçak bileti fiyatlarına baktıktan sonra bu paneldeki 'Temizle' butonu gözüne Ganj Nehri'nden daha arındırıcı gelecek.",
    "Küre diyor ki: Sen bu dünyaya her sabah 8'de uyanıp elalemin excel tablosunu, word metnini düzeltmek için gelmedin. Sen çok daha büyük şeyler için yaratıldın... Şaka şaka, tam olarak bunun için geldin. Hadi yapıştır metni, mesai akıyor.",
    "Bugün istifa edip dünyayı gezen o cool gezginlerden olma hayalin tavan yapacak. Ama sırt çantanı hazırlarken içine koyacak lüksün sadece şirket logolu polar ve promosyon termos olduğunu fark edip masana geri çökeceksiniz. Kopyala butonuna bas ve hayalleri serbest bırak.",
@@ -451,7 +626,7 @@ const oracleQuotes = [
    "Bugün karşına çıkacak saçmalıklara karşı sabrın, bu panelin siyahlığı kadar derin ve sınırsız olsun.",
    "Metindeki çift boşlukları avladığın gibi hayattaki iki yüzlüleri de avlayacağın keskin bir gün.",
    "Günün tavsiyesi: O sekmeyi kapat. Hangi sekme olduğunu biliyorsun. Kapat gitsin.",
-   "Küre fısıldıyor: Akşama güzel bir dizi/film patlat, bütün günün yükünü silsin süpürsün.",
+   "Küre infix: Akşama güzel bir dizi/film patlat, bütün günün yükünü silsin süpürsün.",
    "Yazım hatalarını düzelttiğin gibi hayatına da ince bir ayar çekiyorsun. Doğru yoldasın.",
    "Bugün müşteriden gelen 'Elinize sağlık çok güzel olmuş' mesajını göreceksiniz. (Şaka şaka, revizyon var).",
    "İçinden bir ses 'Bırak git' diyor ama cüzdanın 'Dur yolcu' diye fısıldıyor. Çalışmaya devam.",
@@ -472,10 +647,64 @@ const oracleQuotes = [
    "Tengri Oracle görevini tamamladı. Şimdi o 'Kopyala' butonuna bas ve şovunu yap aslan parçası!"
 ];
 
+// Kahve Molası Motive Edici Sözleri
+const coffeeQuotes = [
+    "Derin bir nefes al. Şu an her şey kontrolün altında olmasa bile, bu senin değerini eksiltmez.",
+    "Zor dökümanlar biter, bitmeyen revizyonlar son bulur ama senin iç huzurun kalıcı olmalıdır.",
+    "Büyük başarılar, pes etmek yerine sadece küçük bir kahve molası verenler tarafından inşa edildi.",
+    "Bugün gösterdiğin sabır, yarın kuracağın o özgür dünyanın en sağlam temel taşı olacak.",
+    "Kendine haksızlık etmeyi bırak. Bugün elinden gelenin en iyisini yapıyorsun ve bu tamamen yeterli.",
+    "Yavaşla. Dünya seni bekleyebilir. Bu kahvenin tadı, önündeki tüm işlerden daha önemli.",
+    "Unutma: En karmaşık kodlar bile tek bir düzeltmeyle çözülür. Hayatındaki karmaşa da öyle.",
+    "Sen bir iş unvanından, bir excel tablosundan ya da revizyon raporundan çok daha fazlasısın.",
+    "Zor zamanlar güçlü insanlar yaratır. Şu an vizyonunu genişleten harika bir olgunlaşma dönemindesin.",
+    "Bugünün stresi yarının tecrübesidir. Sakince kahveni yudumla ve zihnini serbest bırak.",
+    "Şu an tam olarak olman gereken yerdesin. Adım adım, acele etmeden hedefine ilerliyorsun.",
+    "Zihnindeki gürültüyü kapat. Sadece kahvenin kokusuna ve dumanın sakin ritmine odaklan.",
+    "Harika şeyler zaman alır. Kendine zaman tanı, acele kurulan hayaller çabuk yıkılır.",
+    "Her şey üst üste geliyorsa, belki de yön değiştirme vaktin gelmiştir. Bu mola sana rehberlik etsin.",
+    "Sen durdurulamaz bir güçsün, sadece şu an pillerini şarj etmen gerekiyor. Dinlenmek de işin parçası.",
+    "Başarı bir varış noktası değil, bu zorlu ama öğretici yolculuğun ta kendisidir. Yolun tadını çıkar.",
+    "Bugün karşına çıkan engeller, seni durdurmak için değil, stratejini güçlendirmen için varlar.",
+    "Gelecekteki halin sana bakıp teşekkür edecek. Sırf bugün pes etmediğin ve akıllıca dinlendiğin için.",
+    "İçindeki ışığı kimsenin söndürmesine izin verme. Onlar sadece kendi karanlıklarını yansıtıyorlar.",
+    "Fırtınalar ağaçların köklerini derinleştirir. Yaşadığın kurumsal krizler de senin profesyonelliğini.",
+    "Biraz durup dinlenmek, pes etmek demek değildir. Daha güçlü koşmak için stratejik bir geri çekilmedir.",
+    "Cüzdanındaki sayılar ya da ekrandaki dökümanlar seni tanımlamaz. Sen eşsiz bir dehasın.",
+    "Zorlu bir sabahı geride bıraktın, harika bir öğleden sonrasına hazırsın. Kahven sana güç versin.",
+    "Her şey bittiğinde arkana yaslanıp bu günleri tatlı bir tebessümle hatırlayacaksın. İnan bana.",
+    "Zihnini temizle, gereksiz beklentileri tıpkı metindeki çift boşluklar gibi hayatından ayıkla.",
+    "Bugün kendin için küçük bir iyilik yap ve sadece bu ana odaklan. Huzur tam olarak burada saklı.",
+    "Başkalarının ne düşündüğü onların sınırıdır, senin potansiyelinin sınırı ise gökyüzüdür.",
+    "Sakin ol. Hayat bir yarış değil. Kendi ritminde, pürüzsüz ve asil bir şekilde ilerliyorsun.",
+    "Bulutlar dağılır, güneş elbet doğar. Siber evrenin bu geçici yoğunluğu seni asla yıldırmasın.",
+    "Tengri senin emeğini, döktüğün her damla alın terini görüyor. Mükafatın çok yakındır, sabret."
+];
+
 function getTengriOracle() { const display = document.getElementById("oracle-display"); display.classList.add("glitch-effect"); display.style.opacity = 0.3; setTimeout(() => { const randomIndex = Math.floor(Math.random() * oracleQuotes.length); display.innerText = oracleQuotes[randomIndex]; display.style.opacity = 1; setTimeout(() => { display.classList.remove("glitch-effect"); }, 200); }, 200); }
 function changeTheme(themeName, element) { if(themeName === 'dark') { document.documentElement.removeAttribute('data-theme'); } else { document.documentElement.setAttribute('data-theme', themeName); } document.querySelectorAll('.theme-dot').forEach(dot => dot.classList.remove('active')); element.classList.add('active'); }
 function showToast() { const toast = document.getElementById("toast-notification"); toast.classList.add("show"); setTimeout(() => { toast.classList.remove("show"); }, 2000); }
-function calculateMeta(tabIndex) { const text = document.getElementById(`input${tabIndex}`).innerText; const charCount = text.length; const wordCount = text.trim() === "" ? 0 : text.trim().split(/\s+/).length; document.getElementById(`char-count-${tabIndex}`).innerHTML = `Karakter: <strong>${charCount}</strong>`; document.getElementById(`word-count-${tabIndex}`).innerHTML = `Kelime: <strong>${wordCount}</strong>`; }
+
+// Tengri Yazınca Çıldırma Algoritması
+let chaosInterval = null;
+function calculateMeta(tabIndex) { 
+    const inputArea = document.getElementById(`input${tabIndex}`);
+    const text = inputArea.innerText; 
+    const charCount = text.length; 
+    const wordCount = text.trim() === "" ? 0 : text.trim().split(/\s+/).length; 
+    document.getElementById(`char-count-${tabIndex}`).innerHTML = `Karakter: <strong>${charCount}</strong>`; 
+    document.getElementById(`word-count-${tabIndex}`).innerHTML = `Kelime: <strong>${wordCount}</strong>`; 
+
+    // Kaos Tetikleyici Kontrolü
+    if (text.trim().toLowerCase() === "tengri") {
+        if (!chaosInterval) startTengriChaos();
+    } else {
+        if (chaosInterval && document.getElementById("input1").innerText.trim().toLowerCase() !== "tengri" && document.getElementById("input2").innerText.trim().toLowerCase() !== "tengri") {
+            stopTengriChaos();
+        }
+    }
+}
+
 function openTab(i){ document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active")); document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active")); document.querySelectorAll(".tab-content")[i].classList.add("active"); document.querySelectorAll(".tab-btn")[i].classList.add("active"); }
 const bannedWords = ["yüksek kalite", "yüksek kaliteli", "hakiki deri", "gerçek deri", "%100 deri", "% 100 deri", "birinci sınıf", "1. kalite", "1. sınıf", "unisex", "1.sınıf", "1.kalite", "1.kalıte", "1. kalıte", "1.SINIF", "1. SINIF", "1.KALİTE", "1. KALİTE", "BİRİNCİ SINIF", "YÜKSEK KALİTE", "YÜKSEK KALITE"];
 function escapeRegExp(str){ return str.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
@@ -577,6 +806,7 @@ let isPlaying = false;
 let isShuffle = false;
 let isRepeat = false;
 let audio = document.getElementById("main-audio");
+let previousVolume = 1;
 
 function initPlayer() {
     loadTrack(currentTrackIndex);
@@ -684,6 +914,122 @@ function togglePlayerMinimize() {
     } else {
         btn.innerText = "▼ AŞAĞI KAYDIR";
     }
+}
+
+// Ses Kontrol Fonksiyonları
+function changeVolume(val) {
+    audio.volume = val;
+    const icon = document.querySelector(".volume-icon");
+    if(val == 0) {
+        icon.innerText = "🔇";
+    } else if(val < 0.5) {
+        icon.innerText = "🔉";
+    } else {
+        icon.innerText = "🔊";
+    }
+}
+
+function muteToggle() {
+    const slider = document.getElementById("volume-slider");
+    const icon = document.querySelector(".volume-icon");
+    if(audio.volume > 0) {
+        previousVolume = audio.volume;
+        changeVolume(0);
+        slider.value = 0;
+    } else {
+        changeVolume(previousVolume);
+        slider.value = previousVolume;
+    }
+}
+
+// ==========================================================================
+// ☕ KAHVE MOLASI MOTORU
+// ==========================================================================
+let coffeeInterval = null;
+
+function startCoffeeBreak() {
+    document.body.classList.add("coffee-blur-active");
+    const modal = document.getElementById("coffee-modal");
+    modal.classList.add("show");
+    
+    // İlk sözü hemen göster
+    showRandomCoffeeQuote();
+    
+    // 10 saniyede bir yumuşak geçişle değiştir
+    coffeeInterval = setInterval(() => {
+        const quoteEl = document.getElementById("coffee-quote");
+        quoteEl.classList.add("fade");
+        setTimeout(() => {
+            showRandomCoffeeQuote();
+            quoteEl.classList.remove("fade");
+        }, 1000); // 1 saniyelik yumuşak yok olma süresi
+    }, 10000);
+}
+
+function endCoffeeBreak() {
+    document.body.classList.remove("coffee-blur-active");
+    document.getElementById("coffee-modal").classList.remove("show");
+    clearInterval(coffeeInterval);
+}
+
+function showRandomCoffeeQuote() {
+    const randomIndex = Math.floor(Math.random() * coffeeQuotes.length);
+    document.getElementById("coffee-quote").innerText = coffeeQuotes[randomIndex];
+}
+
+// ==========================================================================
+// 🔥 TENGRİ KAOS MODU MOTORU
+// ==========================================================================
+function startTengriChaos() {
+    document.body.classList.add("tengri-crazy-mode");
+    
+    // 4 Farklı yerde tengri.jpg görseli oluştur
+    for (let i = 0; i < 4; i++) {
+        let img = document.createElement("img");
+        img.src = "tengri.jpg";
+        img.className = "tengri-img-spawn";
+        img.id = "tengri-spawn-" + i;
+        
+        // Ekranın rastgele köşelerine fırlat
+        img.style.top = Math.random() * (window.innerHeight - 250) + "px";
+        img.style.left = Math.random() * (window.innerWidth - 250) + "px";
+        document.body.appendChild(img);
+    }
+    
+    // Butonların konumlarını sürekli çılgınlar gibi değiştir
+    chaosInterval = setInterval(() => {
+        const buttons = document.querySelectorAll("button, .theme-dot, .oracle-sphere");
+        buttons.forEach(btn => {
+            btn.style.position = "relative";
+            btn.style.top = (Math.random() * 40 - 20) + "px";
+            btn.style.left = (Math.random() * 40 - 20) + "px";
+        });
+        
+        // Görselleri de sürekli haritada ışınla
+        for (let i = 0; i < 4; i++) {
+            let img = document.getElementById("tengri-spawn-" + i);
+            if (img) {
+                img.style.top = Math.random() * (window.innerHeight - 250) + "px";
+                img.style.left = Math.random() * (window.innerWidth - 250) + "px";
+            }
+        }
+    }, 150);
+}
+
+function stopTengriChaos() {
+    clearInterval(chaosInterval);
+    chaosInterval = null;
+    document.body.classList.remove("tengri-crazy-mode");
+    
+    // Görselleri temizle
+    document.querySelectorAll(".tengri-img-spawn").forEach(el => el.remove());
+    
+    // Butonları eski konumlarına sabitle
+    const buttons = document.querySelectorAll("button, .theme-dot, .oracle-sphere");
+    buttons.forEach(btn => {
+        btn.style.top = "0px";
+        btn.style.left = "0px";
+    });
 }
 </script>
 
