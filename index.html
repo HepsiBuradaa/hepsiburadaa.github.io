@@ -94,14 +94,63 @@ body {
 .top-widgets-container { display: flex; justify-content: space-between; max-width: 900px; margin: 0 auto 25px auto; gap: 20px; }
 .top-widgets-container .oracle-box { margin: 0; flex-grow: 1; }
 
-/* ☕ KAHVE MOLASI WIDGET STYLES */
-.coffee-break-widget { width: 320px; background: var(--bg-container); border: 1px solid var(--border-container); border-radius: 10px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; position: relative; }
+/* ☕ COFFEE OVERLAY & WIDGET MODIFICATIONS */
+.coffee-break-widget { width: 320px; background: var(--bg-container); border: 1px solid var(--border-container); border-radius: 10px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
 .coffee-btn { width: 100%; padding: 10px; font-size: 11px; letter-spacing: 1px; }
-.coffee-display { display: none; width: 100%; flex-direction: column; align-items: center; gap: 8px; }
-.coffee-display.active { display: flex; }
-.coffee-timer { font-size: 22px; font-weight: bold; color: var(--text-heading); font-family: monospace; }
-.coffee-img-placeholder { width: 65px; height: 65px; border-radius: 6px; overflow: hidden; background: #111; display: flex; align-items: center; justify-content: center; font-size: 32px; border: 1px solid var(--border-color); }
-.coffee-quote-text { font-size: 11px; color: var(--text-input); font-style: italic; line-height: 1.4; max-height: 40px; overflow: hidden; }
+
+.coffee-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 100000;
+    align-items: center;
+    justify-content: center;
+}
+.coffee-overlay.active { display: flex; }
+.coffee-modal-card {
+    background: var(--bg-container);
+    border: 1px solid var(--border-color);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 30px var(--accent-glow);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.coffee-animated-icon {
+    font-size: 70px;
+    animation: coffeeFloat 2s ease-in-out infinite;
+    user-select: none;
+}
+@keyframes coffeeFloat {
+    0%, 100% { transform: scale(1) translateY(0); }
+    50% { transform: scale(1.1) translateY(-10px); filter: drop-shadow(0 15px 15px var(--accent-glow)); }
+}
+.coffee-modal-timer {
+    font-size: 48px;
+    font-weight: 800;
+    font-family: monospace;
+    color: var(--text-heading);
+    letter-spacing: 2px;
+}
+.coffee-modal-quote {
+    font-size: 16px;
+    color: var(--text-input);
+    font-style: italic;
+    line-height: 1.6;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
 
 .tabs{ display:flex; justify-content:center; gap:12px; margin-bottom:25px; }
 button, .tab-btn { background: var(--bg-btn); color: var(--text-btn); border: 1px solid var(--border-color); padding: 12px 26px; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 6px; transition: all 0.2s ease; position: relative; }
@@ -297,34 +346,39 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
     pointer-events: none;
 }
 
-/* 🏹 TENGRİ CHAOS SYSTEM MODE */
+/* 🏹 TENGRİ HARDCORE CHAOS SYSTEM MODE */
 .tengri-overlay {
     display: none;
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: url('tengri.jpg') no-repeat center center;
-    background-size: cover;
-    z-index: 99999;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto; height: auto;
+    max-width: 90vw; max-height: 80vh;
+    z-index: 999999;
     pointer-events: none;
-    opacity: 0.25;
+    box-shadow: 0 0 100px rgba(255, 255, 255, 0.3);
+    border: 4px solid #fff;
 }
-@keyframes crazyGlitch {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    20% { transform: translate(15px, -15px) rotate(4deg); }
-    40% { transform: translate(-15px, 15px) rotate(-4deg); }
-    60% { transform: translate(10px, 10px) rotate(2deg); }
-    80% { transform: translate(-10px, -10px) rotate(-2deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
-}
-.tengri-chaos button, .tengri-chaos .tab-btn, .tengri-chaos .oracle-sphere {
-    animation: crazyGlitch 0.15s infinite !important;
+.tengri-chaos-active button, .tengri-chaos-active .tab-btn {
+    position: fixed !important;
+    z-index: 999998 !important;
+    transition: all 0.15s linear !important;
 }
 </style>
 </head>
 
 <body>
 
-<div id="tengri-screen" class="tengri-overlay"></div>
+<img id="tengri-screen" class="tengri-overlay" src="tengri.jpg" alt="Tengri">
+
+<div id="coffee-break-modal" class="coffee-overlay">
+    <div class="coffee-modal-card">
+        <div class="coffee-animated-icon">☕</div>
+        <div id="coffee-modal-timer" class="coffee-modal-timer">01:00</div>
+        <div id="coffee-modal-quote" class="coffee-modal-quote">Zihnini serbest bırak, sadece arkana yaslan...</div>
+        <button onclick="stopCoffeeBreak()" style="margin-top: 10px; padding: 10px 20px; font-size: 11px;">Molayı Erken Bitir</button>
+    </div>
+</div>
 
 <div class="theme-selector">
     <span class="theme-label">TEMA:</span>
@@ -354,11 +408,6 @@ h3 { color: var(--text-heading); font-size: 14px; margin-top: 0; margin-bottom: 
 
     <div class="coffee-break-widget">
         <button id="coffee-start-btn" class="coffee-btn" onclick="startCoffeeBreak()">☕ KAHVE MOLASI VER</button>
-        <div id="coffee-panel" class="coffee-display">
-            <div id="coffee-timer" class="coffee-timer">01:00</div>
-            <div id="coffee-img" class="coffee-img-placeholder">☕</div>
-            <div id="coffee-quote" class="coffee-quote-text">Siber kölelik zincirine kısa bir ara...</div>
-        </div>
     </div>
 </div>
 
@@ -459,68 +508,10 @@ const oracleQuotes = [
    "Bugün tam 'Kendi hikayeni yazma' günü. Ama o hikayenin ilk bölümü 'İşsizlik Maaşı Sırasında Bir Gün' olsun istemiyorsak, gel şu metni kusursuz hale getirelim.",
    "Şu an klavyeye çok sert basarak mail yazıyorsun, hıncını anlıyorum. Ama mekanik klavye fiyatları uçtu, tuş fırlarsa yenisini alamayız. Sakince o parmağını geri çek ve şu metni yumuşatarak düzenle.",
    "Bugün tam patronun odasının kapısını çarparak çıkma günü! Ama o kapı hidrolikli, yavaşça kapanıp karizmanı çizecek, hiç gerek yok. Gel biz şu Excel tablosunu pürüzsüz hale getirelim.",
-   "Bugün o istifa dilekçesini yazıp müdürün önüne fırlatmak için harika bir motivasyonun var. Ama o kağıdı fırlatırken rüzgar ters eser, kendi yüzüne çarpar, iyice sinirin bozulur. Gel o kağıda metnin yeni halini yazalım.",
-   "Bugün tam şirket telefonunu sessize alıp ortadan kaybolma günü. Ama telefon şirket malı, kaybedersen maaşından keserler, durduk yere borçlanma. Gel şu metni cilalayalım.",
-   "Şu an müdüre 'Sizinle çalışmak bir kabustu' diye bağırmak istiyorsun. Ama sesin detone olur, ciddiyetin kaybolur, arkandan gülerler. Hiç o riske girmeyelim, gel şu raporu pürüzsüz yapalım.",
-   "Bugün 'Bıktım sizin vizyonunuzdan' deyip sandalyeyi tekmelemek için harika bir enerji var üstünde. Ama sandalye tekerlekli, kayar odanın öbür ucundaki çöp kovasına çarpar, durduk yere iş çıkar. Boşver, metni temizle geç.",
-   "İçinden 'Şu masadaki her şeyi yere fırlatıp istifa edeceğim' hissi geçiyor. Ama yerleri daha yeni sildiler, temizlik görevlisi ablayla arayı bozmaya değmez. Gel biz şu dosyayı toparlayalım.",
-   "Bugün tam patrona 'Ben bu şirketin kölesi değilim' diye rest çekme günü. Ama şirketin kliması çok güzel soğutuyor, dışarısı 40 derece, evde klima yok. Serin serin şu metni düzenleyelim biz.",
-   "Şu an müdürün yüzüne bakıp 'Siz ne anlarsınız bu işten' diye haykırmak istiyorsun. Ama adamın arkasında klima kumandası duruyor, kapatırsa sıcaktan pişersin. Alttan al, şu analizi bitirelim.",
-   "İçindeki o asi ruh 'Kapat laptopun kapağını çat diye, çık git' diyor. Ama kapağın arasına kalem sıkışır, ekranı patlatırsın, durduk yere 3 maaşın tamire gider. Yavaşça açık bırak o ekranı, metne odaklanalım.",
-   "Hayatındaki bazı insanlar tıpkı Ctrl + Z yapınca geri gelmeyen o 3 saatlik emek gibiler; yoklukları büyük bir travma yaratmıyor ama boşa harcanan zamana insan kahroluyor.",
-   "Bazı insanlar hayatında tıpkı Adobe programlarının o bitmek bilmeyen güncelleme uyarıları gibi; sürekli dikkatini dağıtıyorlar, vakit çalıyorlar ama açıp baksan hayatına en ufak bir yenilik katmıyorlar.",
-   "Hayatındaki bazı insanlar tıpkı masaüstünde unuttuğun 'yeni_klasör_2' gibiler; neden açtığını hatırlamazsın, içi tamamen boştur ama öylece durup arka plan resmini kapatırlar.",
-   "Bazı insanlar tıpkı her web sitesinde karşına çıkan 'Çerezleri Kabul Et' butonu gibiler; hayatına hiçbir derinlik katmıyorlar, sadece gitmek istediğin yolda sürekli önüne çıkıp duruyorlar.",
-   "Hayatındaki bazı insanlar tıpkı o 128 GB'lık flash belleğin içindeki 'Kısayol' dosyası gibiler; dışarıdan bakınca devasa bir veri taşıyor gibi görünürler, tıklarsın bomboş bir hata ekranı verirler.",
-   "Bazı insanlar tıpkı e-ticaret sitelerindeki 'Tükendi' yazan ürünler gibiler; orada durmalarının dünyaya hiçbir faydası yoktur, sadece 'Keşke zamanında baksaydım' diye insana pişmanlık verirler.",
-   "Bazı insanlar tıpkı telefonun arkasında biriken o anlamsız önbellek (cache) dosyaları gibiler; hayatında hiçbir fonksiyonları yoktur, sadece durduk yere ruhunda ağırlık yapıp enerjini tüketirler.",
-   "Hayatındaki bazı insanlar tıpkı eski sevgilinin Spotify'da hala seni takip eden gizli hesabı gibiler; orada bir yerde bir '1' rakamı olarak dururlar ama hayatına ne bir ritim katarlar ne bir melodi.",
-   "Bazı insanlar tıpkı bedava diye indirdiğin o mobil uygulamanın içindeki reklamlar gibiler; her 5 saniyede bir karşına çıkıp 'Hadi beni premium yap' diye ısrar ederler ama kendilerinde hiç premium kumaş yoktur.",
-   "Günün özlü sözü: Yanlış kod satırı Ctrl + Z ile silinir, yanlış insan hayatından Ctrl + Alt + Delete yapsan da kolay kolay temizlenmez.",
-   "Günün özlü sözü: Metindeki eksik harf hemen fark edilir og tamamlanır; insanın içindeki eksik karakteri ise yıllarca fark edemezsin.",
-   "Günün özlü sözü: Tasarımdaki pikselleri büyütüp düzeltebilirsin ama vizyonu küçük insanı ne kadar büyütürsen büyüt, sadece görüntüsü bulanıklaşır.",
-   "Günün özlü sözü: Bozuk dosya formatı dönüştürücüyle kurtarılır, bozuk karakterli insanı hangi kalıba sokarsan sok yine hata verir.",
-   "Günün özlü sözü: Yazım hatası gözden kaçar, görmezden gelinir; ama insanın hatası bir kez göze battı mı bir daha asla unutturulmaz.",
-   "Günün özlü sözü: Word belgesindeki boşluklar tek tıkla silinir; bazı insanların içindeki o devasa boşluğu ise ne yapsan dolduramazsın.",
-   "Günün özlü sözü: Fazla yazılan kelime metinden kolayca ayıklanır; hayatına fazla gelen insanı ayıklamak ise ömründen ömür alır.",
-   "Günün özlü sözü: Kötü tasarlanmış bir sayfa sıfırdan çizilir; kötü niyetli bir insanla yola çıktıysan o yolu kaç kere sıfırlarsan sıfırla hep çıkmaza girersin.",
-   "Günün özlü sözü: Yazının fontunu değiştirmek bir saniyeni alır; insanın rengini değiştirmesi ise sadece bir menfaatine bakar.",
-   "Günün özlü sözü: Formüldeki hata Excel uyarısıyla çözülür; insanın hayatına kattığı hata ise ancak yıllar sonra tecrübeyle anlaşılır.",
-   "Günün özlü sözü: Kaydedilmeyen veri için canın sıkılır ama unutulur; değer görmeyen emek için sızlayan kalbin sızısı ise kolay geçmez.",
-   "Senin emeğinin üzerine konmaya çalışanların mikrofonu toplantıda açık kalsın da evde arkadan gelen o dedikodu sesleri tüm şirkete yayınlansın. Amin.",
-   "Bugün işi sana kitleyip erken çıkanların bindiği metrobüs ters yöne gitsin, üstüne bir de telefonlarının şarjı yüzde 1'ken şarj aletlerini ofiste unuttuklarını fark etsinler. Amin.",
-   "Bugün sana durduk yere revizyon üstüne revizyon verenlerin klavyesindeki Space tuşu bozulsun, tüm mailleri bitişik yazıp rezil olsunlar. Amin.",
-   "İş yapıyormuş gibi görünüp bütün gün sosyal medyada gezenlerin, yanlışlıkla şirket sahibinin 5 yıl önceki tatil fotoğrafını beğenmesine sebocak bir parmak kayması nasip et ya Rabbim. Amin.",
-   "Toplantıda seni zor durumda bırakmak için pusuya yatanların, tam konuşmaya başladıkları an boğazına gıcık otursun da sesleri helyum gazı çekmiş gibi çıksın. Amin.",
-   "Senin başarılarını görmezden gelenlerin en sevdikleri döküman, tam 'Kaydet' tuşuna basacakken elektrik kesintisiyle uçup gitsin. Amin.",
-   "Sana sürekli 'Biz bir aileyiz' deyip mesai ücretini vermeyenlerin şirket arabasının lastiği tam da sanayiye en uzak mesafede patlasın. Amin.",
-   "Bugün 'Seni çok iyi anlıyorum' diyenlerin aslında 'Şu an seni hiç dinlemiyorum, sadece kendi konuşma sıramın gelmesini bekliyorum' demek istediğini bir kez daha anlayacaksın.",
-   "Bugün müdürün 'Bu projede senin vizyonuna güveniyorum' demesinin aslında 'Hata çıkarsa faturayı tamamen sana keseceğim' demek olduğunu acı bir tebessümle fark edeceksin.",
-   "Bugün 'Önceliğimiz çalışan mutluluğu' sloganının aslında 'Ofise langırt koyduk ama oynarsan gözümüz üstünde olur' demek olduğunu anlayacaksın.",
-   "Bugün 'Aramızda çok güzel bir sinerji oluştu' iltifatının aslında 'Sen ne desen onaylıyorsun, işleri de sessizce yapıyorsun, tam aradığımız kölesin' anlamına geldiğini anlayacaksın.",
-   "Bugün 'Biz burada bir aileyiz' söyleminin aslında 'Haklarını ararken fazla profesyonel düşünme, fedakarlık yaparken de sınır tanıma' anlamına geldiğini bir kez daha anlayacaksın.",
-   "İçindeki ses 'Yeter artık, fırlat klavyeyi çık git' diyor ama bankanın mobil uygulamasından gelen 'Kredi taksitiniz yaklaşmaktadır' bildirimi elini usulca klavyeye geri koyduruyor. Devam şampiyon.",
-   "Bugün istifa edip dünyayı gezecek o cesur kararı alacaksın... Tam o sırada gözün masadaki yarım kalmış sodaya takılacak, 'Neyse bunu bari bitireyim' derken mesai bitecek.",
-   "Bugün LinkedIn profilini 'Open to Work' yapasın var. Ama piyasanın durumunu hatırlayınca profili 'Gerekirse 24 Saat Çalışırım' yapmaktan son anda dönüyorsun. Kopyala butonuna bas ve sakinleş.",
-   "Evren sana fısıldıyor: 'Sen daha iyilerine layıksın.' Doğru, layıksın ama kredi kartı ekstrem de diyor ki: 'Şu an tam olarak bu masaya og bu metinlere layıksın.' Hadi aslan parçası.",
-   "Bugün toplantıda masaya vurup 'Ben gidiyorum' demek için harika bir energy var üstünde. Ama masaya vurursan laptop ekranı kırılır, masraf çıkar. Boşver, temizle metni geç.",
-   "Kaderinde bugün çok radikal bir kariyer değişikliği görüyorum. Mesela 'Boşluk Temizleyici' sekmesinden 'Yazım Düzenleyici' sekmesine geçeceksin. Büyük devrim.",
-   "Küre diyor ki: İstifa edip bir sahil kasabasında domates yetiştirmek harika bir fikir. Ama domates tohumu fiyatlarına bakınca bu panelin siyahlığı gözüne bir tık daha güzel geliyor, değil mi?",
-   "Bugün bir delilik yapıp Slack'ten 'Ben çıkıyorum, ne haliniz varsa görün' yazasın gelecek. Ama enter tuşuna basmadan önce kıdem tazminatını hesaplayıp yerine 'Harika bir feedback, hemen ilgileniyorum' yazacaksınız.",
-   "Yıldız haritana göre bugün kurumsal kölelik zincirlerini kırma günün! Ama Akbank, Garanti og Yapı Kredi el ele tutuşup kapıda seni bekliyor. Zincirler kalsın, biz metindeki çift boşlukları kıralım.",
-   "Küre diyor ki: İstifa et, her şeyi sat, Hindistan'a git og ruhunu arındır. Ama uçak bileti fiyatlarına baktıktan sonra bu paneldeki 'Temizle' butonu gözüne Ganj Nehri'nden daha arındırıcı gelecek.",
-   "Küre diyor ki: Sen bu dünyaya her sabah 8'de uyanıp elalemin excel tablosunu, word metnini düzeltmek için gelmedin. Sen çok daha büyük şeyler için yaratıldın... Şaka şaka, tam olarak bunun için geldin. Hadi yapıştır metni, mesai akıyor.",
-   "Bugün istifa edip dünyayı gezen o cool gezginlerden olma hayalin tavan yapacak. Ama sırt çantanı hazırlarken içine koyacak lüksün sadece şirket logolu polar og promosyon termos olduğunu fark edip masana geri çökeceksiniz. Kopyala butonuna bas og hayalleri serbest bırak.",
-   "Evren bugün sana çok net bir vizyon gösteriyor: Kendi işinin patronu olmuşsun, altındaki lüks araba, arkanda korumalar... Ama vizyonun çözünürlüğü biraz artınca fark ediyorsun ki altındaki araba şirket arabası, arkandakiler de 'Şu iş ne oldu?' diye bekleyen yöneticiler. Uyan aslanım, metin temizlenecek.",
-   "İçindeki o çılgın girişimci ruh 'Hemen bu akşam şirketi kuruyoruz' diye bağırıyor. Ama muhasebecinin isteyeceği stopajı, bağkuru, damga vergisini hesaplayınca, buradaki bedava, reklamsız, vergisiz mat siyah panel gözüne bir anda İsviçre Merkez Bankası gibi güvenli gelecek.",
-   "Bugün şirketin ortak platformunda yanlışlıkla 'Yetti be, ne bitmez revizyonmuş!' yazacaksın... diye korkup soğuk terler dökeceksiniz ama yerine saniyede 120 kelime hızla 'Tabii ki hemen revize edip en mükemmel haliyle iletiyorum, sevgiler' yazarak hayatta kalacaksın.",
-   "Geleceğinde inanılmaz bir zenginlik, malikaneler, uşaklar görüyorum... Ama rüya tabirlerine göre bu rüya 'Çok yakında mesaiye kalacaksın og akşam yemeğinde sana sadece soğuk bir dürüm ısmarlayacaklar' anlamına geliyor. Dürümün tuzu bol olsun, devam.",
-   "Bugün ani bir cinnetle yöneticine Slack’ten 'Ben gidiyorum, vizyonsuz ekibiniz og bitmeyen revizyonlarınız size kalsın' yazacaksınız. Tam gönder tuşuna basacakken kalbin sıkışacak, gözün kararacak, metni silip yerine 'Elinize sağlık, çok ufak bir sorum olacaktı :)'* yazıp arkaya gizlice ağlamaya gideceksiniz.",
-   "Küre parlıyor! Seni çok yakında business class uçuşunda şampanyanı yudumlarken görüyorum... Ama uçak modunu kapatınca uyanıyorsun ki metrobüste bir teyzenin pazar çantasıyla sol böbreğin arasında sıkışmışsın og işe geç kalıyorsun. Yapıştır şu metni de bari primin kesilmesin.",
-   "Bugün istifa dilekçeni yazıp tam patronun masasına fırlatacakken, telefonuna bankadan 'Sayın müşterimiz, 120 ay vadeli konut kredinizin 3. taksiti tahsil edilememiştir' bildirimi düşecek. O fırlattığın kağıdı masadan 'Yere çöp düşmüş de efendim' diye yerleri siler gibi geri toplayacaksın.",
+   "Bugün o istifa dilekçesini yazıp tam patronun masasına fırlatacakken, telefonuna bankadan 'Sayın müşterimiz, 120 ay vadeli konut kredinizin 3. taksiti tahsil edilememiştir' bildirimi düşecek. O fırlattığın kağıdı masadan 'Yere çöp düşmüş de efendim' diye yerleri siler gibi geri toplayacaksın.",
    "Büyük bir kurumsal kriz kapıda ama sakin ol, seninle alakası yok. Kahvenden bir yudum al og izle.",
    "Gözüm metnindeki gizli 'Yüksek Kalite' ibarelerini arıyor... Yapma öyle şeyler, Tengri görüyor.",
-   "Bugün copy-paste yaparken elin hiç titremeyecek. Kusursuz bir CTRL+C performansı seziyorum.",
+   "Bugün copy-paste yaparken elin hiç titremeyecek. Kusursuz bir CTRL+C performanceı seziyorum.",
    "O beklediğin mail veya mesaj bugün gelecek. Gelmezse de karşı tarafın vizyonsuzluğudur, boşver.",
    "Yapay zeka senin işini elinden almayacak ama o kahveyi şimdi tazelemezsen uykun kesin alacak.",
    "Yakın zamanda bir revizyon yiyeceksin ama öyle bir düzelteceksin ki isteyen utancından istifa edecek.",
@@ -537,7 +528,7 @@ const oracleQuotes = [
    "Bugün yapacağın en büyük hata, biten işi teslim ettikten sonra 'Başka bir şey var mıydı?' diye sormak olur. Sorma.",
    "Bugün karşına çıkacak saçmalıklara karşı sabrın, bu panelin siyahlığı kadar derin og sınırsız olsun.",
    "Metindeki çift boşlukları avladığın gibi hayattaki iki yüzlüleri de avlayacağın keskin bir gün.",
-   "Günün tavsiyesi: O sekmeyi kapat. Hangi sekme olduğunu biliyorsun. Kapat gitsin.",
+   "Günun tavsiyesi: O sekmeyi kapat. Hangi sekme olduğunu biliyorsun. Kapat gitsin.",
    "Küre fısıldıyor: Akşama güzel bir dizi/film patlat, bütün günün yükünü silsin süpürsün.",
    "Yazım hatalarını düzelttiğin gibi hayatına da ince bir ayar çekiyorsun. Doğru yoldasın.",
    "Bugün müşteriden gelen 'Elinize sağlık çok güzel olmuş' mesajını göreceksiniz. (Şaka şaka, revizyon var).",
@@ -557,6 +548,30 @@ const oracleQuotes = [
    "Bugün kulaklığını tak og dünyayı sessize al. Sadece sen, müziğin og bu asil siyah panel.",
    "Günün özlü sözü: Hatalı metin düzeltilir, hatalı insan zor. Metinlerle uğraştmaya devam.",
    "Tengri Oracle görevini tamamladı. Şimdi o 'Kopyala' butonuna bas og şovunu yap aslan parçası!"
+];
+
+/* ☕ MORAL VERİCİ 20 ÖZEL SÖZ */
+const motivationQuotes = [
+    "Harika gidiyorsun! Şu ana kadar neleri başardığını hatırla ve derin bir nefes al.",
+    "Sen bir kod veya metin yığınından çok daha fazlasısın. Emeğin gerçekten değerli.",
+    "Küçük adımlar büyük yollar açar. Bu mola senin en doğal hakkındı, tadını çıkar.",
+    "Her şey üst üste gelse de senin içindeki gücü hiçbir revizyon söküp alamaz.",
+    "Kendine güven şampiyon! Bugün halledemeyeceğin hiçbir karmaşa yok.",
+    "Zorluklar seni yıldırmak için değil, ne kadar dayanıklı olduğunu göstermek için var.",
+    "Bugün gösterdiğin sabır, yarın kuracağın harika geleceğin en büyük temeli.",
+    "Mükemmel olmak zorunda değilsin, elinden gelenin en iyisini yapman fazlasıyla yeterli.",
+    "Şu dünyadaki en büyük yatırım kendine verdiğin değerdir. Sen çok değerlisin.",
+    "Dinlenmek tembellik değil, zafere giden yolda yakıt ikmalidir. Rahatla biraz.",
+    "Bütün o mailler, listeler bekleyebilir ama senin ruh sağlığın bekleyemez. Keyfine bak.",
+    "İçindeki potansiyelin farkına var. Sen istersen o ekran arkasındaki her işi dize getirirsin.",
+    "Gülümse, çünkü fırtınalar ne kadar sert olursa olsun gökyüzü her zaman maviye döner.",
+    "Bugünkü çaban için kendine kocaman bir teşekkür borçlusun. İyi ki varsın aslan parçası.",
+    "Başarı bir varış noktası değil, yoldur. Sen o yolda aslanlar gibi yürüyorsun.",
+    "Stres sadece geçici bir bulut, sen ise arkasındaki kalıcı güneşsin. Parıldamaya devam.",
+    "Hayatındaki zor pikselleri tek tek temizliyorsun, zihnini de öyle pırıl pırıl yapacaksın.",
+    "Kendine zaman tanı. Her şey tam zamanında, olması gerektiği gibi en güzel haliyle çözülecek.",
+    "Unutma, en karanlık gece bile sona erer ve güneş yeniden doğar. Sen ışığını kaybetme.",
+    "Bu mola bittiğinde masaya çok daha dinamik, çok daha güçlü döneceksiniz. Sana inanıyorum!"
 ];
 
 function getTengriOracle() { const display = document.getElementById("oracle-display"); display.classList.add("glitch-effect"); display.style.opacity = 0.3; setTimeout(() => { const randomIndex = Math.floor(Math.random() * oracleQuotes.length); display.innerText = oracleQuotes[randomIndex]; display.style.opacity = 1; setTimeout(() => { display.classList.remove("glitch-effect"); }, 200); }, 200); }
@@ -588,7 +603,7 @@ function processUltraEngine(inputElementId, forceLowercase = false) {
     let blocks = sandbox.querySelectorAll('p, div, br, li, tr');
     blocks.forEach(el => { if (el.tagName.toLowerCase() === 'br') { el.before(document.createTextNode('\n')); } else { el.before(document.createTextNode('\n')); el.after(document.createTextNode('\n')); } });
     let allElements = sandbox.getElementsByTagName("*");
-    for (let i = allElements.length - 1; i >= 0; i--) { let el = allElements[i]; if (el.tagName.toLowerCase() !== 'b') { el.outerHTML = el.innerHTML; } else { el.removeAttribute('style'); el.removeAttribute('class'); el.removeAttribute('id'); } }
+    for (let i = allElements.length - 1; i >= 0; i--) { el = allElements[i]; if (el.tagName.toLowerCase() !== 'b') { el.outerHTML = el.innerHTML; } else { el.removeAttribute('style'); el.removeAttribute('class'); el.removeAttribute('id'); } }
     let rawLines = sandbox.innerHTML.split('\n');
     let dynamicResultLines = [];
     rawLines.forEach(line => {
@@ -614,30 +629,20 @@ function clear1(){ document.getElementById("input1").innerHTML=""; document.getE
 function copy2(){ copyToClipboard("output2"); }
 function clear2(){ document.getElementById("input2").innerHTML=""; document.getElementById("output2").innerHTML=""; calculateMeta(2); }
 
-/* ☕ KAHVE MOLASI ENGINE */
+/* ☕ COFFEE MODAL ENGINE WITH AUTO-ROTATING QUOTES */
 let coffeeInterval;
-const coffeeQuotes = [
-    "Uzaklara bak ve gözlerini dinlendir şampiyon.",
-    "O maile cevap vermesen de dünya dönmeye devam edecek.",
-    "Kahvenin her yudumu, kurumsal köleliğe vurulmuş bir darbedir.",
-    "Arkanı yaslan, derin bir nefes al ve şirket bütçesini düşünme.",
-    "Yöneticinin seni aradığı o 60 saniyeyi şu an kahvenle kutsuyorsun."
-];
-const coffeeEmojis = ["☕", "🥤", "🍩", "🍪", "✨"];
 function startCoffeeBreak() {
-    const btn = document.getElementById("coffee-start-btn");
-    const panel = document.getElementById("coffee-panel");
-    const timerEl = document.getElementById("coffee-timer");
-    const quoteEl = document.getElementById("coffee-quote");
-    const imgEl = document.getElementById("coffee-img");
+    const modal = document.getElementById("coffee-break-modal");
+    const timerEl = document.getElementById("coffee-modal-timer");
+    const quoteEl = document.getElementById("coffee-modal-quote");
     
-    btn.style.display = "none";
-    panel.classList.add("active");
+    modal.classList.add("active");
     
     let timeLeft = 60;
     timerEl.innerText = "01:00";
-    quoteEl.innerText = coffeeQuotes[Math.floor(Math.random() * coffeeQuotes.length)];
-    imgEl.innerText = coffeeEmojis[Math.floor(Math.random() * coffeeEmojis.length)];
+    
+    // Tıklamada hemen rastgele bir söz ata
+    quoteEl.innerText = motivationQuotes[Math.floor(Math.random() * motivationQuotes.length)];
     
     clearInterval(coffeeInterval);
     coffeeInterval = setInterval(() => {
@@ -645,34 +650,70 @@ function startCoffeeBreak() {
         let secs = timeLeft < 10 ? '0' + timeLeft : timeLeft;
         timerEl.innerText = `00:${secs}`;
         
-        if(timeLeft % 15 === 0 && timeLeft > 0) {
-            quoteEl.innerText = coffeeQuotes[Math.floor(Math.random() * coffeeQuotes.length)];
-            imgEl.innerText = coffeeEmojis[Math.floor(Math.random() * coffeeEmojis.length)];
+        // Her 10 saniyede bir sözü değiştir
+        if (timeLeft % 10 === 0 && timeLeft > 0) {
+            quoteEl.style.opacity = 0;
+            setTimeout(() => {
+                quoteEl.innerText = motivationQuotes[Math.floor(Math.random() * motivationQuotes.length)];
+                quoteEl.style.opacity = 1;
+            }, 300);
         }
         
         if (timeLeft <= 0) {
-            clearInterval(coffeeInterval);
-            panel.classList.remove("active");
-            btn.style.display = "block";
+            stopCoffeeBreak();
         }
     }, 1000);
 }
 
-/* 🏹 TENGRİ CHAOS CONTROLLER */
+function stopCoffeeBreak() {
+    clearInterval(coffeeInterval);
+    document.getElementById("coffee-break-modal").classList.remove("active");
+}
+
+/* 🏹 TENGRİ CHAOS ENGINE: WILD BUTTONS FLYING AROUND */
+let chaosInterval;
 function checkInputChaos(tabIndex) {
     calculateMeta(tabIndex);
     const val = document.getElementById(`input${tabIndex}`).innerText.toLowerCase().trim();
     const overlay = document.getElementById("tengri-screen");
     
     if (val.includes("tengri")) {
-        document.body.classList.add("tengri-chaos");
-        overlay.style.display = "block";
-        if (audio) audio.playbackRate = 2.0;
+        if (!document.body.classList.contains("tengri-chaos-active")) {
+            document.body.classList.add("tengri-chaos-active");
+            overlay.style.display = "block";
+            if (audio) audio.playbackRate = 2.0;
+            
+            // Butonları sürekli çıldırtıp savurma döngüsü
+            clearInterval(chaosInterval);
+            chaosInterval = setInterval(() => {
+                const allButtons = document.querySelectorAll("button, .tab-btn");
+                allButtons.forEach(btn => {
+                    const randomX = Math.floor(Math.random() * (window.innerWidth - btn.offsetWidth));
+                    const randomY = Math.floor(Math.random() * (window.innerHeight - btn.offsetHeight));
+                    btn.style.left = randomX + "px";
+                    btn.style.top = randomY + "px";
+                });
+            }, 150);
+        }
     } else {
-        document.body.classList.remove("tengri-chaos");
-        overlay.style.display = "none";
-        if (audio) audio.playbackRate = 1.0;
+        resetChaosSystem();
     }
+}
+
+function resetChaosSystem() {
+    clearInterval(chaosInterval);
+    document.body.classList.remove("tengri-chaos-active");
+    document.getElementById("tengri-screen").style.display = "none";
+    if (audio) audio.playbackRate = 1.0;
+    
+    // Butonların inline stillerini temizleyip eski yerlerine sabitleme
+    const allButtons = document.querySelectorAll("button, .tab-btn");
+    allButtons.forEach(btn => {
+        btn.style.position = "";
+        btn.style.left = "";
+        btn.style.top = "";
+        btn.style.zIndex = "";
+    });
 }
 
 window.addEventListener("DOMContentLoaded", function() {
