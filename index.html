@@ -3231,6 +3231,38 @@
             sel.innerHTML = sehirler.map(s => `<option value="${s}">${s}</option>`).join('');
         }
 
+        // ---- Yeni yardımcı fonksiyon: iyelik eki ----
+        function getPossessiveSuffix(name) {
+            name = name.trim();
+            if (!name) return "'ın";
+            const vowels = 'aeıioöuü';
+            const kalin = 'aıou';
+            const ince = 'eiöü';
+            let lastVowel = '';
+            for (let i = name.length - 1; i >= 0; i--) {
+                if (vowels.includes(name[i].toLowerCase())) {
+                    lastVowel = name[i];
+                    break;
+                }
+            }
+            if (lastVowel === '') return "'ın";
+            const sonHarf = name[name.length - 1];
+            if (vowels.includes(sonHarf.toLowerCase())) {
+                if (kalin.includes(lastVowel.toLowerCase())) {
+                    return "'nın";
+                } else {
+                    return "'nin";
+                }
+            } else {
+                if (kalin.includes(lastVowel.toLowerCase())) {
+                    return "'ın";
+                } else {
+                    return "'in";
+                }
+            }
+        }
+        // ------------------------------
+
         function haritaHesapla() {
             const isim = document.getElementById('harita-isim').value || 'İsimsiz';
             const tarih = document.getElementById('harita-tarih').value;
@@ -3297,9 +3329,11 @@
                 `Haritana göre ${isim}, senin içsel dünyan ${burcKey} burcunun ${d.element} elementinin etkisiyle şekillenmiş. ${d.gezegen} gezegeni burada güçlü bir konumda. Kariyerinde ${d.uyumlu[2] || 'liderlik'} yönünde ilerlemen önerilir.`
             ];
 
+            const suffix = getPossessiveSuffix(isim);
+
             sonuc.innerHTML = `
                 <div class="harita-sonuc">
-                    <h4 style="color:#c084fc;margin:0 0 8px;">${isim}’in Doğum Haritası</h4>
+                    <h4 style="color:#c084fc;margin:0 0 8px;">${isim}${suffix} Doğum Haritası</h4>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;">
                         <div><strong>🌞 Güneş Burcu:</strong> ${d.emoji} ${burcKey.charAt(0).toUpperCase()+burcKey.slice(1)}</div>
                         <div><strong>🌙 Yükselen (ASC):</strong> ${burcDetaylari[yukselen].emoji} ${yukselen.charAt(0).toUpperCase()+yukselen.slice(1)}</div>
@@ -3324,7 +3358,7 @@
         }
 
         // ==========================================================================
-        // AŞK UYUMU – DETAYLI ANALİZ (ÖNCEKİ GİBİ)
+        // AŞK UYUMU – DETAYLI ANALİZ (ÖNCEKİ GİBİ, YORUM VE TAVSİYE ÖZELLEŞTİRİLDİ)
         // ==========================================================================
         function initAskUyumuSelect() {
             const s1 = document.getElementById('burc1');
@@ -3354,60 +3388,92 @@
                 d2 = burcDetaylari[b2];
             let puan = 50;
             let detaylar = [];
+            let elementYorum = '';
+            let uyumYorum = '';
+            let zitYorum = '';
+            let gezegenYorum = '';
 
+            // Element uyumu
             if (d1.element === d2.element) {
                 puan += 18;
                 detaylar.push('✅ Aynı element grubu: derin bir anlayış ve uyum.');
+                elementYorum = 'Aynı element grubunda olmanız, doğal bir akış ve ortak değerler yaratır. Birbirinizi anlamakta zorluk çekmezsiniz.';
             } else if ((d1.element === 'Ateş' && d2.element === 'Hava') || (d1.element === 'Hava' && d2.element === 'Ateş')) {
                 puan += 14;
                 detaylar.push('🔥 Ateş-Hava: enerji ve fikir alışverişi mükemmel.');
+                elementYorum = 'Ateş ve hava birbirini besler. Fikir alışverişiniz canlıdır, birlikte yeni projelere imza atabilirsiniz.';
             } else if ((d1.element === 'Toprak' && d2.element === 'Su') || (d1.element === 'Su' && d2.element === 'Toprak')) {
                 puan += 14;
                 detaylar.push('🌍 Toprak-Su: duygusal derinlik ve güvenlik harika.');
+                elementYorum = 'Toprak ve su, duygusal güven ve pratik çözümler sunar. Birlikte sağlam bir yuva kurabilirsiniz.';
             } else if ((d1.element === 'Ateş' && d2.element === 'Toprak') || (d1.element === 'Toprak' && d2.element === 'Ateş')) {
                 puan += 6;
                 detaylar.push('🔥🌍 Ateş-Toprak: zıt kutuplar, denge gerektirir.');
+                elementYorum = 'Ateş ve toprak zıt gibi görünse de, biri hayal gücü, diğeri pratiklik getirir. Dengeyi bulursanız mükemmel bir ekip olursunuz.';
             } else if ((d1.element === 'Hava' && d2.element === 'Su') || (d1.element === 'Su' && d2.element === 'Hava')) {
                 puan += 6;
                 detaylar.push('💧🌊 Hava-Su: duygular ve zihin arasında köprü kurar.');
+                elementYorum = 'Hava ve su birleşimi, zihinsel ve duygusal derinlik sağlar. İletişimde ustalaşmalısınız.';
             } else {
                 puan += 2;
                 detaylar.push('⚡ Zıt elementler: heyecanlı ama zorlu.');
+                elementYorum = 'Zıt elementler farklı bakış açıları sunar, bu da ilişkinizi renklendirir ama sabır gerektirir.';
             }
 
+            // Uyumlu / zıt burçlar
             if (d1.uyumlu.includes(b2) || d2.uyumlu.includes(b1)) {
                 puan += 20;
                 detaylar.push('💞 Geleneksel olarak uyumlu burçlar!');
+                uyumYorum = 'Geleneksel olarak uyumlu burçlarsınız. Bu, aranızdaki bağın doğal ve güçlü olduğunu gösterir.';
             }
             if (d1.uyumsuz.includes(b2) || d2.uyumsuz.includes(b1)) {
                 puan -= 12;
                 detaylar.push('⚠️ Geleneksel olarak zıt burçlar, çaba gerekir.');
+                zitYorum = 'Zıt burçlar olmak, ilişkinizi heyecanlı kılar ama anlayış ve özveri şarttır.';
             }
 
+            // Aynı gezegen
             if (d1.gezegen === d2.gezegen) {
                 puan += 8;
                 detaylar.push(`🌟 Aynı gezegen (${d1.gezegen}) tarafından yönetiliyorsunuz.`);
+                gezegenYorum = `Aynı gezegen (${d1.gezegen}) tarafından yönetilmek, derin bir anlayış ve benzer motivasyonlar sağlar.`;
             }
 
             puan = Math.min(100, Math.max(0, puan));
 
+            // Dinamik yorum ve tavsiye oluştur
             let yorum = '';
             let tavsiye = '';
+
+            // Ana yorum: element + uyum/zıt
+            yorum = elementYorum;
+            if (uyumYorum) yorum += ' ' + uyumYorum;
+            if (zitYorum) yorum += ' ' + zitYorum;
+            if (gezegenYorum) yorum += ' ' + gezegenYorum;
+            if (yorum.trim() === '') yorum = 'Aranızda ilginç bir dinamik var, keşfetmeye değer.';
+
+            // Tavsiye
             if (puan >= 85) {
-                yorum = '💖 Harika! Bu çok uyumlu bir çift. İletişim, tutku ve anlayış üst düzeyde.';
-                tavsiye = 'Birlikte uzun vadeli planlar yapmaktan çekinmeyin, evren sizi destekliyor.';
+                tavsiye = 'İlişkinizin gücünü kullanarak birlikte büyük hayaller kurun. Birbirinize destek olun ve ortak hedefler belirleyin.';
             } else if (puan >= 70) {
-                yorum = '💕 İyi bir uyum var, bazı farklılıkları kabul ederek mükemmel olabilirsiniz.';
-                tavsiye = 'Birbirinizin zayıf yönlerini tamamlayarak güçlü bir ekip olabilirsiniz.';
+                tavsiye = 'Aranızdaki uyumu güçlendirmek için iletişime ve ortak aktivitelere zaman ayırın. Küçük sürprizler ilişkinizi canlandırabilir.';
             } else if (puan >= 50) {
-                yorum = '🧐 Zıt kutuplar birbirini çeker, ama anlayış ve sabır çok önemli.';
-                tavsiye = 'İletişime yatırım yapın, duygularınızı açıkça ifade edin.';
+                tavsiye = 'Farklılıklarınızı kabul edin ve ortak paydada buluşmaya çalışın. Anlayış ve sabır, ilişkinizin anahtarıdır.';
             } else if (puan >= 30) {
-                yorum = '💔 Zorlu bir eşleşme, ama her ilişki emek ister.';
-                tavsiye = 'Ortak ilgi alanları bulun ve birbirinize alan tanıyın.';
+                tavsiye = 'Bu ilişki emek ister. Birbirinize alan tanıyın ve duygularınızı açıkça ifade edin. Profesyonel destek almayı düşünebilirsiniz.';
             } else {
-                yorum = '🌪️ Çok zıt kutuplar, büyük bir çaba ve fedakarlık gerektirir.';
-                tavsiye = 'Eğer bu ilişkiyi istiyorsanız, profesyonel bir danışmandan destek alın.';
+                tavsiye = 'Zorlu bir eşleşme, ama her ilişki öğrenmeye değerdir. Kendinize ve partnerinize karşı dürüst olun.';
+            }
+
+            // Özel tavsiye eklemeleri (element bazlı)
+            if (d1.element === 'Ateş' && d2.element === 'Hava') {
+                tavsiye += ' Birlikte yeni maceralara atılmaktan çekinmeyin, fikir alışverişi sizi besleyecek.';
+            } else if (d1.element === 'Toprak' && d2.element === 'Su') {
+                tavsiye += ' Duygusal derinliği pratik adımlarla birleştirin. Birlikte evle ilgili projeler yapmak iyi gelecek.';
+            } else if (d1.element === 'Ateş' && d2.element === 'Toprak') {
+                tavsiye += ' Dengeli olun: ateş size heyecan, toprak size güvenlik versin. Plan yaparak ilerleyin.';
+            } else if (d1.element === 'Hava' && d2.element === 'Su') {
+                tavsiye += ' Duygularınızı konuşmaktan kaçmayın. Zihinsel bağ kadar duygusal bağ da önemli.';
             }
 
             const elementEmoji = {
@@ -3491,6 +3557,26 @@
             burc: ['kova', 'boğa', 'balık', 'aslan']
         }];
 
+        // ---- Burç eki fonksiyonu ----
+        function burcEki(burcAdi) {
+            const map = {
+                'koç': 'sun',
+                'boğa': 'sın',
+                'ikizler': 'sin',
+                'yengeç': 'sin',
+                'aslan': 'sın',
+                'başak': 'sın',
+                'terazi': 'sin',
+                'akrep': 'sin',
+                'yay': 'sın',
+                'oğlak': 'sın',
+                'kova': 'sın',
+                'balık': 'sın'
+            };
+            return map[burcAdi] || 'sın';
+        }
+        // ------------------------------
+
         function baslatQuiz() {
             quizAdimi = 0;
             quizPuanlar = {};
@@ -3504,11 +3590,12 @@
                 const enYuksek = Object.keys(quizPuanlar).reduce((a, b) => quizPuanlar[a] > quizPuanlar[b] ? a : b);
                 const burcKey = enYuksek || 'koç';
                 const d = burcDetaylari[burcKey];
+                const ek = burcEki(burcKey);
                 container.innerHTML = `
                     <div class="quiz-sonuc">
                         <div class="quiz-sonuc-emoji">${d.emoji}</div>
                         <div class="quiz-sonuc-burc">${burcKey.charAt(0).toUpperCase()+burcKey.slice(1)}</div>
-                        <p style="color:rgba(255,255,255,0.6);font-size:13px;">Sen gerçekten bir ${burcKey.charAt(0).toUpperCase()+burcKey.slice(1)}'sun!</p>
+                        <p style="color:rgba(255,255,255,0.6);font-size:13px;">Sen gerçekten bir ${burcKey.charAt(0).toUpperCase()+burcKey.slice(1)}'${ek}!</p>
                         <p style="font-size:12px;color:rgba(255,255,255,0.3);">${d.ozellik.substring(0,120)}…</p>
                         <button onclick="baslatQuiz()" style="margin-top:14px;background:rgba(147,51,234,0.3);border:1px solid rgba(147,51,234,0.5);color:#fff;padding:8px 24px;border-radius:20px;cursor:pointer;">Tekrar Dene</button>
                     </div>
