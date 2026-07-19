@@ -1682,142 +1682,161 @@
         /* ========== TAROT ========== */
         .tarot-date-badge {
             display: inline-block;
-            background: rgba(139,92,246,0.12);
-            border: 1px solid rgba(139,92,246,0.3);
+            background: rgba(201,162,39,0.1);
+            border: 1px solid rgba(201,162,39,0.3);
             border-radius: 20px;
             padding: 4px 16px;
             font-size: 11px;
-            color: rgba(255,255,255,0.45);
+            color: rgba(212,175,55,0.7);
             margin-bottom: 10px;
             letter-spacing: 1px;
         }
         .tarot-cards-row {
             display: flex;
-            gap: 12px;
+            gap: 14px;
             justify-content: center;
             flex-wrap: wrap;
             margin: 16px 0 10px;
         }
-        .tarot-card-slot { flex: 1; min-width: 130px; max-width: 190px; text-align: center; }
+        .tarot-card-slot { flex: 1; min-width: 120px; max-width: 170px; text-align: center; }
         .tarot-card-label {
-            font-size: 9px;
+            font-size: 8px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: rgba(255,255,255,0.3);
-            margin-bottom: 7px;
-            font-weight: 700;
+            letter-spacing: 2.5px;
+            color: rgba(212,175,55,0.55);
+            margin-bottom: 8px;
+            font-weight: 800;
         }
-        /* 3D flip kart */
-        .tarot-card-wrapper { perspective: 900px; width: 100%; }
+        /* 3D flip */
+        .tarot-card-wrapper { perspective: 1000px; width: 100%; }
         .tarot-card-inner {
             position: relative;
             width: 100%;
-            height: 210px;
+            height: 240px;
             transform-style: preserve-3d;
-            transition: transform 0.65s cubic-bezier(0.4,0,0.2,1);
+            transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
             cursor: pointer;
-            border-radius: 12px;
+            border-radius: 10px;
         }
-        /* Çevirme animasyonu sırasında kullanılan geçici sınıf */
-        .tarot-card-inner.flipping {
-            transform: rotateY(180deg);
-            cursor: default;
-        }
-        /* Animasyon bittikten sonra 3D bağlamından çıkar, ön yüz normal akışa girer */
+        .tarot-card-inner.flipping { transform: rotateY(180deg); cursor: default; }
         .tarot-card-inner.flipped {
-            cursor: default;
-            height: auto;
-            min-height: 210px;
-            transform-style: flat;
+            cursor: default; height: auto; min-height: 240px; transform-style: flat;
         }
         .tarot-card-inner.flipped .tarot-card-back-face { display: none; }
         .tarot-card-inner.flipped .tarot-card-front-face {
-            position: relative;
-            inset: auto;
-            transform: none;
-            backface-visibility: visible;
-            -webkit-backface-visibility: visible;
-            overflow: visible;
-            height: auto;
-            min-height: 210px;
+            position: relative; inset: auto; transform: none;
+            backface-visibility: visible; -webkit-backface-visibility: visible;
+            overflow: visible; height: auto; min-height: 240px;
         }
         .tarot-card-back-face,
         .tarot-card-front-face {
-            position: absolute;
-            inset: 0;
-            border-radius: 12px;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 14px 10px;
-            box-sizing: border-box;
-            overflow: hidden;
+            position: absolute; inset: 0; border-radius: 10px;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: flex-start; box-sizing: border-box; overflow: hidden;
         }
+        /* ARKA YÜZ — taş doku */
         .tarot-card-back-face {
-            background: linear-gradient(135deg, #160d38, #261550);
-            border: 2px solid rgba(139,92,246,0.35);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            background:
+                repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0,0,0,0.12) 20px, rgba(0,0,0,0.12) 21px),
+                repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0,0,0,0.12) 20px, rgba(0,0,0,0.12) 21px),
+                linear-gradient(160deg, #2c1d0e, #1a0e04);
+            border: 2px solid #8B6914;
+            box-shadow: 0 0 0 4px rgba(26,14,4,0.9) inset, 0 0 0 6px rgba(139,105,20,0.25) inset, 0 10px 40px rgba(0,0,0,0.85);
+            padding: 12px 10px;
+            justify-content: space-between;
         }
         .tarot-card-back-face::before {
             content: '';
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(45deg,transparent 0px,transparent 8px,rgba(139,92,246,0.04) 8px,rgba(139,92,246,0.04) 10px);
+            position: absolute; inset: 7px;
+            border: 1px solid rgba(139,105,20,0.35);
+            border-radius: 5px;
             pointer-events: none;
         }
-        .tarot-back-symbol { font-size: 42px; position: relative; }
-        .tarot-back-hint {
-            font-size: 9px;
-            color: rgba(255,255,255,0.25);
-            margin-top: 10px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            position: relative;
+        .tarot-back-ornament {
+            font-size: 10px;
+            color: rgba(201,162,39,0.45);
+            letter-spacing: 4px;
+            position: relative; z-index: 1;
         }
+        .tarot-back-symbol {
+            font-size: 50px; position: relative; z-index: 1;
+            filter: drop-shadow(0 0 14px rgba(212,175,55,0.45));
+        }
+        .tarot-back-hint {
+            font-size: 8px; color: rgba(212,175,55,0.4);
+            letter-spacing: 2px; text-transform: uppercase; position: relative; z-index: 1;
+        }
+        /* ÖN YÜZ — antika parşömen */
         .tarot-card-front-face {
-            background: linear-gradient(160deg, #1e1050, #3b1f6e);
-            border: 2px solid rgba(167,139,250,0.7);
-            box-shadow: 0 0 28px rgba(139,92,246,0.28);
+            background: linear-gradient(170deg, #1f1208, #2b1a09, #1a1107);
+            border: 2px solid #c9a227;
+            box-shadow: 0 0 0 5px rgba(201,162,39,0.15) inset, 0 10px 40px rgba(0,0,0,0.85);
             transform: rotateY(180deg);
             justify-content: flex-start;
-            padding-top: 14px;
+            padding: 0;
         }
-        .tarot-front-emoji { font-size: 26px; }
-        .tarot-front-name { font-size: 12px; font-weight: 700; color: #e9d5ff; margin: 5px 0 2px; text-align: center; }
-        .tarot-front-meta { font-size: 9px; color: rgba(255,255,255,0.3); letter-spacing: 1px; margin-bottom: 8px; }
-        .tarot-front-divider { width: 55%; height: 1px; background: rgba(139,92,246,0.3); margin-bottom: 8px; }
-        .tarot-front-text {
-            font-size: 10.5px;
-            color: rgba(255,255,255,0.78);
-            line-height: 1.55;
-            text-align: center;
+        .tarot-card-front-face::before {
+            content: '';
+            position: absolute; inset: 6px;
+            border: 1px solid rgba(201,162,39,0.28);
+            border-radius: 5px; pointer-events: none; z-index: 0;
+        }
+        .tarot-corner {
+            position: absolute; font-size: 9px;
+            color: rgba(201,162,39,0.5); z-index: 2; line-height: 1;
+        }
+        .tarot-corner.tl { top: 10px; left: 10px; }
+        .tarot-corner.tr { top: 10px; right: 10px; }
+        .tarot-corner.bl { bottom: 10px; left: 10px; }
+        .tarot-corner.br { bottom: 10px; right: 10px; }
+        .tarot-front-number {
+            width: 100%; text-align: center;
+            font-size: 9px; letter-spacing: 2.5px;
+            color: rgba(212,175,55,0.65);
+            padding: 9px 0 3px; position: relative; z-index: 1;
+            font-weight: 700;
+        }
+        .tarot-front-art {
+            width: 100%; flex: 0 0 106px;
+            position: relative; z-index: 1; overflow: hidden;
+            border-bottom: 1px solid rgba(201,162,39,0.2);
+        }
+        .tarot-front-art svg { display: block; width: 100%; height: 106px; }
+        .tarot-front-name-banner {
             width: 100%;
+            background: rgba(201,162,39,0.1);
+            border-top: 1px solid rgba(201,162,39,0.25);
+            border-bottom: 1px solid rgba(201,162,39,0.25);
+            text-align: center; padding: 5px 10px; position: relative; z-index: 1;
+        }
+        .tarot-front-name {
+            font-size: 10px; font-weight: 800;
+            color: #e8c96a; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .tarot-front-meta {
+            font-size: 8px; color: rgba(255,255,255,0.32);
+            letter-spacing: 1px; margin-top: 2px;
+        }
+        .tarot-front-text {
+            font-size: 10px; color: rgba(230,200,150,0.85);
+            line-height: 1.5; text-align: center;
+            width: 100%; padding: 8px 12px;
+            position: relative; z-index: 1; box-sizing: border-box;
         }
         .tarot-front-text.loading-text {
-            color: rgba(255,255,255,0.3);
-            font-style: italic;
-            font-size: 10px;
+            color: rgba(255,255,255,0.22); font-style: italic; font-size: 9px;
         }
         .tarot-shuffle-btn {
-            display: block;
-            margin: 12px auto 0;
-            background: linear-gradient(135deg,rgba(139,92,246,0.2),rgba(99,102,241,0.2));
-            border: 1px solid rgba(139,92,246,0.4);
-            color: #c084fc;
-            padding: 9px 26px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 12px;
-            transition: all 0.3s;
-            letter-spacing: 0.5px;
+            display: block; margin: 12px auto 0;
+            background: linear-gradient(135deg,rgba(201,162,39,0.15),rgba(139,105,20,0.15));
+            border: 1px solid rgba(201,162,39,0.4); color: #d4af37;
+            padding: 9px 26px; border-radius: 20px; cursor: pointer;
+            font-weight: 700; font-size: 12px; transition: all 0.3s; letter-spacing: 0.5px;
         }
         .tarot-shuffle-btn:hover {
-            background: linear-gradient(135deg,rgba(139,92,246,0.38),rgba(99,102,241,0.38));
-            box-shadow: 0 0 20px rgba(139,92,246,0.3);
+            background: linear-gradient(135deg,rgba(201,162,39,0.3),rgba(139,105,20,0.3));
+            box-shadow: 0 0 20px rgba(201,162,39,0.25);
         }
         .tarot-ai-box { display: none; }
         /* ── ŞEHİRLER BÖLÜMÜ ───────────────────────────────────────────────── */
@@ -7198,6 +7217,422 @@ Kurallar:
             { isim: 'Dünya', no: 'XXI', emoji: '🌍', anlam: 'tamamlanma, bütünlük, zafer' }
         ];
 
+        // Her kart için benzersiz arka plan rengi
+        const _tarotColors = {
+            '0':    'linear-gradient(135deg,#0d2535,#1a3a4a)',
+            'I':    'linear-gradient(135deg,#1a0d1f,#3a1a40)',
+            'II':   'linear-gradient(135deg,#060d20,#0d1a3a)',
+            'III':  'linear-gradient(135deg,#0d200d,#1a3a1a)',
+            'IV':   'linear-gradient(135deg,#200d00,#3a1a00)',
+            'V':    'linear-gradient(135deg,#15150a,#2a2a12)',
+            'VI':   'linear-gradient(135deg,#200615,#3a0a2a)',
+            'VII':  'linear-gradient(135deg,#051520,#0a2a3a)',
+            'VIII': 'linear-gradient(135deg,#1f0e00,#3a1a00)',
+            'IX':   'linear-gradient(135deg,#0d0d20,#1a1a3a)',
+            'X':    'linear-gradient(135deg,#150520,#2a0a3a)',
+            'XI':   'linear-gradient(135deg,#051f0d,#0a3a1a)',
+            'XII':  'linear-gradient(135deg,#050d1f,#0a1a3a)',
+            'XIII': 'linear-gradient(135deg,#0d0505,#1a0a0a)',
+            'XIV':  'linear-gradient(135deg,#051515,#0a2a2a)',
+            'XV':   'linear-gradient(135deg,#150505,#2a0a0a)',
+            'XVI':  'linear-gradient(135deg,#1f1500,#3a2a00)',
+            'XVII': 'linear-gradient(135deg,#050d15,#0a1a2a)',
+            'XVIII':'linear-gradient(135deg,#050510,#0a0a20)',
+            'XIX':  'linear-gradient(135deg,#201500,#3a2800)',
+            'XX':   'linear-gradient(135deg,#150d05,#2a1a0a)',
+            'XXI':  'linear-gradient(135deg,#05150d,#0a2a1a)',
+        };
+
+        // SVG illüstrasyonları — her Major Arcana için gravür stili çizim
+        const _tarotSVGs = {
+'0':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#0d1f2a"/>
+<circle cx="88" cy="20" r="10" fill="none" stroke="#c9a227" stroke-width="1.2"/>
+<line x1="88" y1="8" x2="88" y2="5" stroke="#c9a22770" stroke-width="0.9"/><line x1="88" y1="32" x2="88" y2="35" stroke="#c9a22770" stroke-width="0.9"/>
+<line x1="76" y1="20" x2="73" y2="20" stroke="#c9a22770" stroke-width="0.9"/><line x1="100" y1="20" x2="103" y2="20" stroke="#c9a22770" stroke-width="0.9"/>
+<line x1="80" y1="12" x2="78" y2="10" stroke="#c9a22770" stroke-width="0.9"/><line x1="96" y1="12" x2="98" y2="10" stroke="#c9a22770" stroke-width="0.9"/>
+<line x1="80" y1="28" x2="78" y2="30" stroke="#c9a22770" stroke-width="0.9"/><line x1="96" y1="28" x2="98" y2="30" stroke="#c9a22770" stroke-width="0.9"/>
+<path d="M0,80 Q28,68 52,73 Q78,78 110,70 L110,106 L0,106Z" fill="#1a0e04"/>
+<path d="M0,80 Q28,68 52,73 Q78,78 110,70" fill="none" stroke="#c9a22740" stroke-width="0.7"/>
+<circle cx="40" cy="30" r="7" fill="#0d1f2a" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M40,37 L40,58 M40,46 L30,53 M40,46 L52,42" stroke="#c9a227" stroke-width="1.3" fill="none"/>
+<path d="M40,58 L33,72 M40,58 L48,70" stroke="#c9a227" stroke-width="1.3" fill="none"/>
+<line x1="52" y1="42" x2="64" y2="24" stroke="#c9a22790" stroke-width="1.1"/>
+<circle cx="65" cy="22" r="4" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<ellipse cx="22" cy="74" rx="7" ry="4" fill="none" stroke="#c9a22780" stroke-width="1.1"/>
+<circle cx="29" cy="71" r="4" fill="none" stroke="#c9a22780" stroke-width="1.1"/>
+<line x1="15" y1="75" x2="12" y2="80" stroke="#c9a22760" stroke-width="0.9"/>
+</svg>`,
+'I':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#1a0d1f"/>
+<path d="M33,17 C33,11 40,9 46,13 C52,17 58,17 64,13 C70,9 77,11 77,17 C77,23 70,25 64,21 C58,17 52,17 46,21 C40,25 33,23 33,17Z" fill="none" stroke="#c9a227" stroke-width="1.3"/>
+<circle cx="55" cy="36" r="7" fill="#1a0d1f" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M55,43 L55,64 M55,51 L41,45 M55,51 L69,45 M55,64 L48,80 M55,64 L62,80" stroke="#c9a227" stroke-width="1.3" fill="none"/>
+<line x1="41" y1="45" x2="41" y2="26" stroke="#c9a22790" stroke-width="1.2"/>
+<path d="M38,26 L41,21 L44,26Z" fill="#c9a22780"/>
+<rect x="22" y="84" width="66" height="4" rx="1" fill="#2a1505" stroke="#c9a22760" stroke-width="0.9"/>
+<circle cx="33" cy="84" r="4" fill="none" stroke="#c9a22760" stroke-width="0.9"/>
+<path d="M47,80 L49,84 M51,80 L49,84 L45,84" fill="none" stroke="#c9a22760" stroke-width="0.9"/>
+<rect x="64" y="77" width="9" height="7" rx="1" fill="none" stroke="#c9a22760" stroke-width="0.9"/>
+<line x1="78" y1="81" x2="88" y2="81" stroke="#c9a22760" stroke-width="0.9"/>
+<line x1="83" y1="77" x2="83" y2="85" stroke="#c9a22760" stroke-width="0.9"/>
+</svg>`,
+'II':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#060d20"/>
+<rect x="8" y="10" width="14" height="85" rx="2" fill="#0a1520" stroke="#c9a22780" stroke-width="1"/>
+<rect x="88" y="10" width="14" height="85" rx="2" fill="#0a1520" stroke="#c9a22780" stroke-width="1"/>
+<text x="15" y="44" text-anchor="middle" font-size="11" font-weight="bold" fill="#c9a22790" font-family="serif">B</text>
+<text x="95" y="44" text-anchor="middle" font-size="11" font-weight="bold" fill="#c9a22790" font-family="serif">J</text>
+<path d="M22,10 Q55,26 88,10 L88,95 Q55,79 22,95Z" fill="rgba(6,13,32,0.85)" stroke="#c9a22730" stroke-width="0.5"/>
+<circle cx="55" cy="36" r="8" fill="#060d20" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M48,28 L50,23 L53,27 L55,22 L57,27 L60,23 L62,28" fill="none" stroke="#c9a227" stroke-width="1.1"/>
+<path d="M55,44 L47,95 M55,44 L63,95" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M47,62 Q55,68 63,62" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<rect x="43" y="47" width="24" height="17" rx="2" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<line x1="47" y1="53" x2="67" y2="53" stroke="#c9a22750" stroke-width="0.7"/>
+<line x1="47" y1="58" x2="67" y2="58" stroke="#c9a22750" stroke-width="0.7"/>
+<path d="M46,99 Q55,93 64,99" fill="none" stroke="#c9a22780" stroke-width="1.2"/>
+</svg>`,
+'III':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#0d200d"/>
+<path d="M0,82 Q35,70 70,76 Q90,79 110,72 L110,106 L0,106Z" fill="#0a1a0a"/>
+<line x1="8" y1="82" x2="8" y2="58" stroke="#c9a22770" stroke-width="1"/><line x1="14" y1="82" x2="16" y2="55" stroke="#c9a22770" stroke-width="1"/><line x1="20" y1="82" x2="19" y2="58" stroke="#c9a22770" stroke-width="1"/>
+<ellipse cx="8" cy="56" rx="3" ry="6" fill="none" stroke="#c9a22770" stroke-width="0.9"/><ellipse cx="16" cy="53" rx="3" ry="6" fill="none" stroke="#c9a22770" stroke-width="0.9"/><ellipse cx="19" cy="56" rx="3" ry="6" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<rect x="32" y="28" width="46" height="68" rx="2" fill="#0a1a0a" stroke="#c9a22750" stroke-width="0.8"/>
+<circle cx="55" cy="30" r="8" fill="#0d200d" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M48,23 L50,18 L53,22 L55,17 L57,22 L60,18 L62,23" fill="none" stroke="#c9a227" stroke-width="1.1"/>
+<path d="M55,38 L47,80 M55,38 L63,80" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M47,55 Q55,62 63,55" fill="none" stroke="#c9a22760" stroke-width="0.9"/>
+<line x1="70" y1="38" x2="70" y2="20" stroke="#c9a22790" stroke-width="1.2"/>
+<circle cx="70" cy="18" r="4" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<circle cx="92" cy="34" r="8" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<line x1="92" y1="42" x2="92" y2="50" stroke="#c9a22780" stroke-width="1"/>
+<line x1="87" y1="46" x2="97" y2="46" stroke="#c9a22780" stroke-width="1"/>
+</svg>`,
+'IV':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#200d00"/>
+<path d="M65,106 L88,48 L110,85 L110,106Z" fill="#170900" stroke="#c9a22730" stroke-width="0.5"/>
+<path d="M80,106 L100,58 L110,75 L110,106Z" fill="#120700"/>
+<rect x="26" y="22" width="58" height="76" rx="2" fill="#1a0a00" stroke="#c9a22750" stroke-width="0.8"/>
+<circle cx="32" cy="27" r="6" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M28,27 C26,23 25,27 27,29" fill="none" stroke="#c9a22780" stroke-width="0.9"/>
+<circle cx="78" cy="27" r="6" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M82,27 C84,23 85,27 83,29" fill="none" stroke="#c9a22780" stroke-width="0.9"/>
+<circle cx="55" cy="33" r="8" fill="#200d00" stroke="#c9a227" stroke-width="1.3"/>
+<rect x="47" y="23" width="16" height="8" rx="1" fill="none" stroke="#c9a227" stroke-width="1.1"/>
+<path d="M50,23 L51,20 M55,23 L55,19 M60,23 L59,20" stroke="#c9a22790" stroke-width="0.9"/>
+<path d="M55,41 L55,70" stroke="#c9a227" stroke-width="1.5"/>
+<path d="M55,50 L36,57 M55,50 L74,57" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M55,70 L47,90 M55,70 L63,90" stroke="#c9a227" stroke-width="1.3"/>
+<circle cx="36" cy="59" r="6" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<line x1="74" y1="57" x2="74" y2="38" stroke="#c9a22790" stroke-width="1.2"/>
+<path d="M71,38 L74,33 L77,38Z" fill="#c9a22770"/>
+</svg>`,
+'V':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#15150a"/>
+<rect x="6" y="8" width="13" height="90" rx="2" fill="#0f0f07" stroke="#c9a22760" stroke-width="0.9"/>
+<rect x="91" y="8" width="13" height="90" rx="2" fill="#0f0f07" stroke="#c9a22760" stroke-width="0.9"/>
+<path d="M19,36 Q55,14 91,36" fill="none" stroke="#c9a22760" stroke-width="0.9"/>
+<circle cx="55" cy="26" r="8" fill="#15150a" stroke="#c9a227" stroke-width="1.3"/>
+<rect x="47" y="16" width="16" height="5" rx="1" fill="none" stroke="#c9a227" stroke-width="1"/>
+<rect x="49" y="12" width="12" height="4" rx="1" fill="none" stroke="#c9a22790" stroke-width="0.9"/>
+<rect x="51" y="9" width="8" height="4" rx="1" fill="none" stroke="#c9a22770" stroke-width="0.8"/>
+<path d="M55,34 L46,98 M55,34 L64,98" stroke="#c9a227" stroke-width="1.3"/>
+<line x1="76" y1="98" x2="76" y2="22" stroke="#c9a22790" stroke-width="1.2"/>
+<line x1="70" y1="35" x2="82" y2="35" stroke="#c9a22790" stroke-width="1.2"/>
+<line x1="71" y1="46" x2="81" y2="46" stroke="#c9a22780" stroke-width="1.1"/>
+<line x1="72" y1="57" x2="80" y2="57" stroke="#c9a22770" stroke-width="1"/>
+<circle cx="30" cy="74" r="6" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M30,80 L26,98 M30,80 L34,98" stroke="#c9a22770" stroke-width="1"/>
+<circle cx="76" cy="74" r="6" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M76,80 L72,98 M76,80 L80,98" stroke="#c9a22770" stroke-width="1"/>
+</svg>`,
+'VI':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#200615"/>
+<circle cx="55" cy="20" r="12" fill="none" stroke="#c9a22760" stroke-width="0.8"/>
+<circle cx="55" cy="20" r="7" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M55,8 L55,5 M55,32 L55,35 M43,20 L40,20 M67,20 L70,20 M47,12 L45,10 M63,12 L65,10" stroke="#c9a22760" stroke-width="0.9"/>
+<path d="M43,27 C46,18 64,18 67,27" fill="none" stroke="#c9a22780" stroke-width="1.1"/>
+<path d="M55,13 L51,19 L55,17 L59,19 L55,13Z" fill="#c9a22770" stroke="#c9a22790" stroke-width="0.5"/>
+<circle cx="35" cy="55" r="7" fill="#200615" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M35,62 L29,98 M35,62 L41,98 M35,68 L26,65 M35,68 L44,65" stroke="#c9a227" stroke-width="1.2"/>
+<circle cx="75" cy="55" r="7" fill="#200615" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M75,62 L69,98 M75,62 L81,98 M75,68 L66,65 M75,68 L84,65" stroke="#c9a227" stroke-width="1.2"/>
+<path d="M0,96 Q20,85 40,90 Q55,93 70,88 Q90,83 110,88 L110,106 L0,106Z" fill="#150912"/>
+<path d="M42,90 L45,84 L48,90" fill="none" stroke="#c9a22760" stroke-width="0.8"/>
+<path d="M62,88 L65,82 L68,88" fill="none" stroke="#c9a22760" stroke-width="0.8"/>
+</svg>`,
+'VII':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#051520"/>
+<path d="M10,10 L100,10 L100,14 L10,14Z" fill="none" stroke="#c9a22760" stroke-width="0.7"/>
+<circle cx="20" cy="12" r="2" fill="#c9a22770"/><circle cx="55" cy="12" r="2" fill="#c9a22770"/><circle cx="90" cy="12" r="2" fill="#c9a22770"/>
+<line x1="10" y1="14" x2="10" y2="68" stroke="#c9a22760" stroke-width="0.8"/>
+<line x1="100" y1="14" x2="100" y2="68" stroke="#c9a22760" stroke-width="0.8"/>
+<line x1="10" y1="68" x2="100" y2="68" stroke="#c9a22760" stroke-width="0.8"/>
+<circle cx="55" cy="36" r="8" fill="#051520" stroke="#c9a227" stroke-width="1.3"/>
+<rect x="44" y="26" width="22" height="8" rx="1" fill="none" stroke="#c9a227" stroke-width="1.1"/>
+<path d="M55,44 L55,60" stroke="#c9a227" stroke-width="1.8"/>
+<path d="M55,50 L38,46 M55,50 L72,46" stroke="#c9a227" stroke-width="1.2"/>
+<ellipse cx="30" cy="80" rx="14" ry="10" fill="none" stroke="#c9a22780" stroke-width="1.1"/>
+<path d="M22,80 L18,74 M22,80 L18,86 M22,80 L14,80" stroke="#c9a22770" stroke-width="0.9"/>
+<circle cx="30" cy="78" r="3" fill="none" stroke="#c9a22780" stroke-width="0.9"/>
+<ellipse cx="80" cy="80" rx="14" ry="10" fill="none" stroke="#c9a22780" stroke-width="1.1"/>
+<path d="M88,80 L92,74 M88,80 L92,86 M88,80 L96,80" stroke="#c9a22770" stroke-width="0.9"/>
+<circle cx="80" cy="78" r="3" fill="none" stroke="#c9a22780" stroke-width="0.9"/>
+<path d="M38,68 Q55,90 72,68" fill="none" stroke="#c9a22750" stroke-width="0.7"/>
+</svg>`,
+'VIII':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#1f0e00"/>
+<path d="M35,18 C35,13 41,10 47,14 C53,18 57,18 63,14 C69,10 75,13 75,18 C75,23 69,26 63,22 C57,18 53,18 47,22 C41,26 35,23 35,18Z" fill="none" stroke="#c9a227" stroke-width="1.2"/>
+<circle cx="45" cy="38" r="7" fill="#1f0e00" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M45,45 L40,98 M45,45 L52,98 M45,53 L33,50 M45,53 L57,50" stroke="#c9a227" stroke-width="1.2"/>
+<ellipse cx="72" cy="65" rx="22" ry="18" fill="none" stroke="#c9a227" stroke-width="1.2"/>
+<circle cx="72" cy="58" r="7" fill="#1f0e00" stroke="#c9a22780" stroke-width="1"/>
+<path d="M60,60 C58,55 60,50 64,52 C62,58 66,65 72,65" fill="none" stroke="#c9a227" stroke-width="1.2"/>
+<path d="M57,42 Q45,40 45,55" fill="none" stroke="#c9a22760" stroke-width="0.8"/>
+<path d="M56,62 Q54,50 50,48" fill="none" stroke="#c9a22760" stroke-width="0.8"/>
+<path d="M5,98 Q30,86 55,90 Q80,94 105,88 L105,106 L5,106Z" fill="#150900"/>
+</svg>`,
+'IX':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#0d0d20"/>
+<path d="M0,90 Q35,75 55,80 Q75,85 110,72 L110,106 L0,106Z" fill="#0a0a18"/>
+<path d="M30,90 Q40,60 45,40 Q48,30 55,25" fill="none" stroke="#c9a22740" stroke-width="0.7"/>
+<circle cx="55" cy="28" r="8" fill="#0d0d20" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M55,36 L50,95 M55,36 L60,95" stroke="#c9a227" stroke-width="1.4"/>
+<path d="M50,50 Q44,54 43,60 Q42,66 44,72" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<path d="M60,50 Q66,54 67,60 Q68,66 66,72" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<line x1="66" y1="36" x2="66" y2="18" stroke="#c9a22790" stroke-width="1.2"/>
+<rect x="60" y="12" width="12" height="10" rx="2" fill="#1a1a30" stroke="#c9a22780" stroke-width="1"/>
+<path d="M62,15 Q66,11 70,15" fill="none" stroke="#c9a227" stroke-width="1.1"/>
+<circle cx="66" cy="17" r="3" fill="#c9a22740"/>
+<path d="M20,30 L25,26 M30,18 L34,15 M18,48 L14,52" stroke="#c9a22740" stroke-width="0.7"/>
+<circle cx="15" cy="25" r="2" fill="#c9a22760"/>
+<circle cx="25" cy="15" r="1.5" fill="#c9a22750"/>
+<circle cx="95" cy="20" r="1.5" fill="#c9a22750"/>
+<circle cx="88" cy="35" r="1.5" fill="#c9a22750"/>
+<circle cx="98" cy="50" r="1" fill="#c9a22750"/>
+</svg>`,
+'X':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#150520"/>
+<circle cx="55" cy="53" r="38" fill="none" stroke="#c9a22760" stroke-width="0.7"/>
+<circle cx="55" cy="53" r="28" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<circle cx="55" cy="53" r="14" fill="none" stroke="#c9a22760" stroke-width="0.8"/>
+<line x1="55" y1="15" x2="55" y2="91" stroke="#c9a22760" stroke-width="0.8"/>
+<line x1="17" y1="53" x2="93" y2="53" stroke="#c9a22760" stroke-width="0.8"/>
+<line x1="28" y1="26" x2="82" y2="80" stroke="#c9a22760" stroke-width="0.8"/>
+<line x1="82" y1="26" x2="28" y2="80" stroke="#c9a22760" stroke-width="0.8"/>
+<text x="44" y="32" font-size="7" fill="#c9a22790" font-family="serif">T</text>
+<text x="67" y="43" font-size="7" fill="#c9a22790" font-family="serif">A</text>
+<text x="67" y="66" font-size="7" fill="#c9a22790" font-family="serif">R</text>
+<text x="44" y="78" font-size="7" fill="#c9a22790" font-family="serif">O</text>
+<ellipse cx="55" cy="8" rx="8" ry="6" fill="#150520" stroke="#c9a22780" stroke-width="1"/>
+<path d="M50,8 L55,4 L60,8 L55,12Z" fill="none" stroke="#c9a22780" stroke-width="0.8"/>
+<ellipse cx="55" cy="98" rx="7" ry="5" fill="#150520" stroke="#c9a22770" stroke-width="1"/>
+<path d="M50,98 L55,103 L60,98" fill="none" stroke="#c9a22770" stroke-width="0.8"/>
+<circle cx="10" cy="25" r="8" fill="#150520" stroke="#c9a22770" stroke-width="1"/>
+<path d="M7,22 L10,18 L13,22 L10,26Z M10,18 L10,14" fill="none" stroke="#c9a22770" stroke-width="0.8"/>
+<circle cx="100" cy="25" r="7" fill="#150520" stroke="#c9a22770" stroke-width="1"/>
+<path d="M97,22 Q100,18 103,22 Q103,26 100,26 Q97,26 97,22Z" fill="none" stroke="#c9a22770" stroke-width="0.8"/>
+</svg>`,
+'XI':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#051f0d"/>
+<rect x="12" y="8" width="14" height="90" rx="2" fill="#041508" stroke="#c9a22760" stroke-width="0.9"/>
+<rect x="84" y="8" width="14" height="90" rx="2" fill="#041508" stroke="#c9a22760" stroke-width="0.9"/>
+<path d="M26,28 Q55,10 84,28" fill="none" stroke="#c9a22760" stroke-width="0.8"/>
+<circle cx="55" cy="30" r="8" fill="#051f0d" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M48,22 L50,18 L53,22 L55,17 L57,22 L60,18 L62,22" fill="none" stroke="#c9a227" stroke-width="1"/>
+<path d="M55,38 L47,98 M55,38 L63,98" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M55,50 L34,55 M55,50 L76,55" stroke="#c9a227" stroke-width="1.2"/>
+<line x1="34" y1="55" x2="34" y2="68" stroke="#c9a22790" stroke-width="1.2"/>
+<path d="M28,62 L34,55 L40,62 L34,68 L28,62Z" fill="none" stroke="#c9a227" stroke-width="1.1"/>
+<line x1="30" y1="62" x2="38" y2="62" stroke="#c9a22770" stroke-width="0.8"/>
+<line x1="76" y1="55" x2="76" y2="22" stroke="#c9a22790" stroke-width="1.3"/>
+<path d="M73,22 L76,17 L79,22Z" fill="#c9a22780"/>
+</svg>`,
+'XII':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#050d1f"/>
+<rect x="20" y="8" width="12" height="70" rx="2" fill="#0a1a2a" stroke="#c9a22780" stroke-width="1"/>
+<rect x="78" y="8" width="12" height="70" rx="2" fill="#0a1a2a" stroke="#c9a22780" stroke-width="1"/>
+<rect x="20" y="8" width="70" height="12" rx="2" fill="#0a1a2a" stroke="#c9a22780" stroke-width="1"/>
+<circle cx="55" cy="56" r="9" fill="#050d1f" stroke="#c9a227" stroke-width="1.3"/>
+<circle cx="55" cy="55" r="14" fill="none" stroke="#c9a22750" stroke-width="0.7"/>
+<line x1="55" y1="20" x2="55" y2="47" stroke="#c9a22790" stroke-width="1.2"/>
+<path d="M55,47 L45,70 M55,47 L65,70" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M45,70 L40,65 M45,70 L44,77 M65,70 L70,65 M65,70 L66,77" stroke="#c9a22770" stroke-width="0.9"/>
+<path d="M45,62 L65,62" stroke="#c9a22770" stroke-width="0.9"/>
+<line x1="34" y1="20" x2="34" y2="8" stroke="#c9a22760" stroke-width="0.8"/>
+<line x1="76" y1="20" x2="76" y2="8" stroke="#c9a22760" stroke-width="0.8"/>
+</svg>`,
+'XIII':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#0d0505"/>
+<circle cx="85" cy="20" r="12" fill="none" stroke="#c9a22750" stroke-width="0.8"/>
+<path d="M75,14 Q85,8 95,14 Q99,20 95,26 Q85,32 75,26 Q71,20 75,14Z" fill="#c9a22720"/>
+<path d="M0,85 Q30,72 55,78 Q80,84 110,75 L110,106 L0,106Z" fill="#0a0404"/>
+<circle cx="68" cy="52" r="22" fill="none" stroke="#c9a22750" stroke-width="0.7"/>
+<path d="M55,50 Q60,30 68,28 Q76,30 74,50" fill="none" stroke="#c9a22780" stroke-width="1.1"/>
+<circle cx="68" cy="26" r="6" fill="#0d0505" stroke="#c9a22780" stroke-width="1"/>
+<path d="M65,21 L66,18 M68,20 L68,17 M71,21 L72,18" stroke="#c9a22770" stroke-width="0.9"/>
+<path d="M63,32 L58,45 M73,32 L78,45" stroke="#c9a22780" stroke-width="1"/>
+<path d="M58,45 L52,75 M78,45 L84,75" stroke="#c9a22780" stroke-width="1"/>
+<path d="M52,75 L45,85 Q40,88 42,92 M84,75 L91,85 Q96,88 94,92" stroke="#c9a22770" stroke-width="0.9"/>
+<path d="M30,55 L38,30 M34,52 L30,55 L34,58" stroke="#c9a22780" stroke-width="1"/>
+<path d="M38,30 L44,25 M38,30 L42,35" stroke="#c9a22780" stroke-width="1"/>
+<circle cx="38" cy="27" r="3" fill="none" stroke="#c9a22780" stroke-width="0.9"/>
+<path d="M36,24 L39,21 L41,24" fill="none" stroke="#c9a22770" stroke-width="0.8"/>
+</svg>`,
+'XIV':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#051515"/>
+<path d="M70,106 L85,65 L100,106Z" fill="#0a1a1a" stroke="#c9a22740" stroke-width="0.5"/>
+<path d="M80,106 L92,72 L110,95 L110,106Z" fill="#060f0f"/>
+<circle cx="18" cy="20" r="10" fill="none" stroke="#c9a22760" stroke-width="0.8"/>
+<circle cx="18" cy="20" r="6" fill="#c9a22720"/>
+<path d="M55" cy="28" r="8" fill="#051515" stroke="#c9a227" stroke-width="1.3"/>
+<circle cx="55" cy="28" r="8" fill="#051515" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M48,38 L44,95 M62,38 L66,95" stroke="#c9a227" stroke-width="1.2"/>
+<path d="M40,50 Q32,55 28,65" stroke="#c9a22770" stroke-width="0.9"/>
+<path d="M70,50 Q78,55 82,65" stroke="#c9a22770" stroke-width="0.9"/>
+<path d="M44,50 L36,52 L30,48" fill="none" stroke="#c9a22780" stroke-width="1.1"/>
+<circle cx="34" cy="48" r="5" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M66,50 L74,52 L80,48" fill="none" stroke="#c9a22780" stroke-width="1.1"/>
+<circle cx="76" cy="48" r="5" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M34,53 Q38,68 30,75 Q22,82 25,90" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<path d="M48,22 L55,16 L62,22" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<line x1="46" y1="18" x2="64" y2="18" stroke="#c9a22760" stroke-width="0.7"/>
+</svg>`,
+'XV':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#150505"/>
+<path d="M55,6 L60,18 L73,14 L64,24 L72,35 L59,29 L55,42 L51,29 L38,35 L46,24 L37,14 L50,18Z" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<circle cx="55" cy="24" r="5" fill="#150505"/>
+<path d="M55,20 L53,26 L57,26Z" fill="#c9a22760"/>
+<circle cx="55" cy="38" r="9" fill="#150505" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M50,30 L46,26 M60,30 L64,26" stroke="#c9a22790" stroke-width="1.2"/>
+<path d="M55,47 L55,65" stroke="#c9a227" stroke-width="1.5"/>
+<path d="M55,54 L37,50 M55,54 L73,50" stroke="#c9a227" stroke-width="1.2"/>
+<path d="M55,65 L45,62 M55,65 L65,62" stroke="#c9a22790" stroke-width="1.1"/>
+<circle cx="30" cy="78" r="6" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M30,84 L26,98 M30,84 L34,98" stroke="#c9a22780" stroke-width="1"/>
+<line x1="30" y1="84" x2="36" y2="78" stroke="#c9a22760" stroke-width="0.8"/>
+<circle cx="80" cy="78" r="6" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M80,84 L76,98 M80,84 L84,98" stroke="#c9a22780" stroke-width="1"/>
+<line x1="80" y1="84" x2="74" y2="78" stroke="#c9a22760" stroke-width="0.8"/>
+<rect x="45" y="66" width="20" height="6" rx="2" fill="#150505" stroke="#c9a22760" stroke-width="0.8"/>
+</svg>`,
+'XVI':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#1f1500"/>
+<rect x="38" y="28" width="34" height="72" rx="2" fill="#150e00" stroke="#c9a227" stroke-width="1.3"/>
+<rect x="34" y="24" width="42" height="10" rx="2" fill="#1a1100" stroke="#c9a227" stroke-width="1.2"/>
+<rect x="42" y="38" width="8" height="10" rx="1" fill="none" stroke="#c9a22760" stroke-width="0.7"/>
+<rect x="60" y="38" width="8" height="10" rx="1" fill="none" stroke="#c9a22760" stroke-width="0.7"/>
+<rect x="42" y="56" width="8" height="10" rx="1" fill="none" stroke="#c9a22760" stroke-width="0.7"/>
+<rect x="60" y="56" width="8" height="10" rx="1" fill="none" stroke="#c9a22760" stroke-width="0.7"/>
+<path d="M22,8 L42,38 L36,30" fill="none" stroke="#c9a227" stroke-width="2"/>
+<path d="M30,12 L42,36 L34,28" fill="none" stroke="#c9a22780" stroke-width="1.5"/>
+<path d="M34,22 L50,30" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<circle cx="36" cy="23" r="3" fill="#c9a22760"/>
+<circle cx="76" cy="15" r="4" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M74,14 L76,10 L78,14 L82,12 L80,16 L84,16 L80,19 L82,23 L78,21 L76,25 L74,21 L70,23 L72,19 L68,16 L72,16 L70,12Z" fill="none" stroke="#c9a22760" stroke-width="0.6"/>
+<circle cx="20" cy="75" r="6" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M20,69 L15,50 M14,55 L15,50 L20,53" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M20,81 L16,98" stroke="#c9a22780" stroke-width="1"/>
+<circle cx="90" cy="55" r="6" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M90,49 L95,32 M96,37 L95,32 L90,35" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M90,61 L94,98" stroke="#c9a22780" stroke-width="1"/>
+</svg>`,
+'XVII':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#050d15"/>
+<path d="M55,8 L58,20 L70,17 L62,26 L70,35 L58,32 L55,44 L52,32 L40,35 L48,26 L40,17 L52,20Z" fill="none" stroke="#c9a227" stroke-width="1.3"/>
+<circle cx="55" cy="26" r="5" fill="#c9a22740"/>
+<circle cx="25" cy="20" r="4" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<circle cx="88" cy="15" r="3" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<circle cx="18" cy="42" r="3" fill="none" stroke="#c9a22760" stroke-width="0.8"/>
+<circle cx="95" cy="38" r="4" fill="none" stroke="#c9a22760" stroke-width="0.8"/>
+<circle cx="12" cy="62" r="2.5" fill="none" stroke="#c9a22750" stroke-width="0.7"/>
+<circle cx="98" cy="56" r="2.5" fill="none" stroke="#c9a22750" stroke-width="0.7"/>
+<path d="M0,82 Q30,72 55,78 Q80,84 110,74 L110,106 L0,106Z" fill="#040b12"/>
+<ellipse cx="38" cy="68" rx="10" ry="6" fill="#040b12" stroke="#c9a22760" stroke-width="0.8"/>
+<circle cx="38" cy="65" r="7" fill="#050d15" stroke="#c9a22780" stroke-width="1"/>
+<path d="M38,58 L32,52 M38,58 L44,52" stroke="#c9a227" stroke-width="1.2"/>
+<path d="M32,70 L28,98 M44,70 L48,98" stroke="#c9a227" stroke-width="1.2"/>
+<path d="M32,58 L20,64 Q14,70 14,78" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<path d="M44,58 L56,64 Q62,70 62,78" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<path d="M20,64 Q12,58 14,72" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+</svg>`,
+'XVIII':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#050510"/>
+<path d="M42,6 Q55,0 68,6 Q78,16 75,26 Q68,30 55,28 Q42,30 35,26 Q32,16 42,6Z" fill="#0a0a20" stroke="#c9a227" stroke-width="1.2"/>
+<path d="M48,18 Q55,14 62,18 Q58,26 55,24 Q52,26 48,18Z" fill="#c9a22730" stroke="#c9a22770" stroke-width="0.8"/>
+<path d="M38,20 L33,15 M32,22 L27,22 M34,26 L30,30" stroke="#c9a22760" stroke-width="0.9"/>
+<path d="M72,20 L77,15 M78,22 L83,22 M76,26 L80,30" stroke="#c9a22760" stroke-width="0.9"/>
+<path d="M0,85 Q22,78 30,80 Q38,82 40,90 Q50,82 60,82 Q70,82 80,90 Q82,82 90,80 Q98,78 110,82 L110,106 L0,106Z" fill="#040410"/>
+<rect x="8" y="46" width="14" height="45" rx="2" fill="#0a0a20" stroke="#c9a22770" stroke-width="1"/>
+<rect x="88" y="46" width="14" height="45" rx="2" fill="#0a0a20" stroke="#c9a22770" stroke-width="1"/>
+<circle cx="25" cy="68" r="8" fill="#050510" stroke="#c9a22780" stroke-width="1.1"/>
+<path d="M20,64 L25,60 L22,68 L28,65 L25,76 L22,68" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<circle cx="85" cy="68" r="7" fill="#050510" stroke="#c9a22780" stroke-width="1.1"/>
+<path d="M82,64 L85,60 L82,68 L88,65 L85,76 L82,68" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M30,90 Q40,78 55,80 Q70,82 80,90" fill="none" stroke="#c9a22760" stroke-width="0.8"/>
+<ellipse cx="55" cy="94" rx="8" ry="5" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M50,96 L52,101 M55,97 L55,102 M60,96 L58,101" stroke="#c9a22770" stroke-width="0.8"/>
+</svg>`,
+'XIX':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#201500"/>
+<circle cx="55" cy="30" r="20" fill="#2a1a00" stroke="#c9a227" stroke-width="1.5"/>
+<circle cx="55" cy="30" r="14" fill="none" stroke="#c9a22780" stroke-width="0.9"/>
+<ellipse cx="55" cy="30" rx="6" ry="8" fill="#c9a22730" stroke="#c9a22780" stroke-width="0.8"/>
+<circle cx="55" cy="29" r="4" fill="#c9a22750"/>
+<path d="M55,8 L55,4 M55,52 L55,56 M35,30 L31,30 M75,30 L79,30" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M42,17 L39,14 M68,17 L71,14 M42,43 L39,46 M68,43 L71,46" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M37,22 L34,20 M73,22 L76,20 M37,38 L34,40 M73,38 L76,40" stroke="#c9a22780" stroke-width="1"/>
+<path d="M0,85 Q28,95 55,95 Q82,95 110,85 L110,106 L0,106Z" fill="#180f00"/>
+<circle cx="42" cy="80" r="6" fill="#180f00" stroke="#c9a22780" stroke-width="1"/>
+<path d="M40,74 L38,70 L42,72 L44,68 L44,72 L48,70 L46,74" fill="none" stroke="#c9a22780" stroke-width="0.9"/>
+<circle cx="68" cy="80" r="6" fill="#180f00" stroke="#c9a22780" stroke-width="1"/>
+<path d="M66,74 L64,70 L68,72 L70,68 L70,72 L74,70 L72,74" fill="none" stroke="#c9a22780" stroke-width="0.9"/>
+<circle cx="75" cy="72" r="5" fill="#180f00" stroke="#c9a22770" stroke-width="0.9"/>
+<path d="M55,62" stroke="#c9a22780" stroke-width="1"/>
+<circle cx="22" cy="68" r="7" fill="#180f00" stroke="#c9a22780" stroke-width="1.1"/>
+<path d="M22,61 L20,56 M22,61 L18,58 M22,61 L24,58 M22,61 L26,56" fill="none" stroke="#c9a22770" stroke-width="0.8"/>
+<path d="M22,75 L20,85 M22,75 L26,85 M16,72 L10,75" stroke="#c9a22780" stroke-width="1"/>
+</svg>`,
+'XX':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#150d05"/>
+<circle cx="55" cy="16" r="10" fill="#150d05" stroke="#c9a22780" stroke-width="1.1"/>
+<path d="M50,10 L55,6 L60,10 L55,14Z" fill="#c9a22760"/>
+<path d="M40,14 L55,6 L70,14" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M44,22 Q55,28 66,22" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<line x1="55" y1="26" x2="55" y2="38" stroke="#c9a22780" stroke-width="1.1"/>
+<path d="M42,32 L68,32" stroke="#c9a22780" stroke-width="0.9"/>
+<path d="M42,32 L38,40 M68,32 L72,40" stroke="#c9a22770" stroke-width="0.9"/>
+<circle cx="28" cy="70" r="8" fill="#150d05" stroke="#c9a22780" stroke-width="1.1"/>
+<path d="M28,62 L24,50 M32,62 L36,50" stroke="#c9a22780" stroke-width="1"/>
+<path d="M24,78 L20,98 M32,78 L36,98 M20,86 L36,86" stroke="#c9a22780" stroke-width="1"/>
+<circle cx="55" cy="70" r="8" fill="#150d05" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M55,62 L55,48 M55,78 L55,98" stroke="#c9a227" stroke-width="1.2"/>
+<path d="M49,78 Q55,82 61,78" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<circle cx="82" cy="70" r="8" fill="#150d05" stroke="#c9a22780" stroke-width="1.1"/>
+<path d="M82,62 L78,50 M86,62 L90,50" stroke="#c9a22780" stroke-width="1"/>
+<path d="M78,78 L74,98 M86,78 L90,98 M74,86 L90,86" stroke="#c9a22780" stroke-width="1"/>
+</svg>`,
+'XXI':`<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+<rect width="110" height="106" fill="#05150d"/>
+<ellipse cx="55" cy="53" rx="32" ry="45" fill="none" stroke="#c9a227" stroke-width="1.4"/>
+<ellipse cx="55" cy="53" rx="28" ry="41" fill="none" stroke="#c9a22760" stroke-width="0.7"/>
+<path d="M30,25 Q38,15 55,12 Q72,15 80,25" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<path d="M30,81 Q38,91 55,94 Q72,91 80,81" fill="none" stroke="#c9a22780" stroke-width="1"/>
+<circle cx="55" cy="53" r="9" fill="#05150d" stroke="#c9a227" stroke-width="1.3"/>
+<path d="M55,44 L55,50 M55,56 L55,62 M46,53 L50,53 M60,53 L64,53" stroke="#c9a22780" stroke-width="1"/>
+<path d="M49,48 L46,45 M61,48 L64,45 M49,58 L46,61 M61,58 L64,61" stroke="#c9a22770" stroke-width="0.8"/>
+<circle cx="12" cy="15" r="7" fill="#05150d" stroke="#c9a22770" stroke-width="1"/>
+<path d="M9,14 L12,10 L15,14 L12,18Z" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<circle cx="98" cy="15" r="7" fill="#05150d" stroke="#c9a22770" stroke-width="1"/>
+<path d="M96,12 Q98,8 100,12 Q100,18 98,18 Q96,18 96,12Z" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<circle cx="12" cy="91" r="7" fill="#05150d" stroke="#c9a22770" stroke-width="1"/>
+<path d="M9,88 Q12,84 15,88 Q15,94 12,92 Q9,94 9,88Z" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+<circle cx="98" cy="91" r="7" fill="#05150d" stroke="#c9a22770" stroke-width="1"/>
+<path d="M95,91 L98,87 L101,91 L98,95Z" fill="none" stroke="#c9a22770" stroke-width="0.9"/>
+</svg>`,
+        };
+
         let _tarotSeeds = null;
         let _tarotCards = null;
         const _tarotCache = {};
@@ -7255,28 +7690,42 @@ Kurallar:
             const row = document.getElementById('tarot-cards-row');
             if (!row) return;
 
-            row.innerHTML = labels.map((lbl, i) => `
+            row.innerHTML = labels.map((lbl, i) => {
+                const card = _tarotCards[i];
+                const artBg = _tarotColors[card.no] || 'linear-gradient(135deg,#1a1a2a,#0d0d15)';
+                const orientLabel = orients[i] === 'ters' ? '▼ TERS' : '▲ DÜZ';
+                return `
                 <div class="tarot-card-slot">
                     <div class="tarot-card-label">${lbl}</div>
                     <div class="tarot-card-wrapper">
                         <div class="tarot-card-inner" id="tarot-inner-${i}" onclick="flipTarotCard(${i}, this)">
                             <div class="tarot-card-back-face">
+                                <div class="tarot-back-ornament">✦ ✦ ✦</div>
                                 <div class="tarot-back-symbol">🔮</div>
                                 <div class="tarot-back-hint">Dokunarak Aç</div>
+                                <div class="tarot-back-ornament">✦ ✦ ✦</div>
                             </div>
                             <div class="tarot-card-front-face">
-                                <div class="tarot-front-emoji">${_tarotCards[i].emoji}</div>
-                                <div class="tarot-front-name">${_tarotCards[i].isim}</div>
-                                <div class="tarot-front-meta">${_tarotCards[i].no} · ${orients[i]}</div>
-                                <div class="tarot-front-divider"></div>
+                                <span class="tarot-corner tl">✦</span>
+                                <span class="tarot-corner tr">✦</span>
+                                <span class="tarot-corner bl">✦</span>
+                                <span class="tarot-corner br">✦</span>
+                                <div class="tarot-front-number">${card.no}</div>
+                                <div class="tarot-front-art">
+                                    ${_tarotSVGs[card.no] || `<svg viewBox="0 0 110 106" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block"><rect width="110" height="106" fill="${artBg.includes('#') ? '#0d0d1a' : '#0d0d1a'}"/><text x="55" y="58" text-anchor="middle" font-size="38" fill="#c9a227">${card.emoji}</text></svg>`}
+                                </div>
+                                <div class="tarot-front-name-banner">
+                                    <div class="tarot-front-name">${card.isim}</div>
+                                    <div class="tarot-front-meta">${orientLabel}</div>
+                                </div>
                                 <div class="tarot-front-text loading-text" id="tarot-text-${i}">
                                     <span class="ai-pulse"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
 
             // AI yorumlarını yükle (localStorage'dan önce bak)
             _tarotCards.forEach((card, i) => {
