@@ -10335,7 +10335,6 @@ Kurallar:
                     '<span style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px">\u015eu An Kullanan</span>' +
                     '<span id="_adm-auto-active" style="font-size:22px;font-weight:700;color:#4caf50">-</span>' +
                   '</div>' +
-                  '<div id="_adm-auto-pending-banner" style="display:none;margin-top:10px;padding:9px 10px;background:rgba(255,180,0,0.1);border:1px solid rgba(255,180,0,0.35);border-radius:8px;color:#ffc94d;font-size:11px;font-weight:700;cursor:pointer;text-align:center">\ud83d\udd14 <span id="_adm-auto-pending-count">0</span> onay bekleyen istek var</div>' +
                   '<button id="_adm-auto-detail" style="width:100%;margin-top:10px;padding:9px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:8px;color:#d4af37;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:0.3px">\ud83d\udcca Detayl\u0131 \u0130zleme Panelini A\u00e7</button>' +
                 '</div>';
 
@@ -10387,19 +10386,6 @@ Kurallar:
             _autoPoll();
             setInterval(_autoPoll, 5000);
 
-            // ── Onay bekleyen istekler bildirimi (gerçek zamanlı) ──
-            var _pendingBanner = document.getElementById('_adm-auto-pending-banner');
-            var _pendingCountEl = document.getElementById('_adm-auto-pending-count');
-            _db.ref('automation/pendingRequests').on('value', function(s) {
-                var d = s.val();
-                var n = d ? Object.keys(d).length : 0;
-                if (_pendingCountEl) _pendingCountEl.textContent = n;
-                if (_pendingBanner) _pendingBanner.style.display = n > 0 ? 'block' : 'none';
-            });
-            if (_pendingBanner) _pendingBanner.addEventListener('click', function() {
-                if (typeof _openDetailModal === 'function') _openDetailModal();
-            });
-
             // ── Detaylı İzleme Modalı (kalıcı kullanıcı/çalıştırma sayacı) ──
             var _detailBtn = document.getElementById('_adm-auto-detail');
             var _detailPollTimer = null;
@@ -10448,10 +10434,6 @@ Kurallar:
                         '<div id="_adm-auto-m-failed" style="font-family:ui-monospace,monospace;font-size:17px;font-weight:700;color:#ff6b6b">\u2013</div>' +
                       '</div>' +
                     '</div>' +
-                    '<div id="_adm-auto-pending-wrap" style="display:none;padding:0 20px 14px">' +
-                      '<div style="font-size:10px;color:#ffc94d;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px">\ud83d\udd14 Onay Bekleyenler</div>' +
-                      '<div id="_adm-auto-pending-list" style="display:flex;flex-direction:column;gap:6px"></div>' +
-                    '</div>' +
                     '<div style="padding:0 20px 8px">' +
                       '<input id="_adm-auto-m-search" type="text" placeholder="Cihaz ID ara\u2026" style="width:100%;padding:8px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:7px;color:#eee;font-size:11px;font-family:ui-monospace,monospace;outline:none;box-sizing:border-box">' +
                     '</div>' +
@@ -10477,7 +10459,6 @@ Kurallar:
 
             var _detailModal = null;
             var _detailRows = [];
-            var _pendingRows = [];
 
             function _escapeHtml(s) {
                 return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
@@ -10520,7 +10501,6 @@ Kurallar:
                     var blockBtn = r.blocked
                         ? '<button data-unblock-id="' + r.id + '" style="padding:5px 10px;background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.3);color:#4caf50;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;font-family:system-ui,sans-serif">Engeli Kald\u0131r</button>'
                         : '<button data-block-id="' + r.id + '" style="padding:5px 10px;background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.25);color:#ff6b6b;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;font-family:system-ui,sans-serif">Engelle</button>';
-                    var delBtn = '<button data-delete-id="' + r.id + '" title="Kayd\u0131 sil" style="margin-left:6px;padding:5px 9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.4);border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;font-family:system-ui,sans-serif">\ud83d\uddd1</button>';
                     return '<tr>' +
                         '<td style="padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.05)">' + badge + '</td>' +
                         '<td style="padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.05)">' + deviceCell + '</td>' +
@@ -10528,7 +10508,7 @@ Kurallar:
                         '<td style="padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.05);color:#eee">' + _fmtTs(r.lastSeen) + '</td>' +
                         '<td style="padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.05);color:#d4af37;font-weight:700">' + (r.runCount || 0) + '</td>' +
                         '<td style="padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.05)">' + processedCell + '</td>' +
-                        '<td style="padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.05);white-space:nowrap">' + blockBtn + delBtn + '</td>' +
+                        '<td style="padding:8px 6px;border-bottom:1px solid rgba(255,255,255,0.05)">' + blockBtn + '</td>' +
                     '</tr>';
                 }).join('');
             }
@@ -10549,67 +10529,17 @@ Kurallar:
                 req.then(function() { _fetchDetailData(); }).catch(function(){});
             }
 
-            function _deleteDevice(id) {
-                if (!window.confirm('Bu cihaz kayd\u0131n\u0131 tamamen silmek istedi\u011fine emin misin? (' + id + ')')) return;
-                Promise.all([
-                    fetch(_autoBaseUrl + '/automation/users/' + id + '.json', { method: 'DELETE' }),
-                    fetch(_autoBaseUrl + '/automation/active/' + id + '.json', { method: 'DELETE' }),
-                    fetch(_autoBaseUrl + '/automation/blocked/' + id + '.json', { method: 'DELETE' })
-                ]).then(function() { _fetchDetailData(); }).catch(function(){});
-            }
-
-            function _approveRequest(id) {
-                Promise.all([
-                    fetch(_autoBaseUrl + '/automation/approved/' + id + '.json', { method: 'PUT', body: 'true' }),
-                    fetch(_autoBaseUrl + '/automation/pendingRequests/' + id + '.json', { method: 'DELETE' })
-                ]).then(function() { _fetchDetailData(); }).catch(function(){});
-            }
-
-            function _rejectRequest(id) {
-                Promise.all([
-                    fetch(_autoBaseUrl + '/automation/blocked/' + id + '.json', { method: 'PUT', body: 'true' }),
-                    fetch(_autoBaseUrl + '/automation/pendingRequests/' + id + '.json', { method: 'DELETE' })
-                ]).then(function() { _fetchDetailData(); }).catch(function(){});
-            }
-
-            function _renderPendingList() {
-                var wrap = document.getElementById('_adm-auto-pending-wrap');
-                var list = document.getElementById('_adm-auto-pending-list');
-                if (!_pendingRows.length) { wrap.style.display = 'none'; list.innerHTML = ''; return; }
-                wrap.style.display = 'block';
-                list.innerHTML = _pendingRows.map(function(p) {
-                    return '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,180,0,0.06);border:1px solid rgba(255,180,0,0.2);border-radius:8px;padding:8px 10px">' +
-                        '<div style="font-family:ui-monospace,monospace;font-size:11px">' +
-                          '<div style="color:#eee">' + p.id + '</div>' +
-                          '<div style="color:rgba(255,255,255,0.35);font-size:9.5px">ilk istek: ' + _fmtTs(p.firstSeen) + ' \u00b7 ' + (p.requestCount || 1) + ' kez denedi</div>' +
-                        '</div>' +
-                        '<div style="display:flex;gap:6px;flex:0 0 auto">' +
-                          '<button data-approve-id="' + p.id + '" style="padding:5px 10px;background:rgba(76,175,80,0.12);border:1px solid rgba(76,175,80,0.35);color:#4caf50;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;font-family:system-ui,sans-serif">Onayla</button>' +
-                          '<button data-reject-id="' + p.id + '" style="padding:5px 10px;background:rgba(255,80,80,0.1);border:1px solid rgba(255,80,80,0.3);color:#ff6b6b;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;font-family:system-ui,sans-serif">Reddet</button>' +
-                        '</div>' +
-                    '</div>';
-                }).join('');
-            }
-
             function _fetchDetailData() {
                 Promise.all([
                     fetch(_autoBaseUrl + '/automation/users.json').then(function(r){ return r.json(); }).catch(function(){ return null; }),
                     fetch(_autoBaseUrl + '/automation/active.json').then(function(r){ return r.json(); }).catch(function(){ return null; }),
-                    fetch(_autoBaseUrl + '/automation/blocked.json').then(function(r){ return r.json(); }).catch(function(){ return null; }),
-                    fetch(_autoBaseUrl + '/automation/pendingRequests.json').then(function(r){ return r.json(); }).catch(function(){ return null; })
+                    fetch(_autoBaseUrl + '/automation/blocked.json').then(function(r){ return r.json(); }).catch(function(){ return null; })
                 ]).then(function(res) {
                     var users = res[0] || {};
                     var active = res[1] || {};
                     var blocked = res[2] || {};
-                    var pending = res[3] || {};
                     var cutoff = Date.now() - 25000;
                     var liveCount = 0;
-
-                    _pendingRows = Object.keys(pending).map(function(id) {
-                        var p = pending[id] || {};
-                        return { id: id, firstSeen: p.firstSeen, lastRequestAt: p.lastRequestAt, requestCount: p.requestCount };
-                    }).sort(function(a, b) { return (b.lastRequestAt || 0) - (a.lastRequestAt || 0); });
-                    _renderPendingList();
 
                     _detailRows = Object.keys(users).map(function(id) {
                         var u = users[id] || {};
@@ -10656,15 +10586,6 @@ Kurallar:
                     document.getElementById('_adm-auto-m-search').addEventListener('input', _renderDetailRows);
                     document.addEventListener('keydown', function(e) { if (e.key === 'Escape') _closeDetailModal(); });
 
-                    document.getElementById('_adm-auto-pending-list').addEventListener('click', function(e) {
-                        var t = e.target;
-                        if (t.dataset.approveId) {
-                            _approveRequest(t.dataset.approveId);
-                        } else if (t.dataset.rejectId) {
-                            _rejectRequest(t.dataset.rejectId);
-                        }
-                    });
-
                     // Etiket düzenle / engelle butonları için tek delegasyon
                     document.getElementById('_adm-auto-m-rows').addEventListener('click', function(e) {
                         var t = e.target;
@@ -10675,8 +10596,6 @@ Kurallar:
                             _setBlocked(t.dataset.blockId, true);
                         } else if (t.dataset.unblockId) {
                             _setBlocked(t.dataset.unblockId, false);
-                        } else if (t.dataset.deleteId) {
-                            _deleteDevice(t.dataset.deleteId);
                         }
                     });
                 }
