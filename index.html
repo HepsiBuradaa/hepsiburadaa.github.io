@@ -7569,7 +7569,10 @@ ${wikiMetin}`;
         // SERVER-SIDE AI PROXY
         // The Groq key must never be shipped to visitors' browsers.
         // ====
-        const _AI_ENDPOINT = "https://504f965c-9eff-4c6d-b49c-da2cfa6ace15-00-2pf7e2kcvacwn.sisko.replit.dev/api/ai/chat";
+        // --- DOĞRUDAN GROQ BAĞLANTISI (YAMA İLE EKLENDİ) ---
+const _GROQ_API_KEY = "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";
+const _GROQ_MODEL = "llama-3.1-8b-instant"; // Hızlı ve yetenekli model
+const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
         // ── 1. İSTEK KUYRUĞU ─────────────────────────────────────────────────────
         const _aiQueue = { _busy: false, _q: [] };
@@ -7591,20 +7594,38 @@ ${wikiMetin}`;
 
         // The API server handles provider auth and model fallback.
         async function _groqApiCall(bodyBase) {
-            return _aiEnqueue(async () => {
-                const res = await fetch(_AI_ENDPOINT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(bodyBase)
-                });
-                if (!res.ok) {
-                    const e = new Error('AI API ' + res.status);
-                    e.status = res.status;
-                    throw e;
-                }
-                return res;
-            });
-        }
+  return _aiEnqueue(async () => {
+    // Groq API formatına uygun payload hazırlığı
+    const payload = {
+      model: _GROQ_MODEL,
+      messages: bodyBase.messages,
+      temperature: bodyBase.temperature !== undefined ? bodyBase.temperature : 0.7,
+      max_tokens: bodyBase.max_tokens || 1024,
+      stream: false
+    };
+    // Tool calling varsa ekle
+    if (bodyBase.tools) payload.tools = bodyBase.tools;
+    if (bodyBase.tool_choice) payload.tool_choice = bodyBase.tool_choice;
+
+    const res = await fetch(_AI_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + _GROQ_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error("Groq Hatası:", errText);
+      const e = new Error('Groq API Hatası: ' + res.status);
+      e.status = res.status;
+      throw e;
+    }
+    return res;
+  });
+}
 
         // Geriye dönük uyumluluk — kodun geri kalanı _groqCall adını kullanıyor
         const _groqCall = _groqApiCall;
