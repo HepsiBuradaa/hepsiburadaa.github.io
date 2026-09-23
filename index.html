@@ -1675,75 +1675,6 @@
         </style>
 </head>
 <body>
-<div id="sg-overlay" style="display:none;position:fixed;inset:0;z-index:2147483647;background:rgba(4,6,12,.97);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);align-items:center;justify-content:center;font-family:system-ui,sans-serif;">
-<div style="width:340px;max-width:92vw;background:#10142a;border:1px solid rgba(212,175,55,.35);border-radius:16px;padding:26px 22px;color:#fff;box-shadow:0 20px 60px rgba(0,0,0,.8);text-align:center;">
-<div style="font-size:30px;">🔐</div>
-<div style="font-size:15px;font-weight:800;letter-spacing:1px;margin:8px 0 4px;">ERİŞİM İZNİ GEREKLİ</div>
-<div id="sg-desc" style="font-size:11.5px;color:rgba(255,255,255,.45);line-height:1.5;margin-bottom:14px;">Bu site yalnızca onaylı ziyaretçilere açıktır.<br>Lütfen adınızı yazın; yönetici onayladığında site otomatik açılır.</div>
-<input id="sg-name" placeholder="Adınız" maxlength="40" style="width:100%;box-sizing:border-box;padding:11px 12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:8px;color:#fff;font-size:14px;outline:none;margin-bottom:8px;text-align:center;" />
-<div id="sg-err" style="color:#f87171;font-size:11px;min-height:14px;margin-bottom:8px;"></div>
-<button id="sg-btn" style="width:100%;padding:11px;background:#d4af37;border:none;border-radius:8px;color:#141000;font-size:13px;font-weight:800;cursor:pointer;letter-spacing:.5px;">ONAY İSTEĞİ GÖNDER</button>
-<div id="sg-check" style="margin-top:4px;font-size:11.5px;color:rgba(255,255,255,.5);">Erişim durumu kontrol ediliyor…<div style="margin:12px auto 0;width:22px;height:22px;border:3px solid rgba(212,175,55,.25);border-top-color:#d4af37;border-radius:50%;animation:sgspin 1s linear infinite;"></div></div>
-<div id="sg-wait" style="display:none;margin-top:4px;">
-<div id="sg-wait-name" style="font-size:13px;font-weight:700;color:#d4af37;margin-bottom:6px;"></div>
-<div style="font-size:11.5px;color:rgba(255,255,255,.5);line-height:1.5;">⏳ Onay bekleniyor…<br>Bu sayfayı açık bırakın; onay gelince otomatik açılır.</div>
-<div style="margin:12px auto 0;width:22px;height:22px;border:3px solid rgba(212,175,55,.25);border-top-color:#d4af37;border-radius:50%;animation:sgspin 1s linear infinite;"></div>
-</div>
-<div id="sg-reject" style="display:none;font-size:12px;color:#ff6b6b;line-height:1.5;margin-top:4px;">❌ Erişim isteğiniz reddedildi.<br>Yanlışlık olduğunu düşünüyorsanız yöneticiyle iletişime geçin.</div>
-</div>
-</div>
-<style>@keyframes sgspin{to{transform:rotate(360deg)}}body.sg-locked{overflow:hidden!important}body.sg-locked>*:not(#sg-overlay){display:none!important}</style>
-<script>
-(function(){
-try{
-if(new URLSearchParams(location.search).get('yonetim')==='tengri')return;
-var BASE='https://tengri3-default-rtdb.europe-west1.firebasedatabase.app/siteGate/users/';
-var mem={};
-function sGet(k){try{var v=localStorage.getItem(k);if(v!==null)return v;}catch(e){}try{var v2=sessionStorage.getItem(k);if(v2!==null)return v2;}catch(e){}return (k in mem)?mem[k]:null;}
-function sSet(k,v){try{localStorage.setItem(k,v);return;}catch(e){}try{sessionStorage.setItem(k,v);return;}catch(e){}mem[k]=v;}
-function sDel(k){try{localStorage.removeItem(k);}catch(e){}try{sessionStorage.removeItem(k);}catch(e){}delete mem[k];}
-var uid=sGet('_sg_uid');
-if(!uid){uid='v_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);sSet('_sg_uid',uid);}
-var ov=document.getElementById('sg-overlay');
-var elCheck=document.getElementById('sg-check'),elDesc=document.getElementById('sg-desc'),elName=document.getElementById('sg-name'),elBtn=document.getElementById('sg-btn'),elErr=document.getElementById('sg-err'),elWait=document.getElementById('sg-wait'),elRej=document.getElementById('sg-reject'),elWN=document.getElementById('sg-wait-name');
-function lock(){document.body.classList.add('sg-locked');ov.style.display='flex';}
-function unlock(){document.body.classList.remove('sg-locked');ov.style.display='none';}
-function show(st,name){
-elCheck.style.display=(st==='check')?'':'none';
-elDesc.style.display=(st==='form')?'':'none';
-elName.style.display=(st==='form')?'':'none';
-elBtn.style.display=(st==='form')?'':'none';
-elWait.style.display=(st==='wait')?'':'none';
-elRej.style.display=(st==='reject')?'':'none';
-if(st==='wait'&&name)elWN.textContent='\uD83D\uDC64 '+name;
-}
-var poll=null;
-function startPoll(){if(poll)return;poll=setInterval(check,4000);}
-function stopPoll(){if(poll){clearInterval(poll);poll=null;}}
-function check(){
-fetch(BASE+uid+'.json',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
-if(d&&d.approved===true){sSet('_sg_ok','1');unlock();stopPoll();return;}
-if(d&&d.approved===false){sDel('_sg_ok');lock();show('reject');startPoll();return;}
-if(d&&d.name){lock();show('wait',d.name);startPoll();return;}
-sDel('_sg_ok');lock();show('form');startPoll();
-}).catch(function(){
-if(sGet('_sg_ok')==='1'){unlock();stopPoll();return;}
-lock();show('check');startPoll();
-});
-}
-function submit(){
-var name=(elName.value||'').trim();
-if(name.length<2){elErr.textContent='\u26A0 L\u00FCtfen ad\u0131n\u0131z\u0131 yaz\u0131n (en az 2 karakter).';return;}
-elErr.textContent='';elBtn.disabled=true;elBtn.textContent='G\u00F6NDER\u0130L\u0130YOR\u2026';
-fetch(BASE+uid+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,ts:Date.now(),approved:null,ua:(navigator.userAgent||'').slice(0,140)})}).then(function(){show('wait',name);startPoll();}).catch(function(){elBtn.disabled=false;elBtn.textContent='ONAY \u0130STE\u011E\u0130 G\u00F6NDER';elErr.textContent='\u26A0 G\u00F6nderilemedi, ba\u011Flant\u0131n\u0131z\u0131 kontrol edin.';});
-}
-elBtn.addEventListener('click',submit);
-elName.addEventListener('keydown',function(e){if(e.key==='Enter')submit();});
-document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')check();});
-lock();show('check');check();
-}catch(e){}
-})();
-</script>
 
     <div class="theme-selector">
         <button onclick="openCoffeeModal()" class="coffee-btn-premium">
@@ -10868,61 +10799,7 @@ if (!confirm('Bu öbeği yasakli listeden kaldirmak istiyor musun?')) return;
 _db.ref('automation/bannedPhrases/' + k).remove().catch(function(){});
 });
 })();
-        (function(){
-var _sgSec=document.createElement('div');
-_sgSec.innerHTML=
-'<div style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1.2px;margin:14px 0 7px">' +
-'\uD83D\uDEAA Site Giri\u015F Onaylar\u0131' +
-'<span id="_adm-sg-badge" style="display:none;background:rgba(255,70,70,0.85);color:#fff;font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;margin-left:6px;vertical-align:middle">0</span>' +
-'</div>' +
-'<div id="_adm-sg-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px">' +
-'<div id="_adm-sg-empty" style="text-align:center;color:rgba(255,255,255,0.22);font-size:11px;padding:14px 0;border:1px dashed rgba(255,255,255,0.07);border-radius:8px">Bekleyen istek yok</div>' +
-'</div>';
-var _rb=document.getElementById('_adm-reset-btn');
-if(_rb&&_rb.parentNode){_rb.parentNode.insertBefore(_sgSec,_rb);}else{panel.appendChild(_sgSec);}
-var _list=document.getElementById('_adm-sg-list');
-var _empty=document.getElementById('_adm-sg-empty');
-var _badge=document.getElementById('_adm-sg-badge');
-var _known={};var _booted=false;
-function _ago(ts){if(!ts)return '';var s=Math.floor((Date.now()-ts)/1000);if(s<60)return s+'sn \u00f6nce';var m=Math.floor(s/60);if(m<60)return m+'dk \u00f6nce';var h=Math.floor(m/60);if(h<24)return h+'sa \u00f6nce';return Math.floor(h/24)+'g \u00f6nce';}
-function _esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function _beep(){try{var AC=window.AudioContext||window.webkitAudioContext;var ctx=new AC();var o=ctx.createOscillator();var g=ctx.createGain();o.connect(g);g.connect(ctx.destination);g.gain.value=0.06;o.frequency.value=880;o.start();setTimeout(function(){o.frequency.value=1320;},120);setTimeout(function(){o.stop();ctx.close();},350);}catch(e){}}
-function _render(data){
-var ch=Array.prototype.slice.call(_list.children);
-ch.forEach(function(c){if(c.id!=='_adm-sg-empty')_list.removeChild(c);});
-var rows=[];var pending=0;
-Object.keys(data||{}).forEach(function(uid){var u=data[uid]||{};var st=u.approved===true?'ok':(u.approved===false?'no':'wait');if(st!=='ok')pending++;rows.push({uid:uid,u:u,st:st});});
-rows.sort(function(a,b){return (b.u.ts||0)-(a.u.ts||0);});
-_badge.style.display=pending?'inline':'none';_badge.textContent=pending;
-if(_booted){rows.forEach(function(r){if(r.st==='wait'&&_known[r.uid]!==undefined&&_known[r.uid]!==r.u.ts){_beep();}if(r.st==='wait')_known[r.uid]=r.u.ts;});}else{rows.forEach(function(r){_known[r.uid]=r.u.ts;});_booted=true;}
-if(!rows.length){_empty.style.display='block';return;}
-_empty.style.display='none';
-rows.forEach(function(r){
-var card=document.createElement('div');
-var bc=r.st==='wait'?'rgba(255,165,0,0.3)':(r.st==='no'?'rgba(255,80,80,0.25)':'rgba(76,175,80,0.25)');
-card.style.cssText='background:rgba(255,255,255,0.03);border:1px solid '+bc+';border-radius:8px;padding:10px 11px;';
-var stx=r.st==='wait'?'<span style="color:#ffa500;font-weight:700">BEKL\u0130YOR</span>':(r.st==='no'?'<span style="color:#ff6b6b;font-weight:700">RED</span>':'<span style="color:#4caf50;font-weight:700">ONAYLI</span>');
-card.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+
-'<span style="font-size:12px;font-weight:700;color:#eee">\uD83D\uDC64 '+_esc(r.u.name||'isimsiz')+'</span>'+
-'<span style="font-size:9px;color:rgba(255,255,255,0.3)">'+_ago(r.u.ts)+'</span></div>'+
-'<div style="font-size:10px;color:rgba(255,255,255,0.35);margin-bottom:8px">'+stx+' \u00b7 <span style="font-family:monospace;font-size:8.5px">'+_esc(r.uid)+'</span></div>'+
-'<div style="display:flex;gap:6px">'+
-(r.st!=='ok'?'<button data-sg-ok="'+_esc(r.uid)+'" style="flex:1;padding:7px 4px;background:rgba(76,175,80,0.13);border:1px solid rgba(76,175,80,0.38);border-radius:6px;color:#4caf50;font-size:11px;font-weight:700;cursor:pointer">\u2713 Onayla</button>':'')+
-(r.st!=='no'?'<button data-sg-no="'+_esc(r.uid)+'" style="flex:1;padding:7px 4px;background:rgba(255,80,80,0.1);border:1px solid rgba(255,80,80,0.3);border-radius:6px;color:#ff6b6b;font-size:11px;font-weight:700;cursor:pointer">\u2717 Reddet</button>':'')+
-'<button data-sg-del="'+_esc(r.uid)+'" style="padding:7px 10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:rgba(255,255,255,0.5);font-size:11px;cursor:pointer">\uD83D\uDDD1</button>'+
-'</div>';
-_list.insertBefore(card,_empty);
-});
-}
-_db.ref('siteGate/users').on('value',function(s){_render(s.val());});
-_list.addEventListener('click',function(e){
-var t=e.target;var u;
-if(t.dataset&&(u=t.dataset.sgOk)){_db.ref('siteGate/users/'+u+'/approved').set(true);return;}
-if(t.dataset&&(u=t.dataset.sgNo)){_db.ref('siteGate/users/'+u+'/approved').set(false);return;}
-if(t.dataset&&(u=t.dataset.sgDel)){if(confirm('Bu kay\u0131t silinsin mi? Ki\u015Fi tekrar istek g\u00f6nderebilir.'))_db.ref('siteGate/users/'+u).remove();return;}
-});
-})();
-function _togglePanel() {
+        function _togglePanel() {
             _panelOpen = !_panelOpen;
             panel.style.transform = _panelOpen ? 'translateX(0)' : 'translateX(100%)';
             toggleTab.style.right = _panelOpen ? '300px' : '0';
