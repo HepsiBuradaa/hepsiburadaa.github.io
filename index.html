@@ -12093,7 +12093,7 @@ ov.querySelectorAll('[data-d]').forEach(function(el){el.onclick=function(){selD=
 ov.querySelectorAll('[data-h]').forEach(function(el){el.onclick=function(){var h=+el.getAttribute('data-h');selH=(selH===h?null:h);render();};});
 var cl=ov.querySelector('[data-clear]');if(cl)cl.onclick=function(){selH=null;render();};}
 function openUser(uid){selU=uid;selD=dk(new Date());selH=null;ov.style.display='block';
-Promise.all([db.ref(B+'users/'+uid).once('value'),db.ref(B+'completedItems').once('value')]).then(function(r){UU={};UU[uid]=r[0].val()||{};CC=r[1].val()||{};render();});}
+Promise.all([db.ref(B+'users/'+uid).once('value'),db.ref(B+'history').once('value'),db.ref(B+'completedItems').once('value')]).then(function(r){UU={};UU[uid]=r[0].val()||{};var H=r[1].val()||{};var C=r[2].val()||{};var M={};Object.keys(H).forEach(function(d){M[d]=Object.assign({},H[d]);});Object.keys(C).forEach(function(d){M[d]=Object.assign(M[d]||{},C[d]);});CC=M;render();});}
 document.addEventListener('click',function(e){var t=e.target;if(t.closest&&t.closest('button'))return;var tr=t.closest?t.closest('#_adm-auto-m-rows tr'):null;if(!tr)return;var txt=tr.textContent||'';
 db.ref(B+'users').once('value').then(function(s){var users=s.val()||{};var uid=null;Object.keys(users).forEach(function(k){if(!uid&&txt.indexOf(k)!==-1)uid=k;});if(uid)openUser(uid);});},true);
 });})();</script>
