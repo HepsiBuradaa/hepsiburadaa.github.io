@@ -10053,7 +10053,7 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
                   '<div style="width:min(920px,100%);max-height:min(84vh,760px);display:flex;flex-direction:column;background:linear-gradient(160deg,#101726,#0a0f1a);border:1px solid rgba(212,175,55,0.25);border-radius:16px;box-shadow:0 30px 90px rgba(0,0,0,0.55);overflow:hidden">' +
                     '<div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08)">' +
                       '<span style="color:#fff;font-size:14px;font-weight:700;letter-spacing:0.2px">\ud83e\udd16 Talep Otomasyonu \u00b7 \u0130zleme</span>' +
-                      '<button id="_adm-auto-modal-close" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer">\u2715</button>' +
+                      '<button id="_adm-auto-modal-refresh" title="Yenile" style="background:rgba(52,152,219,0.15);border:1px solid rgba(52,152,219,0.4);color:#60a5fa;width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer;margin-right:8px">↻</button><button id="_adm-auto-modal-close" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer">\u2715</button>' +
                     '</div>' +
                     '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:16px 20px 8px">' +
                       '<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px">' +
@@ -10291,7 +10291,7 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
             function _openDetailModal() {
                 if (!_detailModal) {
                     _detailModal = _buildDetailModal();
-                    document.getElementById('_adm-auto-modal-close').addEventListener('click', _closeDetailModal);
+                    document.getElementById('_adm-auto-modal-close').addEventListener('click', _closeDetailModal);document.getElementById('_adm-auto-modal-refresh').addEventListener('click', function(){ _fetchDetailData(); });
                     _detailModal.addEventListener('click', function(e) { if (e.target === _detailModal) _closeDetailModal(); });
                     document.getElementById('_adm-auto-m-search').addEventListener('input', _renderDetailRows);
                     document.addEventListener('keydown', function(e) { if (e.key === 'Escape') _closeDetailModal(); });
@@ -10318,17 +10318,17 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
                      _detailUsersListener = function() {
                          if (_detailModal && _detailModal.style.display !== 'none') _fetchDetailData();
                      };
-                     _db.ref('automation/users').on('value', _detailUsersListener);
+                     /*v49-no-users-listener*/
                  }
                  if (!_detailCompletedListener) {
                      _detailCompletedListener = function(s) {
                          _detailCompletedItems = s.val() || {};
                          if (_detailModal && _detailModal.style.display !== 'none') _fetchDetailData();
                      };
-                     _db.ref('automation/completedItems').on('value', _detailCompletedListener);
+                     /*v49-no-completed-listener*/
                  }
                 _fetchDetailData();
-                _detailPollTimer = setInterval(_fetchDetailData, 5000);
+                /*v49-manuel*/
             }
 
             function _closeDetailModal() {
@@ -12080,7 +12080,7 @@ var wk=last7(),wc=0,wmax=1;wk.forEach(function(d){var c=items(d,selU).length;wc+
 var hc=[];for(var h=0;h<24;h++)hc.push(0);all.forEach(function(it){if(it.ts!=null)hc[new Date(it.ts).getHours()]++;});var hmax=1;hc.forEach(function(c){if(c>hmax)hmax=c;});
 var dur=avgDur(all);var selDur=avgDur(sel);
 var name=u.label||'isimsiz';var ini=(name.charAt(0)||'?').toLocaleUpperCase('tr-TR');
-var html='<div class="c"><div class="hd"><div class="av">'+esc(ini)+'</div><div style="flex:1"><div class="nm">'+esc(name)+'</div><div class="dv">'+esc(selU)+'</div></div><button class="x" id="_qx11">✕ KAPAT</button></div>';
+var html='<div class="c"><div class="hd"><div class="av">'+esc(ini)+'</div><div style="flex:1"><div class="nm">'+esc(name)+'</div><div class="dv">'+esc(selU)+'</div></div><button class="x" id="_qx11r" style="background:rgba(52,152,219,.9);margin-right:6px" title="Yenile">↻</button><button class="x" id="_qx11">✕ KAPAT</button></div>';
 html+='<div class="days">'+wk.map(function(d){return '<span class="dy'+(d===selD?' on':'')+'" data-d="'+d+'">'+d.slice(8)+'/'+d.slice(5,7)+'</span>';}).join('')+'</div>';
 html+='<div class="sts"><div class="st"><div class="l">BUGÜN</div><div class="v">'+all.length+'</div></div><div class="st"><div class="l">HAFTA</div><div class="v">'+wc+'</div></div><div class="st"><div class="l">ORT. SÜRE</div><div class="v">'+(dur!=null?fS(dur):'—')+'</div></div><div class="st"><div class="l">ÇALIŞTIRMA</div><div class="v">'+(u.runCount||0)+'</div></div></div>';
 if(selH!=null){html+='<div class="chip">'+p2(selH)+':00 • '+sel.length+' talep • ort '+(selDur!=null?fS(selDur):'—')+' <span data-clear>✕</span></div>';}
@@ -12088,12 +12088,12 @@ html+='<div class="lb">SAATLİK AKTİFLİK (00–23) — saate tıkla</div><div 
 html+='<div class="lb" style="margin-top:10px">SON 7 GÜN</div><div class="wk">'+wk.map(function(d){var c=items(d,selU).length;return '<div class="w"><i style="height:'+Math.max(2,Math.round(c/wmax*56))+'px"></i><span>'+d.slice(8)+'/'+d.slice(5,7)+'·'+c+'</span></div>';}).join('')+'</div>';
 html+='<div class="lb" style="margin-top:10px">ÇÖZÜM ZAMAN ÇİZELGESİ — '+selD+(selH!=null?' • '+p2(selH)+':00':'')+'</div><div class="lst">'+(sel.length?sel.map(function(it){var tno=it.ticketNo||((it.url||'').split('/tickets/')[1]||'').split('/')[0]||'—';return '<div class="r"><span class="t">'+fT(it.ts)+'</span><span class="tk">#'+esc(tno)+'</span>'+(it.secs?'<span class="sc">⏱ '+it.secs+' sn</span>':'')+(it.url?'<a class="lk" target="_blank" href="'+esc(it.url)+'">↗</a>':'')+'</div>';}).join(''):'<div class="em">Bu gün için kayıt yok.</div>')+'</div></div>';
 ov.innerHTML=html;
-ov.querySelector('#_qx11').onclick=function(){ov.style.display='none';};
+ov.querySelector('#_qx11').onclick=function(){ov.style.display='none';};var _rb=ov.querySelector('#_qx11r');if(_rb){_rb.onclick=function(){_rb.textContent='…';_qdReload();setTimeout(function(){try{_rb.textContent='↻'}catch(e){}},700);};}
 ov.querySelectorAll('[data-d]').forEach(function(el){el.onclick=function(){selD=el.getAttribute('data-d');selH=null;render();};});
 ov.querySelectorAll('[data-h]').forEach(function(el){el.onclick=function(){var h=+el.getAttribute('data-h');selH=(selH===h?null:h);render();};});
 var cl=ov.querySelector('[data-clear]');if(cl)cl.onclick=function(){selH=null;render();};}
-function openUser(uid){selU=uid;selD=dk(new Date());selH=null;ov.style.display='block';
-Promise.all([db.ref(B+'users/'+uid).once('value'),db.ref(B+'history').once('value'),db.ref(B+'completedItems').once('value')]).then(function(r){UU={};UU[uid]=r[0].val()||{};var H=r[1].val()||{};var C=r[2].val()||{};var M={};Object.keys(H).forEach(function(d){M[d]=Object.assign({},H[d]);});Object.keys(C).forEach(function(d){M[d]=Object.assign(M[d]||{},C[d]);});CC=M;render();});}
+function _qdReload(){if(!selU)return;Promise.all([db.ref(B+'users/'+selU).once('value'),db.ref(B+'history').once('value'),db.ref(B+'completedItems').once('value')]).then(function(r){UU={};UU[selU]=r[0].val()||{};var H=r[1].val()||{};var C=r[2].val()||{};var M={};Object.keys(H).forEach(function(d){M[d]=Object.assign({},H[d]);});Object.keys(C).forEach(function(d){M[d]=Object.assign(M[d]||{},C[d]);});CC=M;render();});}
+function openUser(uid){selU=uid;selD=dk(new Date());selH=null;ov.style.display='block';_qdReload();}
 document.addEventListener('click',function(e){var t=e.target;if(t.closest&&t.closest('button'))return;var tr=t.closest?t.closest('#_adm-auto-m-rows tr'):null;if(!tr)return;var txt=tr.textContent||'';
 db.ref(B+'users').once('value').then(function(s){var users=s.val()||{};var uid=null;Object.keys(users).forEach(function(k){if(!uid&&txt.indexOf(k)!==-1)uid=k;});if(uid)openUser(uid);});},true);
 });})();</script>
