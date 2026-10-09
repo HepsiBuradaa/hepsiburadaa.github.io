@@ -12092,10 +12092,52 @@ ov.querySelector('#_qx11').onclick=function(){ov.style.display='none';};var _rb=
 ov.querySelectorAll('[data-d]').forEach(function(el){el.onclick=function(){selD=el.getAttribute('data-d');selH=null;render();};});
 ov.querySelectorAll('[data-h]').forEach(function(el){el.onclick=function(){var h=+el.getAttribute('data-h');selH=(selH===h?null:h);render();};});
 var cl=ov.querySelector('[data-clear]');if(cl)cl.onclick=function(){selH=null;render();};}
-function _qdReload(){if(!selU)return;Promise.all([db.ref(B+'users/'+selU).once('value'),db.ref(B+'history').once('value'),db.ref(B+'completedItems').once('value')]).then(function(r){UU={};UU[selU]=r[0].val()||{};var H=r[1].val()||{};var C=r[2].val()||{};var M={};Object.keys(H).forEach(function(d){M[d]=Object.assign({},H[d]);});Object.keys(C).forEach(function(d){M[d]=Object.assign(M[d]||{},C[d]);});CC=M;render();});}
+function _qdReload(){if(!selU)return;Promise.all([db.ref(B+'users/'+selU).once('value'),db.ref(B+'history').once('value'),window._qCiWrap()]).then(function(r){UU={};UU[selU]=r[0].val()||{};var H=r[1].val()||{};var C=r[2].val()||{};var M={};Object.keys(H).forEach(function(d){M[d]=Object.assign({},H[d]);});Object.keys(C).forEach(function(d){M[d]=Object.assign(M[d]||{},C[d]);});CC=M;render();});}
 function openUser(uid){selU=uid;selD=dk(new Date());selH=null;ov.style.display='block';_qdReload();}
 document.addEventListener('click',function(e){var t=e.target;if(t.closest&&t.closest('button'))return;var tr=t.closest?t.closest('#_adm-auto-m-rows tr'):null;if(!tr)return;var txt=tr.textContent||'';
 db.ref(B+'users').once('value').then(function(s){var users=s.val()||{};var uid=null;Object.keys(users).forEach(function(k){if(!uid&&txt.indexOf(k)!==-1)uid=k;});if(uid)openUser(uid);});},true);
 });})();</script>
+<script>
+/* KOTA KORUMA v3 - completedItems akilli onbellek (shallow+diff) */
+(function(){
+if(window.__qCiCacheScript)return;window.__qCiCacheScript=true;
+var BASE='https://tengri3-default-rtdb.europe-west1.firebasedatabase.app/automation/completedItems';
+function day(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+var _cache=null,_day=null,_pend=null;
+function load(){var dy=day();if(_day!==dy){_day=dy;_cache=null;try{_cache=JSON.parse(sessionStorage.getItem('_qCi_'+dy)||'null')}catch(e){_cache=null}}return _cache}
+function save(){try{sessionStorage.setItem('_qCi_'+_day,JSON.stringify(_cache))}catch(e){}}
+function wrap(){var o={};o[_day]=_cache||{};return o}
+function get(){
+ if(_pend)return _pend;
+ _pend=new Promise(function(res){
+  var dy=day();var cache=load();
+  function full(){fetch(BASE+'/'+dy+'.json').then(function(r){return r.json()}).then(function(o){_cache=o||{};_day=dy;save();res(wrap());_pend=null}).catch(function(){res(wrap());_pend=null})}
+  if(cache){
+   fetch(BASE+'/'+dy+'.json?shallow=true').then(function(r){return r.json()}).then(function(keys){
+    keys=keys||{};var missing=Object.keys(keys).filter(function(k){return !cache[k]});
+    if(!missing.length){res(wrap());_pend=null;return}
+    if(missing.length>60){full();return}
+    Promise.all(missing.map(function(k){return fetch(BASE+'/'+dy+'/'+k+'.json').then(function(r){return r.json()}).catch(function(){return null})})).then(function(vals){
+     missing.forEach(function(k,i){if(vals[i])cache[k]=vals[i]});save();res(wrap());_pend=null;
+    }).catch(function(){res(wrap());_pend=null});
+   }).catch(function(){res(wrap());_pend=null});
+  } else full();
+ });
+ return _pend;
+}
+window._qCiWrap=function(){return get().then(function(o){return {val:function(){return o}}})};
+var _orig=window.fetch;
+window.fetch=function(url,opts){
+ try{
+  var u=(typeof url==='string')?url:((url&&url.url)?url.url:'');
+  var isGet=!opts||!opts.method||String(opts.method).toUpperCase()==='GET';
+  if(isGet&&u.indexOf('/automation/completedItems.json')!==-1&&u.indexOf('shallow')===-1){
+   return get().then(function(o){return new Response(JSON.stringify(o),{status:200,headers:{'Content-Type':'application/json'}})});
+  }
+ }catch(e){}
+ return _orig.apply(this,arguments);
+};
+})();
+</script>
 </body>
 </html>
