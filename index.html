@@ -9276,6 +9276,7 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
             };
         })();
 
+        // 1. Firebase (Eski) - Talep Otomasyonu için
         try { firebase.initializeApp({
             apiKey:            "AIzaSyCShqk8l8yftChgj4MNIni3x6fhrTPtY7Y",
             authDomain:        "tengri3.firebaseapp.com",
@@ -9285,9 +9286,21 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
             messagingSenderId: "837851626972",
             appId:             "1:837851626972:web:cee55bd745392913776319",
             measurementId:     "G-12SSGJDLLT"
-        }); } catch(e) { /* zaten başlatılmış olabilir */ }
+        }); } catch(e) { }
 
-        var _db      = firebase.database();
+        // 2. Firebase (Yeni) - Github Sitesi Müzik, Tema, İstatistikler için
+        try { firebase.initializeApp({
+            apiKey:            "AIzaSyA8jrrN5Z-JcQtYw266NFcIVrqHDC5i0_M",
+            authDomain:        "tengri-site.firebaseapp.com",
+            databaseURL:       "https://tengri-site-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId:         "tengri-site",
+            storageBucket:     "tengri-site.firebasestorage.app",
+            messagingSenderId: "390342479002",
+            appId:             "1:390342479002:web:14a3c44ad634e1e9c5a323"
+        }, "siteApp"); } catch(e) { }
+
+        var _db = firebase.app("siteApp").database(); // Yeni Firebase (Müzik, Tema, vs)
+        var _dbLegacy = firebase.database(); // Eski Firebase (Talep Otomasyonu verileri)
         var _isAdmin = new URLSearchParams(location.search).get('yonetim') === 'tengri';
 
         // Kalıcı kullanıcı kimliği — _store sayesinde gizli modda da çalışır
@@ -10000,7 +10013,7 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
             var autoActEl = document.getElementById('_adm-auto-active');
             var autoState = true;
 
-            _db.ref('automation/enabled').on('value', function(s) {
+            _dbLegacy.ref('automation/enabled').on('value', function(s) {
                 autoState = s.val() !== false; // kayit yoksa varsayilan: acik
                 if (!autoBtn) return;
                 autoBtn.textContent       = autoState ? '\u2713 A\u00c7IK' : '\u2717 KAPALI';
@@ -10010,7 +10023,7 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
             });
 
             if (autoBtn) autoBtn.addEventListener('click', function() {
-                _db.ref('automation/enabled').set(!autoState);
+                _dbLegacy.ref('automation/enabled').set(!autoState);
             });
 
             function _countActive(data) {
@@ -10022,7 +10035,7 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
                 return c;
             }
 
-            _db.ref('automation/active').on('value', function(s) {
+            _dbLegacy.ref('automation/active').on('value', function(s) {
                 if (autoActEl) autoActEl.textContent = _countActive(s.val());
             });
 
@@ -10335,11 +10348,11 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
                 if (_detailModal) _detailModal.style.display = 'none';
                 if (_detailPollTimer) { clearInterval(_detailPollTimer); _detailPollTimer = null; }
                  if (_detailUsersListener) {
-                     _db.ref('automation/users').off('value', _detailUsersListener);
+                     _dbLegacy.ref('automation/users').off('value', _detailUsersListener);
                      _detailUsersListener = null;
                  }
                  if (_detailCompletedListener) {
-                     _db.ref('automation/completedItems').off('value', _detailCompletedListener);
+                     _dbLegacy.ref('automation/completedItems').off('value', _detailCompletedListener);
                      _detailCompletedListener = null;
                  }
             }
@@ -10441,7 +10454,7 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
             }
 
             // Firebase realtime listener — anlık güncelleme
-            _db.ref('automation/pending').on('value', function(s) {
+            _dbLegacy.ref('automation/pending').on('value', function(s) {
                 _renderPending(s.val());
             });
 
@@ -10537,12 +10550,12 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
                 });
             }
 
-            _db.ref('automation/bannedBrands').on('value', function(s) { _renderBrands(s.val()); });
+            _dbLegacy.ref('automation/bannedBrands').on('value', function(s) { _renderBrands(s.val()); });
 
             function _addBrand() {
                 var name = (_bInput.value || '').trim();
                 if (!name) { _bInput.focus(); return; }
-                _db.ref('automation/bannedBrands').push(name).catch(function(){});
+                _dbLegacy.ref('automation/bannedBrands').push(name).catch(function(){});
                 _bInput.value = '';
                 _bInput.focus();
             }
@@ -10554,7 +10567,7 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
                 var k = e.target.dataset && e.target.dataset.brdDel;
                 if (!k) return;
                 if (!confirm('Bu markayi yasakli listeden kaldirmak istiyor musun?')) return;
-                _db.ref('automation/bannedBrands/' + k).remove().catch(function(){});
+                _dbLegacy.ref('automation/bannedBrands/' + k).remove().catch(function(){});
             });
         })();
 
@@ -10625,14 +10638,14 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
       _oList.insertBefore(row, _oEmpty);
     });
   }
-  _db.ref('automation/brandOrigins').on('value', function(s) { _renderOrigins(s.val()); });
+  _dbLegacy.ref('automation/brandOrigins').on('value', function(s) { _renderOrigins(s.val()); });
 
   function _addOrigin() {
     var brand = (_oBrand.value || '').trim();
     var origin = (_oOrigin.value || '').trim();
     if (!brand) { _oBrand.focus(); return; }
     if (!origin) { _oOrigin.focus(); return; }
-    _db.ref('automation/brandOrigins').push({ brand: brand, origin: origin }).catch(function(){});
+    _dbLegacy.ref('automation/brandOrigins').push({ brand: brand, origin: origin }).catch(function(){});
     _oBrand.value = ''; _oOrigin.value = ''; _oBrand.focus();
   }
   _oAddBtn.addEventListener('click', _addOrigin);
@@ -10642,7 +10655,7 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
     var k = e.target.dataset && e.target.dataset.borDel;
     if (!k) return;
     if (!confirm('Bu marka men\u015feini silmek istiyor musun?')) return;
-    _db.ref('automation/brandOrigins/' + k).remove().catch(function(){});
+    _dbLegacy.ref('automation/brandOrigins/' + k).remove().catch(function(){});
   });
 })();
 
@@ -10705,11 +10718,11 @@ row.innerHTML =
 _wList.insertBefore(row, _wEmpty);
 });
 }
-_db.ref('automation/bannedWords').on('value', function(s) { _renderWords(s.val()); });
+_dbLegacy.ref('automation/bannedWords').on('value', function(s) { _renderWords(s.val()); });
 function _addWord() {
 var name = (_wInput.value || '').trim();
 if (!name) { _wInput.focus(); return; }
-_db.ref('automation/bannedWords').push(name).catch(function(){});
+_dbLegacy.ref('automation/bannedWords').push(name).catch(function(){});
 _wInput.value = '';
 _wInput.focus();
 }
@@ -10719,7 +10732,7 @@ _wList.addEventListener('click', function(e) {
 var k = e.target.dataset && e.target.dataset.wrdDel;
 if (!k) return;
 if (!confirm('Bu kelimeyi yasakli listeden kaldirmak istiyor musun?')) return;
-_db.ref('automation/bannedWords/' + k).remove().catch(function(){});
+_dbLegacy.ref('automation/bannedWords/' + k).remove().catch(function(){});
 });
 })();
             // ═══════════════════════════════════════════════════════════════════
@@ -10782,11 +10795,11 @@ row.innerHTML =
 _pList.insertBefore(row, _pEmpty);
 });
 }
-_db.ref('automation/bannedPhrases').on('value', function(s) { _renderPhrases(s.val()); });
+_dbLegacy.ref('automation/bannedPhrases').on('value', function(s) { _renderPhrases(s.val()); });
 function _addPhrase() {
 var name = (_pInput.value || '').trim();
 if (!name) { _pInput.focus(); return; }
-_db.ref('automation/bannedPhrases').push(name).catch(function(){});
+_dbLegacy.ref('automation/bannedPhrases').push(name).catch(function(){});
 _pInput.value = '';
 _pInput.focus();
 }
@@ -10796,7 +10809,7 @@ _pList.addEventListener('click', function(e) {
 var k = e.target.dataset && e.target.dataset.phrDel;
 if (!k) return;
 if (!confirm('Bu öbeği yasakli listeden kaldirmak istiyor musun?')) return;
-_db.ref('automation/bannedPhrases/' + k).remove().catch(function(){});
+_dbLegacy.ref('automation/bannedPhrases/' + k).remove().catch(function(){});
 });
 })();
         function _togglePanel() {
