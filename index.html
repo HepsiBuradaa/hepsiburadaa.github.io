@@ -9412,7 +9412,7 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
                 if (!_presActive) return;
                 if (_presConnected) _setPresence();
                 else _restWrite();
-            }, 20 * 1000);
+            }, 120 * 1000);
 
             window.addEventListener('pagehide', _removePresence);
             window.addEventListener('beforeunload', _removePresence);
@@ -10838,7 +10838,7 @@ _db.ref('automation/bannedPhrases/' + k).remove().catch(function(){});
                 .catch(function() { /* sessiz hata */ });
         }
         _refreshOnlineCount(); // hemen çek
-        setInterval(_refreshOnlineCount, 5 * 1000); // her 5 sn'de bir
+        setInterval(_refreshOnlineCount, 600 * 1000); // her 5 sn'de bir
 
         // WebSocket listener — bağlanınca anlık güncellemeler gelir
         _db.ref('online').on('value', function(s) {
