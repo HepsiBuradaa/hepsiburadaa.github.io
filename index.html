@@ -1731,6 +1731,62 @@
 })();
 </script>
 
+<script>
+(function() {
+  const CLOUDFLARE_URL = 'https://automation-api.alesseapl.workers.dev';
+  const createRef = (path) => {
+    const cleanPath = path.replace(/^\//, '').replace(/\/$/, '');
+    return {
+      on: function(event, callback) {
+        if (event !== 'value') return;
+        const fetchData = async () => {
+          try {
+            const res = await fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json');
+            const text = await res.text();
+            let data = null;
+            try { data = text === 'null' ? null : JSON.parse(text); } catch(e) {}
+            callback({ val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } });
+          } catch(e) {}
+        };
+        fetchData();
+        setInterval(fetchData, 3000);
+      },
+      once: function(event) {
+        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json')
+          .then(r => r.text())
+          .then(t => {
+            let data = null;
+            try { data = t === 'null' ? null : JSON.parse(t); } catch(e) {}
+            return { val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } };
+          }).catch(() => ({ val: () => null, numChildren: () => 0, forEach: () => {} }));
+      },
+      set: function(val) {
+        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
+      },
+      push: function(val) {
+        const id = '_' + Date.now() + Math.random().toString(36).slice(2, 7);
+        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '/' + id + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) }).then(() => ({ key: id }));
+      },
+      update: function(val) {
+        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
+      },
+      remove: function() {
+        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'DELETE' });
+      },
+      child: function(subPath) {
+        return createRef(cleanPath + '/' + subPath);
+      }
+    };
+  };
+  window.firebase = {
+    initializeApp: function() { return { database: () => window.firebase.database() }; },
+    app: function() { return { database: () => window.firebase.database() }; },
+    database: function() { return { ref: function(path) { return createRef(path || ''); } }; },
+    database$1: function() { return window.firebase.database(); }
+  };
+})();
+</script>
+
 
     <div class="theme-selector">
         <button onclick="openCoffeeModal()" class="coffee-btn-premium">
