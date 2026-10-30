@@ -9448,39 +9448,82 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
             };
         })();
 
-        // 1. Firebase (Eski) - Talep Otomasyonu için
-        try { firebase.initializeApp({
-            apiKey:            "AIzaSyCShqk8l8yftChgj4MNIni3x6fhrTPtY7Y",
-            authDomain:        "tengri3.firebaseapp.com",
-            databaseURL:       "https://automation-api.alesseapl.workers.dev",
-            projectId:         "tengri3",
-            storageBucket:     "tengri3.firebasestorage.app",
-            messagingSenderId: "837851626972",
-            appId:             "1:837851626972:web:cee55bd745392913776319",
-            measurementId:     "G-12SSGJDLLT"
-        }); } catch(e) { }
+       // ── MÜZİK VE TEMA İÇİN GERÇEK FIREBASE (DOKUNULMADI) ──
+try { firebase.initializeApp({
+    apiKey:            "AIzaSyA8jrrN5Z-JcQtYw266NFcIVrqHDC5i0_M",
+    authDomain:        "tengri-site.firebaseapp.com",
+    databaseURL:       "https://tengri-site-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId:         "tengri-site",
+    storageBucket:     "tengri-site.firebasestorage.app",
+    messagingSenderId: "390342479002",
+    appId:             "1:390342479002:web:14a3c44ad634e1e9c5a323"
+}, "siteApp"); } catch(e) { }
 
-        // 2. Firebase (Yeni) - Github Sitesi Müzik, Tema, İstatistikler için
-        try { firebase.initializeApp({
-            apiKey:            "AIzaSyA8jrrN5Z-JcQtYw266NFcIVrqHDC5i0_M",
-            authDomain:        "tengri-site.firebaseapp.com",
-            databaseURL:       "https://tengri-site-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId:         "tengri-site",
-            storageBucket:     "tengri-site.firebasestorage.app",
-            messagingSenderId: "390342479002",
-            appId:             "1:390342479002:web:14a3c44ad634e1e9c5a323"
-        }, "siteApp"); } catch(e) { }
+var _db = firebase.app("siteApp").database(); // Müzik/Tema (Gerçek Firebase)
 
-        var _db = firebase.app("siteApp").database(); // Yeni Firebase (Müzik, Tema, vs)
-        var _dbLegacy = firebase.database(); // Eski Firebase (Talep Otomasyonu verileri)
-        var _isAdmin = new URLSearchParams(location.search).get('yonetim') === 'tengri';
+// ── OTOMASYON İÇİN CLOUDFLARE KÖPRÜSÜ ──
+const CLOUDFLARE_URL = "https://automation-api.alesseapl.workers.dev";
+const createCloudflareRef = (path) => {
+    const cleanPath = path.replace(/^\//, '').replace(/\/$/, '');
+    return {
+        on: function(event, callback) {
+            if (event !== 'value') return;
+            const fetchData = async () => {
+                try {
+                    const res = await fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json');
+                    const text = await res.text();
+                    let data = null;
+                    try { data = text === 'null' ? null : JSON.parse(text); } catch(e) {}
+                    callback({ val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } });
+                } catch(e) {}
+            };
+            fetchData();
+            setInterval(fetchData, 3000);
+        },
+        once: function(event) {
+            return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json')
+                .then(r => r.text())
+                .then(t => {
+                    let data = null;
+                    try { data = t === 'null' ? null : JSON.parse(t); } catch(e) {}
+                    return { val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } };
+                }).catch(() => ({ val: () => null, numChildren: () => 0, forEach: () => {} }));
+        },
+        set: function(val) {
+            return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
+        },
+        push: function(val) {
+            const id = '_' + Date.now() + Math.random().toString(36).slice(2, 7);
+            return fetch(CLOUDFLARE_URL + '/' + cleanPath + '/' + id + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) }).then(() => ({ key: id }));
+        },
+        update: function(val) {
+            return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
+        },
+        remove: function() {
+            return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'DELETE' });
+        },
+        child: function(subPath) {
+            return createCloudflareRef(cleanPath + '/' + subPath);
+        }
+    };
+};
 
-        // Kalıcı kullanıcı kimliği — _store sayesinde gizli modda da çalışır
-        var _uid = (function() {
-            var k = '_tengri_uid', v = _store.get(k);
-            if (!v) { v = 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2); _store.set(k, v); }
-            return v;
-        })();
+var _dbLegacy = {
+    ref: function(path) { return createCloudflareRef(path || ''); },
+    ServerValue: {
+        increment: function(val) { return val; },
+        TIMESTAMP: Date.now()
+    }
+}; // Otomasyon (Cloudflare)
+
+var _isAdmin = new URLSearchParams(location.search).get('yonetim') === 'tengri';
+
+// Kalıcı kullanıcı kimliği
+var _uid = (function() {
+    var k = '_tengri_uid', v = localStorage.getItem(k); // _store yerine localStorage kullanıldı (hata vermemesi için)
+    if (!v) { v = 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2); localStorage.setItem(k, v); }
+    return v;
+})();
 
         // Yerel tarihi YYYY-MM-DD formatında döndürür (UTC değil — Türkiye saati)
         function _localDate() {
