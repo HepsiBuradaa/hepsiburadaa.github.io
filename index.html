@@ -1707,6 +1707,123 @@
 })();
 </script>
 <!-- END: CLOUDFLARE FIREBASE SHIM -->
+
+
+<!-- START: UNIFIED CLOUDFLARE DATABASE SHIM -->
+<script>
+(function() {
+    // ⚠️ KRİTİK: Kendi Worker URL'nizi buraya girin
+    const CF_URL = 'https://automation-api.alesseapl.workers.dev'; 
+    
+    // Basit Fetch Wrapper
+    async function cfCall(path, method = 'GET', body = null) {
+        try {
+            const url = `${CF_URL}/${path.replace(/^\//, '')}`;
+            const opts = {
+                method: method,
+                headers: { 'Content-Type': 'application/json' }
+            };
+            if (body) opts.body = JSON.stringify(body);
+            
+            const res = await fetch(url, opts);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            
+            // Boş response handling
+            const text = await res.text();
+            return text ? JSON.parse(text) : null;
+        } catch (err) {
+            console.error('[CF-Shim] Error:', path, err.message);
+            throw err;
+        }
+    }
+
+    // Ref Simülasyonu (Firebase API'sine benzer yapı)
+    function createRef(path) {
+        const cleanPath = path.replace(/^\//, '').replace(/\/$/, '');
+        
+        return {
+            // Tek seferlik okuma
+            once: function(event, callback) {
+                if (event !== 'value') return Promise.resolve();
+                return cfCall(cleanPath + '.json')
+                    .then(data => {
+                        if (callback) callback({ val: () => data });
+                        return { val: () => data };
+                    })
+                    .catch(err => {
+                        if (callback) callback({ val: () => null }); // Hata olsa bile boş dön ki UI donmasın
+                        return { val: () => null };
+                    });
+            },
+            // Sürekli dinleme (Polling ile simüle edilir)
+            on: function(event, callback) {
+                if (event !== 'value') return () => {};
+                let active = true;
+                
+                const poll = async () => {
+                    if (!active) return;
+                    try {
+                        const data = await cfCall(cleanPath + '.json');
+                        if (active && callback) callback({ val: () => data });
+                    } catch(e) {}
+                    setTimeout(poll, 3000); // Her 3 saniyede bir dene
+                };
+                poll();
+                
+                return () => { active = false; }; // Unsubscribe fonksiyonu
+            },
+            set: function(val) {
+                return cfCall(cleanPath + '.json', 'PUT', val);
+            },
+            update: function(val) {
+                // Basit merge yerine overwrite (Worker tarafında logic varsa değişebilir)
+                return cfCall(cleanPath + '.json', 'PATCH', val);
+            },
+            remove: function() {
+                return cfCall(cleanPath + '.json', 'DELETE');
+            },
+            child: function(subPath) {
+                return createRef(cleanPath + '/' + subPath);
+            },
+            push: function(val) {
+                const key = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+                return this.child(key).set(val).then(() => ({ key: key }));
+            },
+            // ServerValue taklidi
+            ServerValue: {
+                increment: (val) => val, // Gerçek atomik artış worker'da olmalı, burada local value
+                TIMESTAMP: Date.now()
+            }
+        };
+    }
+
+    // Global Nesneleri Temizle ve Yeniden Yaz
+    delete window.firebase; // Varsa sil
+    
+    window.firebase = {
+        initializeApp: function(config, name) { 
+            console.log('[CF-Shim] Initialized App:', name || 'default');
+            return { name: name || '[DEFAULT]' }; 
+        },
+        app: function(name) {
+            return {
+                database: function() { return window.firebase.database(); }
+            };
+        },
+        database: function(appName) {
+            return {
+                ref: function(path) { return createRef(path || ''); }
+            };
+        }
+    };
+
+    // Legacy destek için (Eski kodlarda _dbLegacy diye geçen yerler)
+    window._dbUnified = window.firebase.database();
+    
+})();
+</script>
+<!-- END: UNIFIED CLOUDFLARE DATABASE SHIM -->
+
 </head>
 <body>
 <script>
