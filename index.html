@@ -1673,6 +1673,40 @@
         /* ─────────────────────────────────────────────────────────── */
 
         </style>
+
+<!-- START: CLOUDFLARE FIREBASE SHIM -->
+<script>
+(function() {
+    // ⚠️ KRİTİK: Kendi Cloudflare Worker adresinizle değiştirin!
+    const CF_URL = 'https://automation-api.alesseapl.workers.dev'; 
+    
+    function cfFetch(path, opts = {}) {
+        return fetch(CF_URL + '/' + path.replace(/^\//, ''), {
+            ...opts,
+            headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) }
+        }).then(r => r.ok ? r.json().catch(() => null) : Promise.reject(new Error('HTTP ' + r.status)));
+    }
+
+    function createRef(p) {
+        const clean = p.replace(/^\//, '').replace(/\/$/, '');
+        return {
+            once: (evt, cb) => { if(evt==='value') cfFetch(clean+'.json').then(d=>cb({val:()=>d})).catch(()=>cb({val:()=>null})); },
+            on: (evt, cb) => { if(evt==='value') setInterval(()=>cfFetch(clean+'.json').then(d=>cb({val:()=>d})).catch(()=>{}), 5000); },
+            set: (v) => cfFetch(clean+'.json', {method:'PUT', body:JSON.stringify(v)}),
+            remove: () => cfFetch(clean+'.json', {method:'DELETE'}),
+            child: (sub) => createRef(clean+'/'+sub),
+            push: (v) => { const k=Date.now().toString(36)+Math.random().toString(36).substr(2); return createRef(clean+'/'+k).set(v).then(()=>({key:k})); }
+        };
+    }
+
+    window.firebase = {
+        initializeApp: () => {},
+        app: () => ({ database: () => window.firebase.database() }),
+        database: () => ({ ref: (path) => createRef(path||'') })
+    };
+})();
+</script>
+<!-- END: CLOUDFLARE FIREBASE SHIM -->
 </head>
 <body>
 <script>
