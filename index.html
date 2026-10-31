@@ -10077,16 +10077,44 @@ var _dbLegacy = {
         // ── Admin paneli (sadece ?yonetim=tengri ile açılır) ──────────────────
         if (!_isAdmin) return;
 
-        // Her girişte Firebase'den hash oku — sessionStorage/localStorage yok
-        _db.ref('_adm/h').once('value').then(function(snap) {
-            var storedHash = snap.val() || null;
-            _showGate(storedHash, function() { _buildPanel(); });
-        }).catch(function() {
-            var errDiv = document.createElement('div');
-            errDiv.style.cssText = 'position:fixed;inset:0;z-index:999999999;background:rgba(4,6,12,0.98);display:flex;align-items:center;justify-content:center;color:#ff6b6b;font-family:system-ui;font-size:13px;text-align:center;padding:20px';
-            errDiv.textContent = 'Firebase bağlantı hatası. Sayfayı yenileyin.';
-            document.body.appendChild(errDiv);
-        });
+        
+// ═══════════════════════════════════════════════════════════════
+// YENİ GÜVENLİ AUTH SİSTEMİ (CLOUDFLARE NATIVE)
+// ═══════════════════════════════════════════════════════════════
+if (!_isAdmin) return;
+
+// Doğrudan fetch ile kontrol et, firebase shim'ine güvenme
+const CF_ADMIN_HASH_PATH = 'https://automation-api.alesseapl.workers.dev/_adm/h.json';
+
+fetch(CF_ADMIN_HASH_PATH)
+.then(res => res.text()) // Metin olarak al, JSON parse hatası riskini azalt
+.then(textData => {
+    let storedHash = null;
+    try {
+        // Eğer boş veya 'null' string'i ise hash yoktur
+        if (textData && textData !== 'null' && textData !== '') {
+            const json = JSON.parse(textData);
+            // Hash değerini al (Worker formatına göre değişebilir, genelde {hash: "..."} olur)
+            storedHash = typeof json === 'string' ? json : (json.hash || json.value || null);
+        }
+    } catch(e) {
+        console.warn("Parse error, treating as no password:", e);
+        storedHash = null;
+    }
+    
+    // Gate'i göster
+    _showGate(storedHash, function() { 
+        _buildPanel(); 
+    });
+})
+.catch(err => {
+    console.error("Cloudflare Fetch Error:", err);
+    // Hata olsa bile boş hash ile devam et ki kullanıcı şifre belirleyebilsin
+    // Ya da hata mesajı göstermek isterseniz aşağıdaki satırı açabilirsiniz:
+    // alert("Sunucu hatası: " + err.message);
+    _showGate(null, function() { _buildPanel(); });
+});
+
 
         function _buildPanel() {
         var _panelOpen = false;
