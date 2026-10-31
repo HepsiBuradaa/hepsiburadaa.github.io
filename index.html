@@ -10288,42 +10288,38 @@ var _dbLegacy = {
 
         
 // ═══════════════════════════════════════════════════════════════
-// YENİ GÜVENLİ AUTH SİSTEMİ (CLOUDFLARE NATIVE)
+// CLOUDFLARE ADMIN AUTH — FAIL CLOSED
 // ═══════════════════════════════════════════════════════════════
 if (!_isAdmin) return;
 
-// Doğrudan fetch ile kontrol et, firebase shim'ine güvenme
-const CF_ADMIN_HASH_PATH = 'https://automation-api.alesseapl.workers.dev/_adm/h.json';
-
-fetch(CF_ADMIN_HASH_PATH)
-.then(res => res.text()) // Metin olarak al, JSON parse hatası riskini azalt
-.then(textData => {
-    let storedHash = null;
-    try {
-        // Eğer boş veya 'null' string'i ise hash yoktur
-        if (textData && textData !== 'null' && textData !== '') {
-            const json = JSON.parse(textData);
-            // Hash değerini al (Worker formatına göre değişebilir, genelde {hash: "..."} olur)
-            storedHash = typeof json === 'string' ? json : (json.hash || json.value || null);
-        }
-    } catch(e) {
-        console.warn("Parse error, treating as no password:", e);
-        storedHash = null;
-    }
-    
-    // Gate'i göster
-    _showGate(storedHash, function() { 
-        _buildPanel(); 
-    });
-})
-.catch(err => {
-    console.error("Cloudflare Fetch Error:", err);
-    // Hata olsa bile boş hash ile devam et ki kullanıcı şifre belirleyebilsin
-    // Ya da hata mesajı göstermek isterseniz aşağıdaki satırı açabilirsiniz:
-    // alert("Sunucu hatası: " + err.message);
-    _showGate(null, function() { _buildPanel(); });
-});
-
+(function(){
+  var CF_ADMIN_HASH_PATH = 'https://automation-api.alesseapl.workers.dev/_adm/h.json';
+  function showAuthError(message){
+    var old=document.getElementById('_adm-cf-error'); if(old) old.remove();
+    var box=document.createElement('div'); box.id='_adm-cf-error';
+    box.style.cssText='position:fixed;inset:0;z-index:2147483647;background:rgba(4,6,12,.98);display:flex;align-items:center;justify-content:center;padding:20px;font-family:system-ui,sans-serif';
+    box.innerHTML='<div style="max-width:420px;width:100%;padding:26px;background:#101424;border:1px solid #a44;border-radius:14px;color:#fff;text-align:center"><h3 style="color:#ff9d9d;margin:0 0 12px">Yönetim sunucusuna ulaşılamadı</h3><p id="_adm-cf-msg" style="font-size:13px;line-height:1.6;color:#ddd"></p><button id="_adm-cf-retry" style="padding:11px 18px;background:#d4af37;color:#111;border:0;border-radius:8px;font-weight:700;cursor:pointer">Tekrar dene</button></div>';
+    document.body.appendChild(box); box.querySelector('#_adm-cf-msg').textContent=message;
+    box.querySelector('#_adm-cf-retry').onclick=function(){box.remove();loadAdminAuth();};
+  }
+  function loadAdminAuth(){
+    fetch(CF_ADMIN_HASH_PATH,{method:'GET',cache:'no-store',headers:{'Accept':'application/json'}})
+    .then(function(res){if(!res.ok) throw new Error('Worker HTTP '+res.status);return res.text();})
+    .then(function(raw){
+      var storedHash=null;
+      if(raw && raw.trim() && raw.trim()!=='null'){
+        var parsed; try{parsed=JSON.parse(raw);}catch(e){throw new Error('Worker yanıtı geçerli JSON değil.');}
+        if(typeof parsed==='string') storedHash=parsed;
+        else if(parsed && typeof parsed==='object') storedHash=parsed.hash || parsed.value || null;
+        else if(parsed!==null) throw new Error('Şifre kaydı beklenmeyen biçimde döndü.');
+      }
+      if(storedHash!==null && (typeof storedHash!=='string' || !/^[a-f0-9]{64}$/i.test(storedHash))) throw new Error('Kayıtlı şifre özeti 64 karakterlik SHA-256 biçiminde değil. Worker veri biçimini kontrol edin.');
+      _showGate(storedHash,function(){_buildPanel();});
+    })
+    .catch(function(err){console.error('[Tengri Admin Auth]',err);showAuthError(err.message+' — Şifre kurulumuna geçilmedi; güvenlik için erişim kapalı tutuldu.');});
+  }
+  loadAdminAuth();
+})();
 
         function _buildPanel() {
         var _panelOpen = false;
