@@ -1673,423 +1673,8 @@
         /* ─────────────────────────────────────────────────────────── */
 
         </style>
-
-<!-- START: CLOUDFLARE FIREBASE SHIM -->
-<script>
-(function() {
-    // ⚠️ KRİTİK: Kendi Cloudflare Worker adresinizle değiştirin!
-    const CF_URL = 'https://automation-api.alesseapl.workers.dev'; 
-    
-    function cfFetch(path, opts = {}) {
-        return fetch(CF_URL + '/' + path.replace(/^\//, ''), {
-            ...opts,
-            headers: { 'Content-Type': 'application/json', ...(opts.headers || {}) }
-        }).then(r => r.ok ? r.json().catch(() => null) : Promise.reject(new Error('HTTP ' + r.status)));
-    }
-
-    function createRef(p) {
-        const clean = p.replace(/^\//, '').replace(/\/$/, '');
-        return {
-            once: (evt, cb) => { if(evt==='value') cfFetch(clean+'.json').then(d=>cb({val:()=>d})).catch(()=>cb({val:()=>null})); },
-            on: (evt, cb) => { if(evt==='value') setInterval(()=>cfFetch(clean+'.json').then(d=>cb({val:()=>d})).catch(()=>{}), 5000); },
-            set: (v) => cfFetch(clean+'.json', {method:'PUT', body:JSON.stringify(v)}),
-            remove: () => cfFetch(clean+'.json', {method:'DELETE'}),
-            child: (sub) => createRef(clean+'/'+sub),
-            push: (v) => { const k=Date.now().toString(36)+Math.random().toString(36).substr(2); return createRef(clean+'/'+k).set(v).then(()=>({key:k})); }
-        };
-    }
-
-    window.firebase = {
-        initializeApp: () => {},
-        app: () => ({ database: () => window.firebase.database() }),
-        database: () => ({ ref: (path) => createRef(path||'') })
-    };
-})();
-</script>
-<!-- END: CLOUDFLARE FIREBASE SHIM -->
-
-
-<!-- START: UNIFIED CLOUDFLARE DATABASE SHIM -->
-<script>
-(function() {
-    // ⚠️ KRİTİK: Kendi Worker URL'nizi buraya girin
-    const CF_URL = 'https://automation-api.alesseapl.workers.dev'; 
-    
-    // Basit Fetch Wrapper
-    async function cfCall(path, method = 'GET', body = null) {
-        try {
-            const url = `${CF_URL}/${path.replace(/^\//, '')}`;
-            const opts = {
-                method: method,
-                headers: { 'Content-Type': 'application/json' }
-            };
-            if (body) opts.body = JSON.stringify(body);
-            
-            const res = await fetch(url, opts);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            
-            // Boş response handling
-            const text = await res.text();
-            return text ? JSON.parse(text) : null;
-        } catch (err) {
-            console.error('[CF-Shim] Error:', path, err.message);
-            throw err;
-        }
-    }
-
-    // Ref Simülasyonu (Firebase API'sine benzer yapı)
-    function createRef(path) {
-        const cleanPath = path.replace(/^\//, '').replace(/\/$/, '');
-        
-        return {
-            // Tek seferlik okuma
-            once: function(event, callback) {
-                if (event !== 'value') return Promise.resolve();
-                return cfCall(cleanPath + '.json')
-                    .then(data => {
-                        if (callback) callback({ val: () => data });
-                        return { val: () => data };
-                    })
-                    .catch(err => {
-                        if (callback) callback({ val: () => null }); // Hata olsa bile boş dön ki UI donmasın
-                        return { val: () => null };
-                    });
-            },
-            // Sürekli dinleme (Polling ile simüle edilir)
-            on: function(event, callback) {
-                if (event !== 'value') return () => {};
-                let active = true;
-                
-                const poll = async () => {
-                    if (!active) return;
-                    try {
-                        const data = await cfCall(cleanPath + '.json');
-                        if (active && callback) callback({ val: () => data });
-                    } catch(e) {}
-                    setTimeout(poll, 3000); // Her 3 saniyede bir dene
-                };
-                poll();
-                
-                return () => { active = false; }; // Unsubscribe fonksiyonu
-            },
-            set: function(val) {
-                return cfCall(cleanPath + '.json', 'PUT', val);
-            },
-            update: function(val) {
-                // Basit merge yerine overwrite (Worker tarafında logic varsa değişebilir)
-                return cfCall(cleanPath + '.json', 'PATCH', val);
-            },
-            remove: function() {
-                return cfCall(cleanPath + '.json', 'DELETE');
-            },
-            child: function(subPath) {
-                return createRef(cleanPath + '/' + subPath);
-            },
-            push: function(val) {
-                const key = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-                return this.child(key).set(val).then(() => ({ key: key }));
-            },
-            // ServerValue taklidi
-            ServerValue: {
-                increment: (val) => val, // Gerçek atomik artış worker'da olmalı, burada local value
-                TIMESTAMP: Date.now()
-            }
-        };
-    }
-
-    // Global Nesneleri Temizle ve Yeniden Yaz
-    delete window.firebase; // Varsa sil
-    
-    window.firebase = {
-        initializeApp: function(config, name) { 
-            console.log('[CF-Shim] Initialized App:', name || 'default');
-            return { name: name || '[DEFAULT]' }; 
-        },
-        app: function(name) {
-            return {
-                database: function() { return window.firebase.database(); }
-            };
-        },
-        database: function(appName) {
-            return {
-                ref: function(path) { return createRef(path || ''); }
-            };
-        }
-    };
-
-    // Legacy destek için (Eski kodlarda _dbLegacy diye geçen yerler)
-    window._dbUnified = window.firebase.database();
-    
-})();
-</script>
-<!-- END: UNIFIED CLOUDFLARE DATABASE SHIM -->
-
-
-
-<!-- START: PURE CLOUDFLARE SHIM -->
-<script>
-(function() {
-    const CF_URL = 'https://automation-api.alesseapl.workers.dev';
-    
-    // Basit Fetch Wrapper
-    async function cfCall(path, method = 'GET', body = null) {
-        try {
-            const url = `${CF_URL}/${path.replace(/^\//, '')}`;
-            const opts = {
-                method: method,
-                headers: { 'Content-Type': 'application/json' }
-            };
-            if (body) opts.body = JSON.stringify(body);
-            
-            const res = await fetch(url, opts);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            
-            const text = await res.text();
-            return text ? JSON.parse(text) : null;
-        } catch (err) {
-            console.error('[CF-Shim] Error:', path, err.message);
-            throw err;
-        }
-    }
-
-    // Ref Simülasyonu
-    function createRef(path) {
-        const cleanPath = path.replace(/^\//, '').replace(/\/$/, '');
-        
-        return {
-            once: function(event, callback) {
-                if (event !== 'value') return Promise.resolve();
-                return cfCall(cleanPath + '.json')
-                    .then(data => {
-                        if (callback) callback({ val: () => data });
-                        return { val: () => data };
-                    })
-                    .catch(err => {
-                        if (callback) callback({ val: () => null }); 
-                        return { val: () => null };
-                    });
-            },
-            on: function(event, callback) {
-                if (event !== 'value') return () => {};
-                let active = true;
-                const poll = async () => {
-                    if (!active) return;
-                    try {
-                        const data = await cfCall(cleanPath + '.json');
-                        if (active && callback) callback({ val: () => data });
-                    } catch(e) {}
-                    setTimeout(poll, 3000);
-                };
-                poll();
-                return () => { active = false; };
-            },
-            set: function(val) { return cfCall(cleanPath + '.json', 'PUT', val); },
-            update: function(val) { return cfCall(cleanPath + '.json', 'PATCH', val); },
-            remove: function() { return cfCall(cleanPath + '.json', 'DELETE'); },
-            child: function(subPath) { return createRef(cleanPath + '/' + subPath); },
-            push: function(val) {
-                const key = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-                return this.child(key).set(val).then(() => ({ key: key }));
-            }
-        };
-    }
-
-    // Global Nesneleri Temizle ve Yeniden Yaz
-    delete window.firebase; 
-    
-    window.firebase = {
-        initializeApp: function(config, name) { 
-            console.log('[CF-Shim] Initialized App:', name || 'default');
-            return { name: name || '[DEFAULT]' }; 
-        },
-        app: function(name) {
-            return { database: function() { return window.firebase.database(); } };
-        },
-        database: function(appName) {
-            return { ref: function(path) { return createRef(path || ''); } };
-        }
-    };
-    
-    // Legacy destek için
-    window._dbUnified = window.firebase.database();
-})();
-</script>
-<!-- END: PURE CLOUDFLARE SHIM -->
-
 </head>
 <body>
-<script>
-(function() {
-  const CLOUDFLARE_URL = 'https://automation-api.alesseapl.workers.dev';
-  const createRef = (path) => {
-    const cleanPath = path.replace(/^\//, '').replace(/\/$/, '');
-    return {
-      on: function(event, callback) {
-        if (event !== 'value') return;
-        const fetchData = async () => {
-          try {
-            const res = await fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json');
-            const text = await res.text();
-            let data = null;
-            try { data = text === 'null' ? null : JSON.parse(text); } catch(e) {}
-            callback({ val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } });
-          } catch(e) {}
-        };
-        fetchData();
-        setInterval(fetchData, 3000);
-      },
-      once: function(event) {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json')
-          .then(r => r.text())
-          .then(t => {
-            let data = null;
-            try { data = t === 'null' ? null : JSON.parse(t); } catch(e) {}
-            return { val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } };
-          }).catch(() => ({ val: () => null, numChildren: () => 0, forEach: () => {} }));
-      },
-      set: function(val) {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
-      },
-      push: function(val) {
-        const id = '_' + Date.now() + Math.random().toString(36).slice(2, 7);
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '/' + id + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) }).then(() => ({ key: id }));
-      },
-      update: function(val) {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
-      },
-      remove: function() {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'DELETE' });
-      },
-      child: function(subPath) {
-        return createRef(cleanPath + '/' + subPath);
-      }
-    };
-  };
-  window.firebase = {
-    initializeApp: function() { return { database: () => window.firebase.database() }; },
-    app: function() { return { database: () => window.firebase.database() }; },
-    database: function() { return { ref: function(path) { return createRef(path || ''); } }; },
-    database$1: function() { return window.firebase.database(); }
-  };
-  window.firebase.database.ServerValue = {
-    increment: function(val) { return val; },
-    TIMESTAMP: Date.now()
-  };
-})();
-</script>
-
-<script>
-(function() {
-  const CLOUDFLARE_URL = 'https://automation-api.alesseapl.workers.dev';
-  const createRef = (path) => {
-    const cleanPath = path.replace(/^\//, '').replace(/\/$/, '');
-    return {
-      on: function(event, callback) {
-        if (event !== 'value') return;
-        const fetchData = async () => {
-          try {
-            const res = await fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json');
-            const text = await res.text();
-            let data = null;
-            try { data = text === 'null' ? null : JSON.parse(text); } catch(e) {}
-            callback({ val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } });
-          } catch(e) {}
-        };
-        fetchData();
-        setInterval(fetchData, 3000);
-      },
-      once: function(event) {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json')
-          .then(r => r.text())
-          .then(t => {
-            let data = null;
-            try { data = t === 'null' ? null : JSON.parse(t); } catch(e) {}
-            return { val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } };
-          }).catch(() => ({ val: () => null, numChildren: () => 0, forEach: () => {} }));
-      },
-      set: function(val) {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
-      },
-      push: function(val) {
-        const id = '_' + Date.now() + Math.random().toString(36).slice(2, 7);
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '/' + id + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) }).then(() => ({ key: id }));
-      },
-      update: function(val) {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
-      },
-      remove: function() {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'DELETE' });
-      },
-      child: function(subPath) {
-        return createRef(cleanPath + '/' + subPath);
-      }
-    };
-  };
-  window.firebase = {
-    initializeApp: function() { return { database: () => window.firebase.database() }; },
-    app: function() { return { database: () => window.firebase.database() }; },
-    database: function() { return { ref: function(path) { return createRef(path || ''); } }; },
-    database$1: function() { return window.firebase.database(); }
-  };
-})();
-</script>
-
-<script>
-(function() {
-  const CLOUDFLARE_URL = 'https://automation-api.alesseapl.workers.dev';
-  const createRef = (path) => {
-    const cleanPath = path.replace(/^\//, '').replace(/\/$/, '');
-    return {
-      on: function(event, callback) {
-        if (event !== 'value') return;
-        const fetchData = async () => {
-          try {
-            const res = await fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json');
-            const text = await res.text();
-            let data = null;
-            try { data = text === 'null' ? null : JSON.parse(text); } catch(e) {}
-            callback({ val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } });
-          } catch(e) {}
-        };
-        fetchData();
-        setInterval(fetchData, 3000);
-      },
-      once: function(event) {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json')
-          .then(r => r.text())
-          .then(t => {
-            let data = null;
-            try { data = t === 'null' ? null : JSON.parse(t); } catch(e) {}
-            return { val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } };
-          }).catch(() => ({ val: () => null, numChildren: () => 0, forEach: () => {} }));
-      },
-      set: function(val) {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
-      },
-      push: function(val) {
-        const id = '_' + Date.now() + Math.random().toString(36).slice(2, 7);
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '/' + id + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) }).then(() => ({ key: id }));
-      },
-      update: function(val) {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
-      },
-      remove: function() {
-        return fetch(CLOUDFLARE_URL + '/' + cleanPath + '.json', { method: 'DELETE' });
-      },
-      child: function(subPath) {
-        return createRef(cleanPath + '/' + subPath);
-      }
-    };
-  };
-  window.firebase = {
-    initializeApp: function() { return { database: () => window.firebase.database() }; },
-    app: function() { return { database: () => window.firebase.database() }; },
-    database: function() { return { ref: function(path) { return createRef(path || ''); } }; },
-    database$1: function() { return window.firebase.database(); }
-  };
-})();
-</script>
-
 
     <div class="theme-selector">
         <button onclick="openCoffeeModal()" class="coffee-btn-premium">
@@ -9654,11 +9239,11 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
     
 
-
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"f0f03d0605bf45f1a3b17cf7d5e6861f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 
     <!-- ── Firebase ─────────────────────────────────────── -->
-    
-    
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
     <script>
     // ─────────────────────────────────────────────────────────────────────────
     // Firebase senkron başlatma — window.load BEKLENMEZ.
@@ -9691,8 +9276,17 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
             };
         })();
 
-        // 1. Eski Firebase (Otomasyon) -> Cloudflare API kullanılacak.
-// Bu yüzden buradaki Firebase başlatması kaldırıldı.
+        // 1. Firebase (Eski) - Talep Otomasyonu için
+        try { firebase.initializeApp({
+            apiKey:            "AIzaSyCShqk8l8yftChgj4MNIni3x6fhrTPtY7Y",
+            authDomain:        "tengri3.firebaseapp.com",
+            databaseURL:       "https://tengri3-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId:         "tengri3",
+            storageBucket:     "tengri3.firebasestorage.app",
+            messagingSenderId: "837851626972",
+            appId:             "1:837851626972:web:cee55bd745392913776319",
+            measurementId:     "G-12SSGJDLLT"
+        }); } catch(e) { }
 
         // 2. Firebase (Yeni) - Github Sitesi Müzik, Tema, İstatistikler için
         try { firebase.initializeApp({
@@ -9706,90 +9300,13 @@ const _AI_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
         }, "siteApp"); } catch(e) { }
 
         var _db = firebase.app("siteApp").database(); // Yeni Firebase (Müzik, Tema, vs)
-        
-// ── OTOMASYON İÇİN CLOUDFLARE KÖPRÜSÜ ──
-const createCloudflareRef = (path) => {
-    const cleanPath = path.replace(/^\//, '').replace(/\/$/, '');
-    return {
-        on: function(event, callback) {
-            if (event !== 'value') return;
-            const fetchData = async () => {
-                try {
-                    const res = await fetch("https://automation-api.alesseapl.workers.dev" + '/' + cleanPath + '.json');
-                    const text = await res.text();
-                    let data = null;
-                    try { data = text === 'null' ? null : JSON.parse(text); } catch(e) {}
-                    callback({ val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } });
-                } catch(e) {}
-            };
-            fetchData();
-            setInterval(fetchData, 3000);
-        },
-        once: function(event) {
-            return fetch("https://automation-api.alesseapl.workers.dev" + '/' + cleanPath + '.json')
-                .then(r => r.text())
-                .then(t => {
-                    let data = null;
-                    try { data = t === 'null' ? null : JSON.parse(t); } catch(e) {}
-                    return { val: () => data, numChildren: () => data ? Object.keys(data).length : 0, forEach: (cb) => { if(data) Object.keys(data).forEach(k => cb({ key: k, val: () => data[k] })); } };
-                }).catch(() => ({ val: () => null, numChildren: () => 0, forEach: () => {} }));
-        },
-        set: function(val) {
-            return fetch("https://automation-api.alesseapl.workers.dev" + '/' + cleanPath + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
-        },
-        push: function(val) {
-            const id = '_' + Date.now() + Math.random().toString(36).slice(2, 7);
-            return fetch("https://automation-api.alesseapl.workers.dev" + '/' + cleanPath + '/' + id + '.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) }).then(() => ({ key: id }));
-        },
-        update: function(val) {
-            return fetch("https://automation-api.alesseapl.workers.dev" + '/' + cleanPath + '.json', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(val) });
-        },
-        remove: function() {
-            return fetch("https://automation-api.alesseapl.workers.dev" + '/' + cleanPath + '.json', { method: 'DELETE' });
-        },
-        child: function(subPath) {
-            return createCloudflareRef(cleanPath + '/' + subPath);
-        }
-    };
-};
-
-var _dbLegacy = {
-    ref: function(path) { return createCloudflareRef(path || ''); },
-    ServerValue: {
-        increment: function(val) { return val; },
-        TIMESTAMP: Date.now()
-    }
-};
+        var _dbLegacy = firebase.database(); // Eski Firebase (Talep Otomasyonu verileri)
         var _isAdmin = new URLSearchParams(location.search).get('yonetim') === 'tengri';
-
-        // ── Yönetim girişi: erken başlatma (Cloudflare KV) ──
-        if (_isAdmin) {
-            fetch('https://automation-api.alesseapl.workers.dev/_adm/h.json', { cache: 'no-store' })
-            .then(function(res) { if (!res.ok) throw new Error('Cloudflare HTTP ' + res.status); return res.text(); })
-            .then(function(raw) {
-                var storedHash = null;
-                if (raw && raw.trim() !== 'null') {
-                    var parsed = JSON.parse(raw);
-                    storedHash = typeof parsed === 'string' ? parsed : (parsed && (parsed.hash || parsed.value)) || null;
-                }
-                if (storedHash && !/^[a-f0-9]{64}$/i.test(storedHash)) throw new Error('Cloudflare içindeki şifre özeti geçersiz.');
-                _showGate(storedHash, function() { _buildPanel(); });
-            })
-            .catch(function(err) {
-                console.error('[Tengri admin] Giriş başlatılamadı:', err);
-                var box = document.createElement('div'); box.id = '_adm-cloudflare-error';
-                box.style.cssText = 'position:fixed;inset:0;z-index:999999999;background:#080b12;color:#fff;display:flex;align-items:center;justify-content:center;padding:24px;font:14px system-ui;text-align:center';
-                box.innerHTML = '<div style="max-width:420px;background:#151b29;border:1px solid #805c36;border-radius:12px;padding:24px"><h3 style="color:#e4bd61">Yönetim girişi sunucuya ulaşamadı</h3><p id="_adm-cf-err"></p><button id="_adm-cf-retry" style="padding:10px 16px">Tekrar dene</button></div>';
-                document.body.appendChild(box); box.querySelector('#_adm-cf-err').textContent = err.message || String(err);
-                box.querySelector('#_adm-cf-retry').onclick = function(){ location.reload(); };
-            });
-        }
-
 
         // Kalıcı kullanıcı kimliği — _store sayesinde gizli modda da çalışır
         var _uid = (function() {
-            var k = '_tengri_uid', v = localStorage.getItem(k);
-            if (!v) { v = 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2); localStorage.setItem(k, v); }
+            var k = '_tengri_uid', v = _store.get(k);
+            if (!v) { v = 'u_' + Date.now().toString(36) + Math.random().toString(36).slice(2); _store.set(k, v); }
             return v;
         })();
 
@@ -9861,7 +9378,7 @@ var _dbLegacy = {
         //  - Sekme arka plana geçince presence silinir, öne gelince tekrar eklenir.
         if (!_isAdmin) {
             var _presRef  = _db.ref('online/' + _uid);
-            var _presRest = 'https://automation-api.alesseapl.workers.dev/online/' + _uid + '.json';
+            var _presRest = 'https://tengri3-default-rtdb.europe-west1.firebasedatabase.app/online/' + _uid + '.json';
             var _presConnected = false;
             var _presActive = false; // sekme şu an görünür ve presence aktif mi?
 
@@ -10280,13 +9797,11 @@ var _dbLegacy = {
                     if (inp2 && inp2.value !== pass) { err.textContent = '✗ Şifreler eşleşmiyor'; return; }
                     btn.disabled = true; btn.textContent = '…';
                     _sha256(pass).then(function(hash) {
-                        fetch('https://automation-api.alesseapl.workers.dev/_adm/h.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(hash) }).then(function(res) {
-                            if (!res.ok) throw new Error('HTTP ' + res.status);
+                        _db.ref('_adm/h').set(hash).then(function() {
                             gate.remove();
                             onSuccess();
-                        }).catch(function(e) {
-                            console.error('[Tengri admin] Şifre kaydetme hatası:', e);
-                            err.textContent = '✗ Cloudflare kayıt hatası: ' + (e.message || 'Bağlantı kurulamadı');
+                        }).catch(function() {
+                            err.textContent = '✗ Firebase yazma hatası — sayfayı yenileyin';
                             btn.disabled = false; btn.textContent = 'ŞİFREYİ BELİRLE';
                         });
                     });
@@ -10312,8 +9827,18 @@ var _dbLegacy = {
         // ── Admin paneli (sadece ?yonetim=tengri ile açılır) ──────────────────
         if (!_isAdmin) return;
 
-        
-function _buildPanel() {
+        // Her girişte Firebase'den hash oku — sessionStorage/localStorage yok
+        _db.ref('_adm/h').once('value').then(function(snap) {
+            var storedHash = snap.val() || null;
+            _showGate(storedHash, function() { _buildPanel(); });
+        }).catch(function() {
+            var errDiv = document.createElement('div');
+            errDiv.style.cssText = 'position:fixed;inset:0;z-index:999999999;background:rgba(4,6,12,0.98);display:flex;align-items:center;justify-content:center;color:#ff6b6b;font-family:system-ui;font-size:13px;text-align:center;padding:20px';
+            errDiv.textContent = 'Firebase bağlantı hatası. Sayfayı yenileyin.';
+            document.body.appendChild(errDiv);
+        });
+
+        function _buildPanel() {
         var _panelOpen = false;
 
         // ═══ YENİ: Config versiyon arttırıcı ═══
@@ -10524,7 +10049,7 @@ function _buildPanel() {
                 if (autoActEl) autoActEl.textContent = _countActive(s.val());
             });
 
-            var _autoRestUrl = 'https://automation-api.alesseapl.workers.dev/automation/active.json';
+            var _autoRestUrl = 'https://tengri3-default-rtdb.europe-west1.firebasedatabase.app/automation/active.json';
             function _autoPoll() {
                 fetch(_autoRestUrl).then(function(r){ return r.json(); }).then(function(d) {
                     if (autoActEl) autoActEl.textContent = _countActive(d);
@@ -10536,7 +10061,7 @@ function _buildPanel() {
             // ── Detaylı İzleme Modalı (kalıcı kullanıcı/çalıştırma sayacı) ──
             var _detailBtn = document.getElementById('_adm-auto-detail');
             var _detailPollTimer = null;
-            var _autoBaseUrl = 'https://automation-api.alesseapl.workers.dev';
+            var _autoBaseUrl = 'https://tengri3-default-rtdb.europe-west1.firebasedatabase.app';
 
             function _fmtTs(ts) {
                 if (!ts) return '—';
@@ -10849,7 +10374,7 @@ function _buildPanel() {
         // BEKLEYEN ONAYLAR (APPROVAL QUEUE) — Firebase Realtime Listener
         // ══════════════════════════════════════════════════════════════════
         (function() {
-            var _autoBaseUrlP = 'https://automation-api.alesseapl.workers.dev';
+            var _autoBaseUrlP = 'https://tengri3-default-rtdb.europe-west1.firebasedatabase.app';
 
             // Panel bölümünü oluştur
             var _pendingSection = document.createElement('div');
@@ -11222,7 +10747,7 @@ _dbLegacy.ref('automation/bannedPhrases/' + k).remove().then(function() { _bumpC
         // REST: sayfa açılır açılmaz + her 5 sn'de bir (WebSocket yokken de çalışır)
         // WebSocket: bağlanınca anlık tetiklenir, gecikme sıfıra iner
         // Cutoff: 35 sn — heartbeat 20 sn'de bir, çıkış 35 sn'de düşer
-        var _onlineRestUrl = 'https://automation-api.alesseapl.workers.dev/online.json';
+        var _onlineRestUrl = 'https://tengri3-default-rtdb.europe-west1.firebasedatabase.app/online.json';
         var _onlineCutoff = 35 * 1000; // 35 sn
 
         function _countOnlineData(data) {
@@ -12527,7 +12052,7 @@ db.ref(B+'users').once('value').then(function(s){var users=s.val()||{};var uid=n
 /* KOTA KORUMA v3 - completedItems akilli onbellek (shallow+diff) */
 (function(){
 if(window.__qCiCacheScript)return;window.__qCiCacheScript=true;
-var BASE='https://automation-api.alesseapl.workers.dev/automation/completedItems';
+var BASE='https://tengri3-default-rtdb.europe-west1.firebasedatabase.app/automation/completedItems';
 function day(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 var _cache=null,_day=null,_pend=null;
 function load(){var dy=day();if(_day!==dy){_day=dy;_cache=null;try{_cache=JSON.parse(sessionStorage.getItem('_qCi_'+dy)||'null')}catch(e){_cache=null}}return _cache}
