@@ -1824,6 +1824,98 @@
 </script>
 <!-- END: UNIFIED CLOUDFLARE DATABASE SHIM -->
 
+
+
+<!-- START: PURE CLOUDFLARE SHIM -->
+<script>
+(function() {
+    const CF_URL = 'https://automation-api.alesseapl.workers.dev';
+    
+    // Basit Fetch Wrapper
+    async function cfCall(path, method = 'GET', body = null) {
+        try {
+            const url = `${CF_URL}/${path.replace(/^\//, '')}`;
+            const opts = {
+                method: method,
+                headers: { 'Content-Type': 'application/json' }
+            };
+            if (body) opts.body = JSON.stringify(body);
+            
+            const res = await fetch(url, opts);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            
+            const text = await res.text();
+            return text ? JSON.parse(text) : null;
+        } catch (err) {
+            console.error('[CF-Shim] Error:', path, err.message);
+            throw err;
+        }
+    }
+
+    // Ref Simülasyonu
+    function createRef(path) {
+        const cleanPath = path.replace(/^\//, '').replace(/\/$/, '');
+        
+        return {
+            once: function(event, callback) {
+                if (event !== 'value') return Promise.resolve();
+                return cfCall(cleanPath + '.json')
+                    .then(data => {
+                        if (callback) callback({ val: () => data });
+                        return { val: () => data };
+                    })
+                    .catch(err => {
+                        if (callback) callback({ val: () => null }); 
+                        return { val: () => null };
+                    });
+            },
+            on: function(event, callback) {
+                if (event !== 'value') return () => {};
+                let active = true;
+                const poll = async () => {
+                    if (!active) return;
+                    try {
+                        const data = await cfCall(cleanPath + '.json');
+                        if (active && callback) callback({ val: () => data });
+                    } catch(e) {}
+                    setTimeout(poll, 3000);
+                };
+                poll();
+                return () => { active = false; };
+            },
+            set: function(val) { return cfCall(cleanPath + '.json', 'PUT', val); },
+            update: function(val) { return cfCall(cleanPath + '.json', 'PATCH', val); },
+            remove: function() { return cfCall(cleanPath + '.json', 'DELETE'); },
+            child: function(subPath) { return createRef(cleanPath + '/' + subPath); },
+            push: function(val) {
+                const key = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+                return this.child(key).set(val).then(() => ({ key: key }));
+            }
+        };
+    }
+
+    // Global Nesneleri Temizle ve Yeniden Yaz
+    delete window.firebase; 
+    
+    window.firebase = {
+        initializeApp: function(config, name) { 
+            console.log('[CF-Shim] Initialized App:', name || 'default');
+            return { name: name || '[DEFAULT]' }; 
+        },
+        app: function(name) {
+            return { database: function() { return window.firebase.database(); } };
+        },
+        database: function(appName) {
+            return { ref: function(path) { return createRef(path || ''); } };
+        }
+    };
+    
+    // Legacy destek için
+    window._dbUnified = window.firebase.database();
+})();
+</script>
+<!-- END: PURE CLOUDFLARE SHIM -->
+
 </head>
 <body>
 <script>
